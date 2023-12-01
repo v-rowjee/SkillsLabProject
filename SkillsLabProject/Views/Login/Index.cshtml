@@ -1,0 +1,40 @@
+﻿
+@{
+    ViewBag.Title = "Login";
+    Layout = "~/Views/Shared/_GuestLayout.cshtml";
+}
+
+@section scripts {
+    <script src="~/Scripts/login.js"></script>
+}
+
+<div class="container">
+
+    <div class="row align-items-center mt-3">
+        <div class="col-md-6">
+            <img src="~/Content/Images/login.png" class="img-fluid" alt="login" />
+        </div>
+        <div class="col-md-6 px-5">
+            <h2 class="display-4 fw-bold">Welcome Back!</h2>
+            <form id="loginForm" class="my-5 needs-validation" novalidate>
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email Address</label>
+                    <input type="email" class="form-control" id="email" required>
+                    <div class="invalid-feedback">
+                        Please enter your email.
+                    </div>
+                </div>
+                <div class="mb-5">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" class="form-control" id="password" required>
+                    <div class="invalid-feedback">
+                        Please enter your password.
+                    </div>
+                </div>
+                <button type="submit" id="login" class="btn btn-primary w-100 mb-4">Login</button>
+                <hr />
+                @Html.ActionLink("Create a new account", "Index", "Register", null, new { @class = "btn btn-outline-secondary w-100 mt-4" })
+            </form>
+        </div>
+    </div>
+</div>

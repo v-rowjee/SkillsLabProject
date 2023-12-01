@@ -1,0 +1,81 @@
+﻿@{
+    ViewBag.Title = "Register";
+    Layout = "~/Views/Shared/_GuestLayout.cshtml";
+}
+
+@section scripts {
+    <script src="~/Scripts/register.js"></script>
+}
+
+<div class="container">
+
+    <div class="row mt-3 align-items-center">
+        <div class="col-lg-6">
+            <img src="~/Content/Images/register.png" class="img-fluid sticky-top top-70 pe-5" alt="register" />
+        </div>
+        <div class="col-lg-6 px-5">
+            <h2 class="display-4 fw-bold"><span id="userrole">Employee</span> Registration</h2>
+            <form id="registerForm" class="my-5 needs-validation" novalidate>
+                <div class="mb-3">
+                    <label for="fname" class="form-label">First Name</label>
+                    <input type="text" class="form-control" id="fname" required>
+                    <div class="invalid-feedback">
+                        First name is required.
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="lname" class="form-label">Last Name</label>
+                    <input type="text" class="form-control" id="lname" required>
+                    <div class="invalid-feedback">
+                        Last name is required.
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="nic" class="form-label">NIC</label>
+                    <input type="text" class="form-control" id="nic" required>
+                    <div class="invalid-feedback">
+                        NIC is required.
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="phone" class="form-label">Phone</label>
+                    <input type="number" class="form-control" id="phone" required>
+                    <div class="invalid-feedback">
+                        Phone number is required.
+                    </div>
+                </div>
+                <div class="mb-5">
+                    <label for="department" class="form-label">Department</label>
+                    <select class="form-select" id="department" required>
+                        <option selected disabled>Select a department</option>
+                        @foreach (var department in ViewBag.Departments)
+                        {
+                            <option value="@department.DepartmentId">@department.Title</option>
+                        }
+                    </select>
+                    <div class="invalid-feedback">
+                        Select a Department.
+                    </div>
+                </div>
+                <hr class="py-3" />
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email Address</label>
+                    <input type="email" class="form-control" id="email" required>
+                    <div id="email-feedback" class="invalid-feedback">
+                        Please provide a valid email.
+                    </div>
+                </div>
+                <div class="mb-5">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" class="form-control" id="password" required>
+                    <div class="invalid-feedback">
+                        Please provide a valid password.
+                    </div>
+                </div>
+                <button type="submit" id="register" class="btn btn-primary w-100 mb-4">Register</button>
+                <hr />
+                @Html.ActionLink("Already have an account", "Index", "Login", null, new { @class = "btn btn-outline-secondary w-100 mt-4" })
+            </form>
+        </div>
+    </div>
+</div>

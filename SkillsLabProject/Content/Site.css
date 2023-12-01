@@ -1,0 +1,23 @@
+﻿﻿* {
+    font-family: Verdana
+}
+
+:root {
+    --blue: #0099ff
+}
+body{
+    height: 100vh;
+}
+.logo {
+    height: 2.5rem;
+}
+/* Chrome, Safari, Edge, Opera */
+.no-arrow::-webkit-outer-spin-button,
+.no-arrow::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+/* Firefox */
+.no-arrow[type=number] {
+    -moz-appearance: textfield;
+}
