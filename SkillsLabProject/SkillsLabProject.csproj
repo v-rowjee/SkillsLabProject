@@ -168,7 +168,6 @@
     <Compile Include="DAL\TrainingDAL.cs" />
     <Compile Include="Enums\Role.cs" />
     <Compile Include="Enums\Status.cs" />
-    <Compile Include="Exceptions\ReturnException.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
