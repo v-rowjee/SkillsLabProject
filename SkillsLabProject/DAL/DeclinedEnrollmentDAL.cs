@@ -1,85 +1,68 @@
 ﻿using SkillsLabProject.Models;
 using SkillsLabProject.DAL.Common;
-using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace SkillsLabProject.DAL
 {
     public interface IDeclinedEnrollmentDAL : IDAL<DeclinedEnrollmentModel>
     {
-
     }
     public class DeclinedEnrollmentDAL : IDeclinedEnrollmentDAL
     {
-        private const string AddDeclinedEnrollmentQuery = @"
-            INSERT [dbo].[DeclinedEnrollment] (EnrollmentId, Reason) VALUES (@EnrollmentId, @Reason);
-        ";
-        private const string GetAllDeclinedEnrollmentsQuery = @"
-            SELECT DeclinedEnrollmentId, EnrollmentId, Reason
-            FROM [dbo].[DeclinedEnrollment]
-        ";
-        private const string GetDeclinedEnrollmentQuery = @"
-            SELECT DeclinedEnrollmentId, EnrollmentId, Reason
-            FROM [dbo].[DeclinedEnrollment]
-            WHERE [DeclinedEnrollmentId] = @DeclinedEnrollmentId
-        ";
-        private const string UpdateDeclinedEnrollmentQuery = @"
-            UPDATE [dbo].[DeclinedEnrollment]
-            SET EnrollmentId=@EnrollmentId, Reason=@Reason
-            WHERE DeclinedEnrollmentId=@DeclinedEnrollmentId;
-        ";
-        private const string DeleteDeclinedEnrollmentQuery = @"
-            DELETE FROM [dbo].[DeclinedEnrollment] WHERE DeclinedEnrollmentId=@DeclinedEnrollmentId
-        ";
-
         public bool Add(DeclinedEnrollmentModel model)
         {
             var parameters = new List<SqlParameter>();
             parameters.Add(new SqlParameter("@EnrollmentId", model.EnrollmentId));
             parameters.Add(new SqlParameter("@Reason", model.Reason));
-
-
-            var DeclinedEnrollmentInserted = DBCommand.InsertUpdateData(AddDeclinedEnrollmentQuery, parameters);
-
-            return DeclinedEnrollmentInserted;
+            const string AddDeclinedEnrollmentQuery = @"
+                INSERT [dbo].[DeclinedEnrollment] (EnrollmentId, Reason) VALUES (@EnrollmentId, @Reason);
+            ";
+            return DBCommand.InsertUpdateData(AddDeclinedEnrollmentQuery, parameters);
         }
-
         public bool Delete(int declinedEnrollmentId)
         {
+            const string DeleteDeclinedEnrollmentQuery = @"
+                DELETE FROM [dbo].[DeclinedEnrollment] 
+                WHERE DeclinedEnrollmentId=@DeclinedEnrollmentId
+            ";
             var parameter = new SqlParameter("@DeclinedEnrollmentId", declinedEnrollmentId);
             return DBCommand.DeleteData(DeleteDeclinedEnrollmentQuery, parameter);
         }
-
         public IEnumerable<DeclinedEnrollmentModel> GetAll()
         {
+            const string GetAllDeclinedEnrollmentsQuery = @"
+                SELECT DeclinedEnrollmentId, EnrollmentId, Reason
+                FROM [dbo].[DeclinedEnrollment]
+            ";
+            var dt = DBCommand.GetData(GetAllDeclinedEnrollmentsQuery);
             var DeclinedEnrollments = new List<DeclinedEnrollmentModel>();
             DeclinedEnrollmentModel DeclinedEnrollment;
-
-            var dt = DBCommand.GetData(GetAllDeclinedEnrollmentsQuery);
             foreach (DataRow row in dt.Rows)
             {
-                DeclinedEnrollment = new DeclinedEnrollmentModel();
-                DeclinedEnrollment.DeclinedEnrollmentId = int.Parse(row["DeclinedEnrollmentId"].ToString());
-                DeclinedEnrollment.EnrollmentId = int.Parse(row["EnrollmentId"].ToString());
-                DeclinedEnrollment.Reason = row["Reason"].ToString();
-
+                DeclinedEnrollment = new DeclinedEnrollmentModel
+                {
+                    DeclinedEnrollmentId = int.Parse(row["DeclinedEnrollmentId"].ToString()),
+                    EnrollmentId = int.Parse(row["EnrollmentId"].ToString()),
+                    Reason = row["Reason"].ToString()
+                };
                 DeclinedEnrollments.Add(DeclinedEnrollment);
             }
             return DeclinedEnrollments;
         }
-
         public DeclinedEnrollmentModel GetById(int declinedEnrollmentId)
         {
-            var DeclinedEnrollment = new DeclinedEnrollmentModel();
-            var parameters = new List<SqlParameter>();
-            parameters.Add(new SqlParameter("@DeclinedEnrollmentId", declinedEnrollmentId));
-
+            const string GetDeclinedEnrollmentQuery = @"
+                SELECT DeclinedEnrollmentId, EnrollmentId, Reason
+                FROM [dbo].[DeclinedEnrollment]
+                WHERE [DeclinedEnrollmentId] = @DeclinedEnrollmentId
+            ";
+            var parameters = new List<SqlParameter>
+            {
+                new SqlParameter("@DeclinedEnrollmentId", declinedEnrollmentId)
+            };
             var dt = DBCommand.GetDataWithCondition(GetDeclinedEnrollmentQuery, parameters);
+            var DeclinedEnrollment = new DeclinedEnrollmentModel();
             foreach (DataRow row in dt.Rows)
             {
                 DeclinedEnrollment.DeclinedEnrollmentId = int.Parse(row["DeclinedEnrollmentId"].ToString());
@@ -88,17 +71,20 @@ namespace SkillsLabProject.DAL
             }
             return DeclinedEnrollment;
         }
-
         public bool Update(DeclinedEnrollmentModel model)
         {
-            var parameters = new List<SqlParameter>();
-            parameters.Add(new SqlParameter("@DeclinedEnrollmentId", model.DeclinedEnrollmentId));
-            parameters.Add(new SqlParameter("@EnrollmentId", model.EnrollmentId));
-            parameters.Add(new SqlParameter("@Reason", model.Reason));
-
-            var DeclinedEnrollmentUpdated = DBCommand.InsertUpdateData(UpdateDeclinedEnrollmentQuery, parameters);
-
-            return DeclinedEnrollmentUpdated;
+            const string UpdateDeclinedEnrollmentQuery = @"
+                UPDATE [dbo].[DeclinedEnrollment]
+                SET EnrollmentId=@EnrollmentId, Reason=@Reason
+                WHERE DeclinedEnrollmentId=@DeclinedEnrollmentId;
+            ";
+            var parameters = new List<SqlParameter>
+            {
+                new SqlParameter("@DeclinedEnrollmentId", model.DeclinedEnrollmentId),
+                new SqlParameter("@EnrollmentId", model.EnrollmentId),
+                new SqlParameter("@Reason", model.Reason)
+            };
+            return DBCommand.InsertUpdateData(UpdateDeclinedEnrollmentQuery, parameters);
         }
     }
 }

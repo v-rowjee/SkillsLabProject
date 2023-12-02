@@ -1,27 +1,31 @@
 ﻿using SkillsLabProject.Models;
 using SkillsLabProject.Models.ViewModels;
-using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using SkillsLabProject.DAL.Common;
 using SkillsLabProject.Enums;
-using System.Reflection;
-
 namespace SkillsLabProject.DAL
 {
     public interface IEmployeeDAL
     {
+        bool DeleteEmployee(int employeeId);
         IEnumerable<EmployeeModel> GetAllEmployees();
         EmployeeModel GetEmployee(LoginViewModel model);
         bool UpdateEmployee(EmployeeModel employee);
-        bool DeleteEmployee(int employeeId);
     }
     public class EmployeeDAL : IEmployeeDAL
     {
+        public bool DeleteEmployee(int employeeId)
+        {
+            const string DeleteEmployeeQuery = @"
+                DELETE FROM AppUser WHERE EmployeeId=@EmployeeId;
+                DELETE FROM Enrollement WHERE EmployeeId=@EmployeeId;
+                DELETE FROM Employee WHERE EmployeeId=@EmployeeId
+            ";
+            var parameter = new SqlParameter("@EmployeeId", employeeId);
+            return DBCommand.DeleteData(DeleteEmployeeQuery, parameter);
+        }
         public IEnumerable<EmployeeModel> GetAllEmployees()
         {
             const string GetAllEmployeesQuery = @"
@@ -108,16 +112,6 @@ namespace SkillsLabProject.DAL
                 new SqlParameter("@RoleId", (int)employee.Role)
             };
             return DBCommand.InsertUpdateData(UpdateEmployeeQuery, parameters);
-        }
-        public bool DeleteEmployee(int employeeId)
-        {
-            const string DeleteEmployeeQuery = @"
-                DELETE FROM AppUser WHERE EmployeeId=@EmployeeId;
-                DELETE FROM Enrollement WHERE EmployeeId=@EmployeeId;
-                DELETE FROM Employee WHERE EmployeeId=@EmployeeId
-            ";
-            var parameter = new SqlParameter("@EmployeeId", employeeId);
-            return DBCommand.DeleteData(DeleteEmployeeQuery, parameter);
         }
     }
 }

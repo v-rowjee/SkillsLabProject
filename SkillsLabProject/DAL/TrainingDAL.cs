@@ -2,13 +2,8 @@
 using SkillsLabProject.DAL.Common;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Data;
-using SkillsLabProject.BLL;
 using System.Data.SqlClient;
-using System.Reflection;
 
 namespace SkillsLabProject.DAL
 {
@@ -47,18 +42,17 @@ namespace SkillsLabProject.DAL
             }
             return trainings;
         }
-
         public TrainingModel GetById(int trainingId)
         {
-            var parameters = new List<SqlParameter>
-            {
-                new SqlParameter("@TrainingId", trainingId)
-            };
             const string GetTrainingQuery = @"
                 SELECT TrainingId, Title, Deadline, Capacity
                 FROM [dbo].[Training]
                 WHERE [TrainingId] = @TrainingId
             ";
+            var parameters = new List<SqlParameter>
+            {
+                new SqlParameter("@TrainingId", trainingId)
+            };
             var dt = DBCommand.GetDataWithCondition(GetTrainingQuery, parameters);
             var training = new TrainingModel();
             foreach (DataRow row in dt.Rows)
@@ -71,9 +65,12 @@ namespace SkillsLabProject.DAL
             }
             return training;
         }
-
         public bool Add(TrainingModel training)
         {
+            const string AddTrainingQuery = @"
+                INSERT [dbo].[Training] (Title, Deadline, Capacity, PriorityDepartmentId) 
+                VALUES (@Title, @Deadline, @Capacity, @PriorityDepartmentId);
+            ";
             var parameters = new List<SqlParameter>
             {
                 new SqlParameter("@Title", training.Title),
@@ -81,14 +78,15 @@ namespace SkillsLabProject.DAL
                 new SqlParameter("@Capacity", training.Capacity),
                 new SqlParameter("@PriorityDepartmentId", training.PriorityDepartmentId)
             };
-            const string AddTrainingQuery = @"
-                INSERT [dbo].[Training] (Title, Deadline, Capacity, PriorityDepartmentId) 
-                VALUES (@Title, @Deadline, @Capacity, @PriorityDepartmentId);
-            ";
             return DBCommand.InsertUpdateData(AddTrainingQuery, parameters);
         }
         public bool Update(TrainingModel training)
         {
+            const string UpdateTrainingQuery = @"
+                UPDATE [dbo].[Training]
+                SET Title=@Title, Deadline=@Deadline, Capacity=@Capacity, PriorityDepartment=@PriorityDepartment
+                WHERE TrainingId=@TrainingId;
+            ";
             var parameters = new List<SqlParameter>
             {
                 new SqlParameter("@TrainingId", training.TrainingId),
@@ -97,16 +95,10 @@ namespace SkillsLabProject.DAL
                 new SqlParameter("@Capacity", training.Capacity),
                 new SqlParameter("@PriorityDepartmentId", training.PriorityDepartmentId)
             };
-            const string UpdateTrainingQuery = @"
-                UPDATE [dbo].[Training]
-                SET Title=@Title, Deadline=@Deadline, Capacity=@Capacity, PriorityDepartment=@PriorityDepartment
-                WHERE TrainingId=@TrainingId;
-            ";
             return DBCommand.InsertUpdateData(UpdateTrainingQuery, parameters);
         }
         public bool Delete(int trainingId)
         {
-            var parameter = new SqlParameter("@TrainingId", trainingId);
             const string DeleteTrainingQuery = @"
                 BEGIN TRANSACTION
                     DELETE FROM [dbo].[TrainingPreRequisite] WHERE TrainingId=@TrainingId;
@@ -114,6 +106,7 @@ namespace SkillsLabProject.DAL
                     DELETE FROM [dbo].[Training] WHERE TrainingId=@TrainingId
                 COMMIT
             ";
+            var parameter = new SqlParameter("@TrainingId", trainingId);
             return DBCommand.DeleteData(DeleteTrainingQuery, parameter);
         }
     }
