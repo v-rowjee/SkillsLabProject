@@ -12,20 +12,20 @@ namespace SkillsLabProject.DAL.Common
         public static DataTable GetData(string query)
         {
             DAL dal = new DAL();
-            DataTable dt = new DataTable();
+            DataTable dataTable = new DataTable();
 
-            using (SqlCommand cmd = new SqlCommand(query, dal.Connection))
+            using (SqlCommand command = new SqlCommand(query, dal.Connection))
             {
-                cmd.CommandType = CommandType.Text;
-                using (SqlDataAdapter sda = new SqlDataAdapter(cmd))
+                command.CommandType = CommandType.Text;
+                using (SqlDataAdapter dataAdapter = new SqlDataAdapter(command))
                 {
-                    sda.Fill(dt);
+                    dataAdapter.Fill(dataTable);
                 }
             }
 
             dal.CloseConnection();
 
-            return dt;
+            return dataTable;
         }
 
         public static bool InsertUpdateData(string query, List<SqlParameter> parameters)
@@ -35,17 +35,17 @@ namespace SkillsLabProject.DAL.Common
                 DAL dal = new DAL();
                 int rowsAffected = 0;
 
-                using (SqlCommand cmd = new SqlCommand(query, dal.Connection))
+                using (SqlCommand command = new SqlCommand(query, dal.Connection))
                 {
-                    cmd.CommandType = CommandType.Text;
+                    command.CommandType = CommandType.Text;
                     if (parameters != null)
                     {
                         parameters.ForEach(parameter =>
                         {
-                            cmd.Parameters.AddWithValue(parameter.ParameterName, parameter.Value);
+                            command.Parameters.AddWithValue(parameter.ParameterName, parameter.Value);
                         });
                     }
-                    rowsAffected = cmd.ExecuteNonQuery();
+                    rowsAffected = command.ExecuteNonQuery();
                 }
                 dal.CloseConnection();
 
@@ -63,17 +63,17 @@ namespace SkillsLabProject.DAL.Common
             DAL dal = new DAL();
             DataTable dt = new DataTable();
 
-            using (SqlCommand cmd = new SqlCommand(query, dal.Connection))
+            using (SqlCommand command = new SqlCommand(query, dal.Connection))
             {
-                cmd.CommandType = CommandType.Text;
+                command.CommandType = CommandType.Text;
                 if (parameters != null)
                 {
                     parameters.ForEach(parameter =>
                     {
-                        cmd.Parameters.AddWithValue(parameter.ParameterName, parameter.Value);
+                        command.Parameters.AddWithValue(parameter.ParameterName, parameter.Value);
                     });
                 }
-                using (SqlDataAdapter sda = new SqlDataAdapter(cmd))
+                using (SqlDataAdapter sda = new SqlDataAdapter(command))
                 {
                     sda.Fill(dt);
                 }
@@ -92,14 +92,14 @@ namespace SkillsLabProject.DAL.Common
                 DAL dal = new DAL();
                 int rowsAffected = 0;
 
-                using (SqlCommand cmd = new SqlCommand(query, dal.Connection))
+                using (SqlCommand command = new SqlCommand(query, dal.Connection))
                 {
-                    cmd.CommandType = CommandType.Text;
+                    command.CommandType = CommandType.Text;
                     if (parameter != null)
                     {
-                        cmd.Parameters.AddWithValue(parameter.ParameterName, parameter.Value);
+                        command.Parameters.AddWithValue(parameter.ParameterName, parameter.Value);
                     }
-                    rowsAffected = cmd.ExecuteNonQuery();
+                    rowsAffected = command.ExecuteNonQuery();
                 }
                 dal.CloseConnection();
                 return rowsAffected > 0;

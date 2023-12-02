@@ -10,7 +10,6 @@ namespace SkillsLabProject.DAL.Common
 {
     public class DAL
     {
-        // public const string connectionString = @"server=jedicarpooldbserver.database.windows.net;database=JEDICarpool_db;uid=wbpoc;pwd=sql@tfs2008";
         private readonly string _connectionString;
 
         public SqlConnection Connection;
@@ -33,9 +32,9 @@ namespace SkillsLabProject.DAL.Common
 
                 Connection.Open();
             }
-            catch (SqlException ex)
+            catch (SqlException)
             {
-                throw ex;
+                throw;
             }
         }
 
@@ -51,9 +50,9 @@ namespace SkillsLabProject.DAL.Common
 
                 Connection.Open();
             }
-            catch (SqlException ex)
+            catch (SqlException)
             {
-                throw ex;
+                throw;
             }
         }
 
