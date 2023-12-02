@@ -71,7 +71,7 @@ namespace SkillsLabProject.DAL
                 department.Title = row["Title"].ToString();
                 employee.Department = department;
 
-                employee.Role = (RoleEnum) int.Parse(row["RoleId"].ToString());
+                employee.Role = (Role) int.Parse(row["RoleId"].ToString());
 
                 employees.Add(employee);
             }
@@ -101,7 +101,7 @@ namespace SkillsLabProject.DAL
                 department.Title = row["Title"].ToString();
                 employee.Department = department;
 
-                employee.Role = (RoleEnum)int.Parse(row["RoleId"].ToString());
+                employee.Role = (Role)int.Parse(row["RoleId"].ToString());
             }
 
             return employee;

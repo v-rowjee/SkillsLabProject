@@ -52,7 +52,7 @@ namespace SkillsLabProject.DAL
                 Enrollment.EnrollmentId = int.Parse(row["EnrollmentId"].ToString());
                 Enrollment.EmployeeId = int.Parse(row["EmployeeId"].ToString());
                 Enrollment.EnrollmentId = int.Parse(row["EnrollmentId"].ToString());
-                Enrollment.Status =  (StatusEnum) int.Parse(row["StatusId"].ToString());
+                Enrollment.Status =  (Status) int.Parse(row["StatusId"].ToString());
 
                 Enrollments.Add(Enrollment);
             }
@@ -71,7 +71,7 @@ namespace SkillsLabProject.DAL
                 Enrollment.EnrollmentId = int.Parse(row["EnrollmentId"].ToString());
                 Enrollment.EmployeeId = int.Parse(row["EmployeeId"].ToString());
                 Enrollment.TrainingId = int.Parse(row["TrainingId"].ToString());
-                Enrollment.Status = (StatusEnum) int.Parse(row["PriorityDepartmentId"].ToString());
+                Enrollment.Status = (Status) int.Parse(row["PriorityDepartmentId"].ToString());
             }
             return Enrollment;
         }

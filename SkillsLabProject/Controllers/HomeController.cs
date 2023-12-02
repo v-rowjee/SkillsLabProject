@@ -25,8 +25,8 @@ namespace SkillsLabProject.Controllers
 
             if (loggeduser != null)
             {
-                var data = EmployeeBL.GetEmployee(loggeduser);
-                ViewBag.Account = data;
+                var employee = EmployeeBL.GetEmployee(loggeduser);
+                ViewBag.Employee = employee;
 
                 view.MasterName = "~/Views/Shared/_Layout.cshtml";
             }

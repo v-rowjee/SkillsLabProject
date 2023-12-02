@@ -19,22 +19,23 @@ namespace SkillsLabProject.DAL
     {
         public IEnumerable<TrainingModel> GetAll()
         {
-            var trainings = new List<TrainingModel>();
-            TrainingModel training;
             const string GetAllTrainingsQuery = @"
                 SELECT TrainingId, Title, Deadline, Capacity, PriorityDepartmentId 
                 FROM [dbo].[Training]
             ";
             var dt = DBCommand.GetData(GetAllTrainingsQuery);
+            TrainingModel training;
+            var trainings = new List<TrainingModel>();
             foreach (DataRow row in dt.Rows)
             {
-                training = new TrainingModel();
-                training.TrainingId = int.Parse(row["TrainingId"].ToString());
-                training.Title = row["Title"].ToString();
-                training.Deadline = DateTime.Parse(row["Datetime"].ToString());
-                training.Capacity = int.Parse(row["Capacity"].ToString());
-                training.PriorityDepartmentId = int.Parse(row["PriorityDepartmentId"].ToString());
-
+                training = new TrainingModel
+                {
+                    TrainingId = int.Parse(row["TrainingId"].ToString()),
+                    Title = row["Title"].ToString(),
+                    Deadline = DateTime.Parse(row["Deadline"].ToString()),
+                    Capacity = int.Parse(row["Capacity"].ToString()),
+                    PriorityDepartmentId = int.Parse(row["PriorityDepartmentId"].ToString())
+                };
                 trainings.Add(training);
             }
             return trainings;
@@ -42,50 +43,53 @@ namespace SkillsLabProject.DAL
 
         public TrainingModel GetById(int trainingId)
         {
-            var training = new TrainingModel();
-            var parameters = new List<SqlParameter>();
-            parameters.Add(new SqlParameter("@TrainingId", trainingId));
+            var parameters = new List<SqlParameter>
+            {
+                new SqlParameter("@TrainingId", trainingId)
+            };
             const string GetTrainingQuery = @"
                 SELECT TrainingId, Title, Deadline, Capacity
                 FROM [dbo].[Training]
                 WHERE [TrainingId] = @TrainingId
             ";
             var dt = DBCommand.GetDataWithCondition(GetTrainingQuery, parameters);
-            foreach(DataRow row in dt.Rows)
+            var training = new TrainingModel();
+            foreach (DataRow row in dt.Rows)
             {
                 training.TrainingId = int.Parse(row["TrainingId"].ToString());
                 training.Title = row["Title"].ToString();
                 training.Deadline = DateTime.Parse(row["Datetime"].ToString());
                 training.Capacity = int.Parse(row["Capacity"].ToString());
-                training.PriorityDepartmentId = int.Parse(row["PriorityDepartmentId"].ToString());
+                training.PriorityDepartmentId = int.Parse(row["PriorityDepartmentId"]?.ToString());
             }
             return training;
         }
 
-        public bool Add(TrainingModel model)
+        public bool Add(TrainingModel training)
         {
-            var parameters = new List<SqlParameter>();
-            parameters.Add(new SqlParameter("@Title", model.Title));
-            parameters.Add(new SqlParameter("@Deadline", model.Deadline));
-            parameters.Add(new SqlParameter("@Capacity", model.Capacity));
-            parameters.Add(new SqlParameter("@PriorityDepartmentId", model.PriorityDepartmentId));
+            var parameters = new List<SqlParameter>
+            {
+                new SqlParameter("@Title", training.Title),
+                new SqlParameter("@Deadline", training.Deadline),
+                new SqlParameter("@Capacity", training.Capacity),
+                new SqlParameter("@PriorityDepartmentId", training.PriorityDepartmentId)
+            };
             const string AddTrainingQuery = @"
-                INSERT [dbo].[Training] (Title, Deadline, Capacity, PriorityDepartmentId) VALUES (@Title, @Deadline, @Capacity, @PriorityDepartmentId);
+                INSERT [dbo].[Training] (Title, Deadline, Capacity, PriorityDepartmentId) 
+                VALUES (@Title, @Deadline, @Capacity, @PriorityDepartmentId);
             ";
-            var trainingInserted = DBCommand.InsertUpdateData(AddTrainingQuery, parameters);
-
-            return trainingInserted;
-
+            return DBCommand.InsertUpdateData(AddTrainingQuery, parameters);
         }
-
-        public bool Update(TrainingModel model)
+        public bool Update(TrainingModel training)
         {
-            var parameters = new List<SqlParameter>();
-            parameters.Add(new SqlParameter("@TrainingId", model.TrainingId));
-            parameters.Add(new SqlParameter("@Title", model.Title));
-            parameters.Add(new SqlParameter("@Deadline",model.Deadline));
-            parameters.Add(new SqlParameter("@Capacity", model.Capacity));
-            parameters.Add(new SqlParameter("@PriorityDepartmentId", model.PriorityDepartmentId));
+            var parameters = new List<SqlParameter>
+            {
+                new SqlParameter("@TrainingId", training.TrainingId),
+                new SqlParameter("@Title", training.Title),
+                new SqlParameter("@Deadline", training.Deadline),
+                new SqlParameter("@Capacity", training.Capacity),
+                new SqlParameter("@PriorityDepartmentId", training.PriorityDepartmentId)
+            };
             const string UpdateTrainingQuery = @"
                 UPDATE [dbo].[Training]
                 SET Title=@Title, Deadline=@Deadline, Capacity=@Capacity, PriorityDepartment=@PriorityDepartment
@@ -93,7 +97,6 @@ namespace SkillsLabProject.DAL
             ";
             return DBCommand.InsertUpdateData(UpdateTrainingQuery, parameters);
         }
-
         public bool Delete(int trainingId)
         {
             var parameter = new SqlParameter("@TrainingId", trainingId);

@@ -40,7 +40,7 @@ namespace SkillsLabProject.Controllers
         [HttpPost]
         public JsonResult Register(RegisterViewModel model)
         {
-            model.Role = RoleEnum.Employee;
+            model.Role = Role.Employee;
             var result = AppUserBL.RegisterUser(model);
 
             if (result == "Success")

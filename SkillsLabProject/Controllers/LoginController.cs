@@ -25,7 +25,7 @@ namespace JEDI_Carpool.Controllers
             var loggeduser = Session["CurrentUser"] as LoginViewModel;
             if (loggeduser != null)
             {
-                return Redirect("Home/Index");
+                return Redirect("Training/Index");
             }
             return View();
         }
@@ -39,7 +39,7 @@ namespace JEDI_Carpool.Controllers
             {
                 this.Session["CurrentUser"] = model;
             }
-            return Json(new { result = IsUserValid, url = Url.Action("Index", "Home") });
+            return Json(new { result = IsUserValid, url = Url.Action("Index", "Training") });
 
         }
     }

@@ -12,6 +12,6 @@ namespace SkillsLabProject.Models
         public int EnrollmentId { get; set; }
         public int EmployeeId { get; set; }
         public int TrainingId { get; set; }
-        public StatusEnum Status { get; set; }
+        public Status Status { get; set; }
     }
 }

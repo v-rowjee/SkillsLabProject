@@ -23,9 +23,11 @@ namespace SkillsLabProject.DAL
     {
         public bool AuthenticateUser(LoginViewModel model)
         {
-            var parameters = new List<SqlParameter>();
-            parameters.Add(new SqlParameter("@Email", model.Email));
-            parameters.Add(new SqlParameter("@Password", model.Password));
+            var parameters = new List<SqlParameter>
+            {
+                new SqlParameter("@Email", model.Email),
+                new SqlParameter("@Password", model.Password)
+            };
             const string AUTHENTICATE_USER_QUERY = @"
                 SELECT e.EmployeeId
                 FROM [dbo].[Employee] e 
@@ -38,15 +40,17 @@ namespace SkillsLabProject.DAL
 
         public bool RegisterUser(RegisterViewModel model)
         {
-            var parameters = new List<SqlParameter>();
-            parameters.Add(new SqlParameter("@Email", model.Email));
-            parameters.Add(new SqlParameter("@Password", model.Password));
-            parameters.Add(new SqlParameter("@FirstName", model.FirstName));
-            parameters.Add(new SqlParameter("@LastName", model.LastName));
-            parameters.Add(new SqlParameter("@NIC", model.NIC));
-            parameters.Add(new SqlParameter("@PhoneNumber", model.PhoneNumber));
-            parameters.Add(new SqlParameter("@DepartmentId", model.DepartmentId));
-            parameters.Add(new SqlParameter("@RoleId", (int) model.Role));
+            var parameters = new List<SqlParameter>
+            {
+                new SqlParameter("@Email", model.Email),
+                new SqlParameter("@Password", model.Password),
+                new SqlParameter("@FirstName", model.FirstName),
+                new SqlParameter("@LastName", model.LastName),
+                new SqlParameter("@NIC", model.NIC),
+                new SqlParameter("@PhoneNumber", model.PhoneNumber),
+                new SqlParameter("@DepartmentId", model.DepartmentId),
+                new SqlParameter("@RoleId", (int)model.Role)
+            };
             const string REGISTER_USER_QUERY = @"
                 INSERT [dbo].[Employee] ([FirstName] ,[LastName] ,[NIC] ,[PhoneNumber], [DepartmentId], [RoleId])
                 VALUES (@FirstName ,@LastName, @NIC, @PhoneNumber, @DepartmentId, @RoleId);
@@ -58,9 +62,10 @@ namespace SkillsLabProject.DAL
         }
         public string GetHashedPassword(LoginViewModel model)
         {
-            string hashedPassword = "";
-            var parameters = new List<SqlParameter>();
-            parameters.Add(new SqlParameter("@Email", model.Email));
+            var parameters = new List<SqlParameter>
+            {
+                new SqlParameter("@Email", model.Email)
+            };
             const string GET_HASHED_PASSWORD_QUERY = @"
                 SELECT Password 
                 FROM [dbo].[AppUser] a 
@@ -68,6 +73,7 @@ namespace SkillsLabProject.DAL
                 WHERE a.Email=@Email
             ";
             var dt = DBCommand.GetDataWithCondition(GET_HASHED_PASSWORD_QUERY, parameters);
+            string hashedPassword = "";
             foreach (DataRow row in dt.Rows)
             {
                 hashedPassword = row["Password"].ToString();
@@ -76,9 +82,9 @@ namespace SkillsLabProject.DAL
         }
         public IEnumerable<string> GetAllEmails()
         {
+            const string GET_ALL_EMAILS_QUERY = @"SELECT Email FROM [dbo].[AppUser]";
+            var dt = DBCommand.GetData(GET_ALL_EMAILS_QUERY);
             var emails = new List<string>();
-            const string GET_ALL_EMAIL_SQUERY = @"SELECT Email FROM [dbo].[AppUser]";
-            var dt = DBCommand.GetData(GET_ALL_EMAIL_SQUERY);
             foreach (DataRow row in dt.Rows)
             {
                 emails.Add(row["Email"].ToString());

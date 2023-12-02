@@ -150,9 +150,11 @@
     <Compile Include="BLL\PreRequisiteBL.cs" />
     <Compile Include="BLL\ProofBL.cs" />
     <Compile Include="BLL\TrainingBL.cs" />
+    <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\RegisterController.cs" />
+    <Compile Include="Controllers\TrainingController.cs" />
     <Compile Include="DAL\AppUserDAL.cs" />
     <Compile Include="DAL\Common\DAL.cs" />
     <Compile Include="DAL\Common\DBCommand.cs" />
@@ -164,8 +166,8 @@
     <Compile Include="DAL\PreRequisiteDAL.cs" />
     <Compile Include="DAL\ProofDAL.cs" />
     <Compile Include="DAL\TrainingDAL.cs" />
-    <Compile Include="Enums\RoleEnum.cs" />
-    <Compile Include="Enums\StatusEnum.cs" />
+    <Compile Include="Enums\Role.cs" />
+    <Compile Include="Enums\Status.cs" />
     <Compile Include="Exceptions\ReturnException.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -229,6 +231,7 @@
     <Content Include="Scripts\jQueryVal\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\login.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
+    <Content Include="Scripts\site.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -244,6 +247,8 @@
     <Content Include="Views\Login\Index.cshtml" />
     <Content Include="Views\Register\Index.cshtml" />
     <Content Include="Views\Shared\_GuestLayout.cshtml" />
+    <Content Include="Views\Error\Index.cshtml" />
+    <Content Include="Views\Training\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace SkillsLabProject.Enums
 {
-    public enum RoleEnum
+    public enum Status
     {
-        Employee = 1,
-        Manager = 2,
-        Admin = 3
+        Pending = 1,
+        Approved = 2,
+        Denied = 3
     }
 }
