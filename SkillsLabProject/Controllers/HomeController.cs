@@ -11,31 +11,10 @@ namespace SkillsLabProject.Controllers
 {
     public class HomeController : Controller
     {
-        private IEmployeeBL EmployeeBL;
-        public HomeController(IEmployeeBL employeeBL)
-        {
-            this.EmployeeBL = employeeBL;
-        }
-
         // GET: Home
         public ActionResult Index()
         {
-            var loggeduser = Session["CurrentUser"] as LoginViewModel;
-            var view = View();
-
-            if (loggeduser != null)
-            {
-                var employee = EmployeeBL.GetEmployee(loggeduser);
-                ViewBag.Employee = employee;
-
-                view.MasterName = "~/Views/Shared/_Layout.cshtml";
-            }
-            else
-            {
-                view.MasterName = "~/Views/Shared/_GuestLayout.cshtml";
-            }
-
-            return view;
+            return RedirectToAction("Index", "Training");
         }
 
         // GET: Home/Logout
