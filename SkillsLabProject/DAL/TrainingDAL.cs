@@ -30,12 +30,19 @@ namespace SkillsLabProject.DAL
             {
                 training = new TrainingModel
                 {
-                    TrainingId = int.Parse(row["TrainingId"].ToString()),
+                    TrainingId = (int)row["TrainingId"],
                     Title = row["Title"].ToString(),
                     Deadline = DateTime.Parse(row["Deadline"].ToString()),
-                    Capacity = int.Parse(row["Capacity"].ToString()),
-                    PriorityDepartmentId = int.Parse(row["PriorityDepartmentId"].ToString())
+                    Capacity = (int)row["Capacity"]
                 };
+                if (row["PriorityDepartmentId"] is DBNull)
+                {
+                    training.PriorityDepartmentId = null;
+                }
+                else 
+                {
+                    training.PriorityDepartmentId = (int) row["PriorityDepartmentId"];
+                }
                 trainings.Add(training);
             }
             return trainings;
