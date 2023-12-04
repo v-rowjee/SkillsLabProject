@@ -142,14 +142,6 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\UnityConfig.cs" />
-    <Compile Include="BLL\AppUserBL.cs" />
-    <Compile Include="BLL\DeclinedEnrollmentBL.cs" />
-    <Compile Include="BLL\DepartmentBL.cs" />
-    <Compile Include="BLL\EmployeeBL.cs" />
-    <Compile Include="BLL\EnrollmentBL.cs" />
-    <Compile Include="BLL\PreRequisiteBL.cs" />
-    <Compile Include="BLL\ProofBL.cs" />
-    <Compile Include="BLL\TrainingBL.cs" />
     <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
@@ -166,23 +158,9 @@
     <Compile Include="DAL\PreRequisiteDAL.cs" />
     <Compile Include="DAL\ProofDAL.cs" />
     <Compile Include="DAL\TrainingDAL.cs" />
-    <Compile Include="Enums\Role.cs" />
-    <Compile Include="Enums\Status.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\AppUserModel.cs" />
-    <Compile Include="Models\DeclinedEnrollmentModel.cs" />
-    <Compile Include="Models\DepartmentModel.cs" />
-    <Compile Include="Models\EmployeeModel.cs" />
-    <Compile Include="Models\EnrollmentModel.cs" />
-    <Compile Include="Models\PreRequisiteModel.cs" />
-    <Compile Include="Models\ProofModel.cs" />
-    <Compile Include="Models\TrainingModel.cs" />
-    <Compile Include="Models\TrainingPreRequisiteModel.cs" />
-    <Compile Include="Models\ViewModels\EnrollmentViewModel.cs" />
-    <Compile Include="Models\ViewModels\LoginViewModel.cs" />
-    <Compile Include="Models\ViewModels\RegisterViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Content Include="Scripts\enroll.js" />
     <Content Include="Content\Images\register.png" />
@@ -279,6 +257,20 @@
     <Content Include="Scripts\Bootstrap\bootstrap.bundle.js.map" />
     <Content Include="Scripts\jQuery\jquery-3.4.1.slim.min.map" />
     <Content Include="Scripts\jQuery\jquery-3.4.1.min.map" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SkillsLabProject.BL\SkillsLabProject.BL.csproj">
+      <Project>{1E36025E-EE84-4A48-B962-A9E832B997B3}</Project>
+      <Name>SkillsLabProject.BL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SkillsLabProject.Common\SkillsLabProject.Common.csproj">
+      <Project>{8367A7A2-CC75-4430-9925-FEEB447CB0EA}</Project>
+      <Name>SkillsLabProject.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SkillsLabProject.DAL\SkillsLabProject.DAL.csproj">
+      <Project>{61C1A683-D346-4CE1-A425-CAD062DCC6BA}</Project>
+      <Name>SkillsLabProject.DAL</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

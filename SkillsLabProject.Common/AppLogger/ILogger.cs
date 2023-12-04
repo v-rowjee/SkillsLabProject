@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SkillsLabProject.Models.ViewModels
+namespace SkillsLabProject.Common.AppLogger
 {
-    internal class EnrollmentViewModel
+    public interface ILogger
     {
+        void Log(string message);
     }
 }

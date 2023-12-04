@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SkillsLabProject.Enums
+namespace SkillsLabProject.DAL.Enums
 {
     public enum Status
     {
