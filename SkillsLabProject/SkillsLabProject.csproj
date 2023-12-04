@@ -183,8 +183,8 @@
     <Compile Include="Models\ViewModels\EnrollmentViewModel.cs" />
     <Compile Include="Models\ViewModels\LoginViewModel.cs" />
     <Compile Include="Models\ViewModels\RegisterViewModel.cs" />
-    <Compile Include="Models\ViewModels\TrainingViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Content Include="Scripts\enroll.js" />
     <Content Include="Content\Images\register.png" />
     <Content Include="Scripts\register.js" />
   </ItemGroup>
@@ -248,6 +248,7 @@
     <Content Include="Views\Shared\_GuestLayout.cshtml" />
     <Content Include="Views\Error\Index.cshtml" />
     <Content Include="Views\Training\Index.cshtml" />
+    <Content Include="Views\Training\View.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

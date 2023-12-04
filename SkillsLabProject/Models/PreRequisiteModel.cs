@@ -9,6 +9,7 @@ namespace SkillsLabProject.Models
     public class PreRequisiteModel
     {
         public int PreRequisiteId { get; set; }
+        public int TrainingId { get; set; }
         public string Detail { get; set; }
     }
 }

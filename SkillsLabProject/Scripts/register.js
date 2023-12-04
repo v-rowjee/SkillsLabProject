@@ -13,7 +13,7 @@
         var fname = $('#fname').val().trim()
         var lname = $('#lname').val().trim()
         var nic = $('#nic').val().trim()
-        var phone = $('#phone').val().trim()
+        var phone = $('#phone').val().toString()
         var department = $('#department').val()
 
         var error = ''

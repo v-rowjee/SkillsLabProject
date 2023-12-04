@@ -34,20 +34,20 @@ namespace SkillsLabProject.BLL
         {
             try
             {
-                if (IsEmailExist(model.Email))
+                if (!IsEmailAlreadyRegistered(model.Email))
                 {
                     model.Password = HashPassword(model.Password);
                     return _appUserDAL.RegisterUser(model) ? "Success" : "Error";
                 }
+                return "DuplicatedEmail";
             }
             catch (Exception error)
             {
                 return error.Message;
                 throw;
             }
-            return "Error";
         }
-        private bool IsEmailExist(string email)
+        private bool IsEmailAlreadyRegistered(string email)
         {
             return _appUserDAL.GetAllEmails().Contains(email.Trim());
         }
