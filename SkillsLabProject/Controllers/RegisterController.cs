@@ -41,7 +41,7 @@ namespace SkillsLabProject.Controllers
         [HttpPost]
         public JsonResult Register(RegisterViewModel model)
         {
-            model.Role = Role.Employee;
+            model.RoleId = (int) Role.Employee;
             var result = _appUserBL.RegisterUser(model);
 
             if (result == "Success")

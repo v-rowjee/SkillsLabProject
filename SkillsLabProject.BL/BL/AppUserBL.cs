@@ -16,12 +16,12 @@ namespace SkillsLabProject.BLL
     }
     public class AppUserBL : IAppUserBL
     {
-        private readonly IRepositoryBL<AppUser> _appUserDAL;
-        private readonly IRepositoryBL<Employee> _employeeDAL;
+        private readonly IRepositoryBL<AppUser> _appUserRepositoryBL;
+        private readonly IRepositoryBL<Employee> _employeeRepositoryBL;
         public AppUserBL(IRepositoryBL<AppUser> appUserDAL, IRepositoryBL<Employee> employeeDAL)
         {
-            _appUserDAL = appUserDAL;
-            _employeeDAL = employeeDAL;
+            _appUserRepositoryBL = appUserDAL;
+            _employeeRepositoryBL = employeeDAL;
         }
 
         public bool AuthenticateUser(LoginViewModel model)
@@ -30,7 +30,7 @@ namespace SkillsLabProject.BLL
             {
                 new SqlParameter("Email",model.Email)
             };
-            var resultAppUser = _appUserDAL.GetAll();
+            var resultAppUser = _appUserRepositoryBL.GetAll();
             var appUserModel = resultAppUser.GetModelList().FirstOrDefault(x => x.Email.Equals(model.Email));
             var hashedPassword = appUserModel.Password;
             return hashedPassword != null && VerifyPassword(hashedPassword, model.Password);
@@ -50,9 +50,9 @@ namespace SkillsLabProject.BLL
                         PhoneNumber = model.PhoneNumber,
                         NIC = model.NIC,
                         DepartmentId = model.DepartmentId,
-                        Role = model.Role
+                        RoleId = model.RoleId
                     };
-                    var resultEmployee = _employeeDAL.Add(employeeModel);
+                    var resultEmployee = _employeeRepositoryBL.Add(employeeModel); // not getting employeeId
 
                     var appUserModel = new AppUser
                     {
@@ -60,7 +60,7 @@ namespace SkillsLabProject.BLL
                         Password = model.Password,
                         EmployeeId = resultEmployee.GetModel().EmployeeId,
                     };
-                    var resultAppUser = _appUserDAL.Add(appUserModel);
+                    var resultAppUser = _appUserRepositoryBL.Add(appUserModel);
                 }
                 return "DuplicatedEmail";
             }
@@ -72,7 +72,7 @@ namespace SkillsLabProject.BLL
         }
         private bool IsEmailAlreadyRegistered(string email)
         {
-            var appUserModels = _appUserDAL.GetAll().GetModelList();
+            var appUserModels = _appUserRepositoryBL.GetAll().GetModelList();
             return appUserModels.Any(appUserModel => appUserModel.Email == email);
         }
         private string HashPassword(string password)

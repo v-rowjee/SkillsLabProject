@@ -16,6 +16,6 @@ namespace SkillsLabProject.Models.ViewModels
         public string Password { get; set; }
         public string NIC { get; set; }
         public string PhoneNumber { get; set; }
-        public Role Role { get; set; }
+        public int RoleId { get; set; }
     }
 }

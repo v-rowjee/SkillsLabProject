@@ -89,7 +89,7 @@ namespace SkillsLabProject.DAL.RepositoryDAL
         {
             ResultModel<T> result = new ResultModel<T>();
             DataAccessLayer dal = new DataAccessLayer();
-            var results = dal.Update<T>(model);
+            var results = dal.Update(model);
             result.SetUpdatedRows(results);
             return result;
         }
