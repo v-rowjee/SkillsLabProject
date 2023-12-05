@@ -12,7 +12,7 @@ namespace SkillsLabProject.BL.RepositoryBL
     {
         ResultModel<T> GetAll();
         ResultModel<T> Get(int id);
-        ResultModel<T> Get(string sql, List<SqlParameter> parameters);
+        ResultModel<T> Get(string query, List<SqlParameter> parameters);
         ResultModel<T> Add(T entity);
         ResultModel<T> Update(T entity);
         ResultModel<T> Delete(int id);

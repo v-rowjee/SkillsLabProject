@@ -1,6 +1,7 @@
-﻿using SkillsLabProject.BLL;
-using SkillsLabProject.DAL;
-using SkillsLabProject.Enums;
+﻿using SkillsLabProject.BL.RepositoryBL;
+using SkillsLabProject.BLL;
+using SkillsLabProject.DAL.Enums;
+using SkillsLabProject.DAL.Models;
 using SkillsLabProject.Models.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -12,13 +13,13 @@ namespace SkillsLabProject.Controllers
 {
     public class RegisterController : Controller
     {
-        public IAppUserBL AppUserBL;
-        public IDepartmentBL DepartmentBL;
+        private readonly AppUserBL _appUserBL;
+        private readonly IRepositoryBL<Department> _departmentBL;
 
-        public RegisterController(IAppUserBL appUserBL, IDepartmentBL departmentBL)
+        public RegisterController(AppUserBL appUserBL, IRepositoryBL<Department> departmentRepository)
         {
-            AppUserBL = appUserBL;
-            DepartmentBL = departmentBL;
+            _appUserBL = appUserBL;
+            _departmentBL = departmentRepository;
         }
 
 
@@ -31,7 +32,7 @@ namespace SkillsLabProject.Controllers
                 return Redirect("Home/Index");
             }
 
-            var departments = DepartmentBL.GetAllDepartments().ToList();
+            var departments = _departmentBL.GetAll().GetModelList();
             ViewBag.Departments = departments;
             return View();
         }
@@ -41,7 +42,7 @@ namespace SkillsLabProject.Controllers
         public JsonResult Register(RegisterViewModel model)
         {
             model.Role = Role.Employee;
-            var result = AppUserBL.RegisterUser(model);
+            var result = _appUserBL.RegisterUser(model);
 
             if (result == "Success")
             {

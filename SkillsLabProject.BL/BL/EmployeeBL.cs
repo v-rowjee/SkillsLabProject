@@ -6,44 +6,26 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using SkillsLabProject.Models.ViewModels;
+using SkillsLabProject.DAL.Models;
+using SkillsLabProject.DAL.RepositoryDAL;
+using System.Data.SqlClient;
 
 namespace SkillsLabProject.BLL
 {
     public interface IEmployeeBL
     {
-        IEnumerable<EmployeeModel> GetAllEmployees();
-        EmployeeModel GetEmployee(LoginViewModel model);
-        bool UpdateEmployee(EmployeeModel employee);
+        IEnumerable<Employee> GetAllEmployees();
+        Employee GetEmployee(LoginViewModel model);
+        bool UpdateEmployee(Employee employee);
         bool DeleteEmployee(int employeeId);
     }
-    public class EmployeeBL : IEmployeeBL
+    public class EmployeeBL
     {
-        private readonly IEmployeeDAL _employeeDAL;
+        private readonly IRepositoryDAL<Employee> _employeeDAL;
 
-        public EmployeeBL(IEmployeeDAL employeeDAL)
+        public EmployeeBL(IRepositoryDAL<Employee> employeeDAL)
         {
             _employeeDAL = employeeDAL;
-        }
-        public EmployeeBL()
-        {
-            _employeeDAL = new EmployeeDAL();
-        }
-
-        public EmployeeModel GetEmployee(LoginViewModel model)
-        { 
-            return _employeeDAL.GetEmployee(model);
-        }
-        public IEnumerable<EmployeeModel> GetAllEmployees() 
-        { 
-            return _employeeDAL.GetAllEmployees();
-        }
-        public bool UpdateEmployee(EmployeeModel employee) 
-        { 
-            return _employeeDAL.UpdateEmployee(employee); 
-        }
-        public bool DeleteEmployee(int employeeId) 
-        { 
-            return _employeeDAL.DeleteEmployee(employeeId);
         }
     }
 }

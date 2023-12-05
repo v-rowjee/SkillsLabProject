@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace SkillsLabProject.DAL.Models
 {
-    public class EnrollmentModel
+    public class Enrollment
     {
         [Key]
         public int EnrollmentId { get; set; }

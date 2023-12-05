@@ -31,15 +31,35 @@ namespace SkillsLabProject.DAL.RepositoryDAL
                     Success = false,
                     Exception = error
                 });
-                CustomException customException = new CustomException(error.Message, error);
-                customException.Log();
+                CustomException exception = new CustomException(error.Message, error);
+                exception.Log();
             }
             return result;
         }
 
         public ResultModel<T> Delete(int id)
         {
-            throw new NotImplementedException();
+            ResultModel<T> result = new ResultModel<T>();
+
+            try
+            {
+                DataAccessLayer dal = new DataAccessLayer();
+                int rowDeleted = dal.Delete(id);
+                result.SetDeleteRows(rowDeleted);
+                dal.CloseConnection();
+            }
+            catch (Exception error)
+            {
+                result.AddValidationResult(new ValidationResult()
+                {
+                    ErrorMessage = $"Unable to delete with id: {id}",
+                    Success = false,
+                    Exception = error
+                });
+                CustomException customException = new CustomException(error.Message, error);
+                customException.Log();
+            }
+            return result;
         }
 
         public ResultModel<T> Get(int id)
@@ -49,7 +69,11 @@ namespace SkillsLabProject.DAL.RepositoryDAL
 
         public ResultModel<T> Get(string query, List<SqlParameter> parameters)
         {
-            throw new NotImplementedException();
+            ResultModel<T> result = new ResultModel<T>();
+            DataAccessLayer dal = new DataAccessLayer();
+            var results = dal.GetData<T>(query, parameters);
+            result.SetModelList(results);
+            return result;
         }
 
         public ResultModel<T> GetAll()
@@ -63,7 +87,11 @@ namespace SkillsLabProject.DAL.RepositoryDAL
 
         public ResultModel<T> Update(T model)
         {
-            throw new NotImplementedException();
+            ResultModel<T> result = new ResultModel<T>();
+            DataAccessLayer dal = new DataAccessLayer();
+            var results = dal.Update<T>(model);
+            result.SetUpdatedRows(results);
+            return result;
         }
     }
 }

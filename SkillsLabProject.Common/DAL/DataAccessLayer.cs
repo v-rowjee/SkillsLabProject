@@ -25,7 +25,7 @@ namespace SkillsLabProject.Common.DAL
             {
                 if (Connection == null)
                 {
-                    var connectionString = ConfigurationManager.AppSettings["DefaultConnectionString"];
+                    var connectionString = ConfigurationManager.AppSettings["ConnectionString"];
                     if (!string.IsNullOrEmpty(connectionString))
                     {
                         Connection = new SqlConnection(connectionString);
@@ -109,6 +109,34 @@ namespace SkillsLabProject.Common.DAL
             }
             return rowAdded;
         }
+        public int Update<T>(T item)
+        {
+            int rowUpdated = -1;
+            try
+            {
+                string sql = GenerateUpdateQuery<T>();
+                List<SqlParameter> parameters = GenerateSqlParameters(item, true);
+
+                using (var cmd = new SqlCommand(sql, Connection))
+                {
+                    cmd.Parameters.AddRange(parameters.ToArray());
+                    rowUpdated = cmd.ExecuteNonQuery();
+                }
+            }
+            catch (Exception error)
+            {
+                CustomException exception = new CustomException(error.Message, error);
+                exception.Log();
+                throw;
+            }
+            return rowUpdated;
+        }
+
+        public int Delete<T>(T item)
+        {
+            throw new NotImplementedException();
+        }
+
         private string GenerateSelectQuery<T>(bool includeCondition = false, List<string> conditionsProperties = null)
         {
             StringBuilder columns = new StringBuilder();
@@ -148,6 +176,43 @@ namespace SkillsLabProject.Common.DAL
             string query = $"INSERT INTO {typeof(T).Name} ({columns.ToString()}) VALUES ({values.ToString()})";
             return query;
         }
+
+        private string GenerateUpdateQuery<T>()
+        {
+            StringBuilder updateColumns = new StringBuilder();
+
+            PropertyInfo[] properties = typeof(T).GetProperties();
+            foreach (PropertyInfo property in properties.Where(prop => !Attribute.IsDefined(prop, typeof(KeyAttribute))))
+            {
+                if (!property.CanRead) continue;
+                updateColumns.Append(property.Name + "= @" + property.Name + ",");
+            }
+            updateColumns.Remove(updateColumns.Length - 1, 1); // Remove the last comma
+
+            PropertyInfo key = properties.FirstOrDefault(prop => Attribute.IsDefined(prop, typeof(KeyAttribute)));
+            string query = string.Empty;
+            if (key != null)
+            {
+                string condition = $" WHERE {key.Name} = @{key};";
+                query = $"UPDATE {typeof(T).Name} SET {updateColumns.ToString()} {condition}";
+            }
+            return query;
+        }
+
+        private string GenerateDeleteQuery<T>()
+        {
+            PropertyInfo[] properties = typeof(T).GetProperties();
+
+            PropertyInfo key = properties.FirstOrDefault(prop => Attribute.IsDefined(prop, typeof(KeyAttribute)));
+            string query = string.Empty;
+            if (key != null)
+            {
+                string condition = $" WHERE {key.Name} = @{key};";
+                query = $"DELETE FROM {typeof(T).Name} {condition}";
+            }
+            return query;
+        }
+
         private static void Populate<T>(T item, SqlDataReader reader)
         {
             for (int i = 0; i < reader.FieldCount; i++)
@@ -180,16 +245,6 @@ namespace SkillsLabProject.Common.DAL
                 parameters.Add(parameter);
             }
             return parameters;
-        }
-
-        public int Update<T>(T item)
-        {
-            throw new NotImplementedException();
-        }
-
-        public int Delete<T>(T item)
-        {
-            throw new NotImplementedException();
         }
     }
 }

@@ -147,17 +147,6 @@
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\RegisterController.cs" />
     <Compile Include="Controllers\TrainingController.cs" />
-    <Compile Include="DAL\AppUserDAL.cs" />
-    <Compile Include="DAL\Common\DAL.cs" />
-    <Compile Include="DAL\Common\DBCommand.cs" />
-    <Compile Include="DAL\Common\IDAL.cs" />
-    <Compile Include="DAL\DeclinedEnrollmentDAL.cs" />
-    <Compile Include="DAL\DepartmentDAL.cs" />
-    <Compile Include="DAL\EmployeeDAL.cs" />
-    <Compile Include="DAL\EnrollmentDAL.cs" />
-    <Compile Include="DAL\PreRequisiteDAL.cs" />
-    <Compile Include="DAL\ProofDAL.cs" />
-    <Compile Include="DAL\TrainingDAL.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

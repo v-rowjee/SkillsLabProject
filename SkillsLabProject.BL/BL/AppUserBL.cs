@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using CryptoHelper;
-using SkillsLabProject.DAL;
+using SkillsLabProject.BL.RepositoryBL;
+using SkillsLabProject.DAL.Models;
 using SkillsLabProject.Models.ViewModels;
 
 namespace SkillsLabProject.BLL
@@ -18,16 +16,23 @@ namespace SkillsLabProject.BLL
     }
     public class AppUserBL : IAppUserBL
     {
-        private readonly IAppUserDAL _appUserDAL;
-        private readonly IEmployeeDAL _employeeDAL;
-        public AppUserBL(IAppUserDAL appUserBL, IEmployeeDAL employeeDAL)
+        private readonly IRepositoryBL<AppUser> _appUserDAL;
+        private readonly IRepositoryBL<Employee> _employeeDAL;
+        public AppUserBL(IRepositoryBL<AppUser> appUserDAL, IRepositoryBL<Employee> employeeDAL)
         {
-            _appUserDAL = appUserBL;
+            _appUserDAL = appUserDAL;
             _employeeDAL = employeeDAL;
         }
+
         public bool AuthenticateUser(LoginViewModel model)
         {
-            var hashedPassword = _appUserDAL.GetHashedPassword(model);
+            var parameters = new List<SqlParameter>
+            {
+                new SqlParameter("Email",model.Email)
+            };
+            var resultAppUser = _appUserDAL.GetAll();
+            var appUserModel = resultAppUser.GetModelList().FirstOrDefault(x => x.Email.Equals(model.Email));
+            var hashedPassword = appUserModel.Password;
             return hashedPassword != null && VerifyPassword(hashedPassword, model.Password);
         }
         public string RegisterUser(RegisterViewModel model)
@@ -37,7 +42,25 @@ namespace SkillsLabProject.BLL
                 if (!IsEmailAlreadyRegistered(model.Email))
                 {
                     model.Password = HashPassword(model.Password);
-                    return _appUserDAL.RegisterUser(model) ? "Success" : "Error";
+
+                    var employeeModel = new Employee
+                    {
+                        FirstName = model.FirstName,
+                        LastName = model.LastName,
+                        PhoneNumber = model.PhoneNumber,
+                        NIC = model.NIC,
+                        DepartmentId = model.DepartmentId,
+                        Role = model.Role
+                    };
+                    var resultEmployee = _employeeDAL.Add(employeeModel);
+
+                    var appUserModel = new AppUser
+                    {
+                        Email = model.Email,
+                        Password = model.Password,
+                        EmployeeId = resultEmployee.GetModel().EmployeeId,
+                    };
+                    var resultAppUser = _appUserDAL.Add(appUserModel);
                 }
                 return "DuplicatedEmail";
             }
@@ -49,7 +72,8 @@ namespace SkillsLabProject.BLL
         }
         private bool IsEmailAlreadyRegistered(string email)
         {
-            return _appUserDAL.GetAllEmails().Contains(email.Trim());
+            var appUserModels = _appUserDAL.GetAll().GetModelList();
+            return appUserModels.Any(appUserModel => appUserModel.Email == email);
         }
         private string HashPassword(string password)
         {

@@ -7,11 +7,15 @@ using System.Threading.Tasks;
 
 namespace SkillsLabProject.DAL.Models
 {
-    public class PreRequisiteModel
+    public class Training
     {
         [Key]
-        public int PreRequisiteId { get; set; }
         public int TrainingId { get; set; }
-        public string Detail { get; set; }
+        public string Title { get; set; }
+        public string Description { get; set; }
+        public DateTime Deadline { get; set; }
+        public int Capacity { get; set; }
+        public int PriorityDepartmentId { get; set; }
+
     }
 }

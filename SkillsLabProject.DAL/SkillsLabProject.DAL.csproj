@@ -44,16 +44,16 @@
   <ItemGroup>
     <Compile Include="Enums\Role.cs" />
     <Compile Include="Enums\Status.cs" />
-    <Compile Include="Models\AppUserModel.cs" />
-    <Compile Include="Models\DeclinedEnrollmentModel.cs" />
-    <Compile Include="Models\DepartmentModel.cs" />
-    <Compile Include="Models\EmployeeModel.cs" />
-    <Compile Include="Models\EnrollmentModel.cs" />
-    <Compile Include="Models\PreRequisiteModel.cs" />
-    <Compile Include="Models\ProofModel.cs" />
+    <Compile Include="Models\AppUser.cs" />
+    <Compile Include="Models\DeclinedEnrollment.cs" />
+    <Compile Include="Models\Department.cs" />
+    <Compile Include="Models\Employee.cs" />
+    <Compile Include="Models\Enrollment.cs" />
+    <Compile Include="Models\PreRequisite.cs" />
+    <Compile Include="Models\Proof.cs" />
     <Compile Include="Models\ResultModel.cs" />
-    <Compile Include="Models\TrainingModel.cs" />
-    <Compile Include="Models\TrainingPreRequisiteModel.cs" />
+    <Compile Include="Models\Training.cs" />
+    <Compile Include="Models\TrainingPreRequisite.cs" />
     <Compile Include="Models\ValidationResult.cs" />
     <Compile Include="Models\ViewModels\LoginViewModel.cs" />
     <Compile Include="Models\ViewModels\RegisterViewModel.cs" />

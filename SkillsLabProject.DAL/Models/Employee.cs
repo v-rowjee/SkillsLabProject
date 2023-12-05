@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace SkillsLabProject.DAL.Models
 {
-    public class EmployeeModel
+    public class Employee
     {
         [Key]
         public int EmployeeId { get; set; }
@@ -16,7 +16,6 @@ namespace SkillsLabProject.DAL.Models
         public string LastName { get; set; }
         public string NIC { get; set; }
         public string PhoneNumber { get; set; }
-        public string Email { get; set; }
         public int DepartmentId { get; set; }
         public Role Role { get; set; }
     }

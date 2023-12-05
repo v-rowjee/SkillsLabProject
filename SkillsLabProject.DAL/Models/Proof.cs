@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace SkillsLabProject.DAL.Models
 {
-    public class DeclinedEnrollmentModel
+    public class Proof
     {
         [Key]
-        public int DeclinedEnrollmentId { get; set; }
-        public int EnrollmentId { get; set;}
-        public string Reason { get; set;}
+        public int ProofId { get; set; }
+        public int EnrollmentId { get; set; }
+        public string Attachment {  get; set; }
     }
 }

@@ -1,4 +1,6 @@
-﻿using SkillsLabProject.BLL;
+﻿using SkillsLabProject.BL.BL;
+using SkillsLabProject.BLL;
+using SkillsLabProject.DAL.Models;
 using SkillsLabProject.Models.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -48,7 +50,7 @@ namespace SkillsLabProject.Controllers
 
             if (training == null) return RedirectToAction("Index");
             ViewBag.Training = training;
-            var preRequisites = _preRequisiteBL.GetAllPreRequisites().Where(p => p.TrainingId == training.TrainingId).ToList();
+            var preRequisites = new List<PreRequisite>();//_preRequisiteBL.GetAllPreRequisites().Where(p => p.TrainingId == training.TrainingId).ToList();
             ViewBag.Prerequisites = preRequisites.Any() ? preRequisites : null;
             
             return View();

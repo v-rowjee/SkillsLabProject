@@ -20,34 +20,32 @@ namespace SkillsLabProject.BL.RepositoryBL
 
         public ResultModel<T> Add(T entity)
         {
-            var repository = new RepositoryDAL<T>();
-            var result = repository.Add(entity);
-            return result;
+            return _repository.Add(entity);
         }
 
         public ResultModel<T> Delete(int id)
         {
-            throw new NotImplementedException();
+            return _repository.Delete(id);
         }
 
         public ResultModel<T> Get(int id)
         {
-            throw new NotImplementedException();
+            return _repository.Get(id);
         }
 
         public ResultModel<T> Get(string sql, List<SqlParameter> parameters)
         {
-            throw new NotImplementedException();
+            return _repository.Get(sql, parameters);
         }
 
         public ResultModel<T> GetAll()
         {
-            throw new NotImplementedException();
+            return _repository.GetAll();
         }
 
         public ResultModel<T> Update(T entity)
         {
-            throw new NotImplementedException();
+            return _repository.Update(entity);
         }
     }
 }
