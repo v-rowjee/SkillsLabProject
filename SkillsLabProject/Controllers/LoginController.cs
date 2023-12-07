@@ -1,5 +1,7 @@
 ﻿using SkillsLabProject.BLL;
+using SkillsLabProject.Custom;
 using SkillsLabProject.DAL.Common;
+using SkillsLabProject.Enums;
 using SkillsLabProject.Models;
 using SkillsLabProject.Models.ViewModels;
 using System;
@@ -12,11 +14,13 @@ namespace JEDI_Carpool.Controllers
 {
     public class LoginController : Controller
     {
-        public IAppUserBL AppUserBL;
+        private IAppUserBL AppUserBL;
+        private IEmployeeBL EmployeeBL;
 
-        public LoginController(IAppUserBL appUserBL)
+        public LoginController(IAppUserBL appUserBL,IEmployeeBL employeeBL)
         {
             this.AppUserBL = appUserBL;
+            this.EmployeeBL = employeeBL;
         }
 
         // GET: Login
@@ -38,6 +42,8 @@ namespace JEDI_Carpool.Controllers
             if (IsUserValid)
             {
                 this.Session["CurrentUser"] = model;
+                var employee = EmployeeBL.GetEmployee(model);
+                this.Session["CurrentRole"] = employee.Role.ToString();
             }
             return Json(new { result = IsUserValid, url = Url.Action("Index", "Training") });
 

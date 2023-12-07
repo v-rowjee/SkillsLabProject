@@ -1,5 +1,4 @@
-﻿
-@{
+﻿@{
     ViewBag.Title = ViewBag.Training.Title;
 }
 
@@ -18,6 +17,16 @@
                 </div>
                 <div class="card-body">
                     <p class="m-1">@ViewBag.Training.Description</p>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-header">
+                    <i class="fa-solid fa-briefcase me-1"></i>
+                    Department Priority
+                </div>
+                <div class="card-body">
+                    <p class="m-0 ms-1">@(ViewBag.Training.PriorityDepartment != null ? ViewBag.Training.PriorityDepartment.Title : "None")</p>
                 </div>
             </div>
 
@@ -69,9 +78,14 @@
                     </ul>
                 </div>
             </div>
-
-            <button class="btn btn-primary w-100 mb-5">Enroll</button>
-
+            <div class="row">
+                <div class="col-4">
+                    @Html.ActionLink("Cancel", "View", "Training", null, new { @class = "btn btn-danger me-2 w-100" })
+                </div>
+                <div class="col-8">
+                    <button class="btn btn-primary w-100 mb-5">Enroll</button>
+                </div>
+            </div>
         </div>
     </div>
 </div>

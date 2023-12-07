@@ -5,7 +5,6 @@ namespace SkillsLabProject
 {
     public class BundleConfig
     {
-        // For more information on bundling, visit https://go.microsoft.com/fwlink/?LinkId=301862
         public static void RegisterBundles(BundleCollection bundles)
         {
             bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
@@ -21,9 +20,6 @@ namespace SkillsLabProject
                         "~/Scripts/Moment/moment.min.js",
                         "~/Scripts/Moment/moment-with-locales.min.js"
                 ));
-
-
-            //--------------------------------------------------------------
 
 
             bundles.Add(new Bundle("~/bundles/bootstrap").Include(

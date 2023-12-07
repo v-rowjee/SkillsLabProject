@@ -1,0 +1,134 @@
+﻿@{
+    ViewBag.Title = "Edit " + ViewBag.Training.Title;
+}
+@section scripts {
+    <script src="~/Scripts/training.js"></script>
+}
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-xl-6">
+            <h1 class="display-6 mb-4">
+                @Html.ActionLink("Training", "Index", "Training", null, new { @class = "text-decoration-none text-black" })
+                / Editing @ViewBag.Training.Title
+            </h1>
+
+            <form id="editTrainingForm" class="needs-validation" novalidate>
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <i class="fa-solid fa-graduation-cap me-1"></i>
+                        Title
+                    </div>
+                    <div class="card-body">
+                        <input id="title" class="form-control" name="title" value="@ViewBag.Training.Title" />
+                    </div>
+                </div>
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <i class="fa-solid fa-circle-info me-1"></i>
+                        Description
+                    </div>
+                    <div class="card-body">
+                        <textarea id="description" class="form-control" rows="3">@ViewBag.Training.Description</textarea>
+                    </div>
+                </div>
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <i class="fa-solid fa-graduation-cap me-1"></i>
+                        Department
+                    </div>
+                    <div class="card-body">
+                        <select class="form-select" id="department" required>
+                            @foreach (var department in ViewBag.Departments)
+                            {
+                                if (ViewBag.Training.PriorityDepartment != null && department.DepartmentId == ViewBag.Training.PriorityDepartment.DepartmentId)
+                                {
+                                    <option selected value="@department.DepartmentId">@department.Title</option>
+                                }
+                                else
+                                {
+                                    <option value="@department.DepartmentId">@department.Title</option>
+                                }
+                            }
+                            @if (ViewBag.Training.PriorityDepartment == null)
+                            {
+                                <option selected value="none">None</option>
+                            }
+                            else
+                            {
+                                <option value="none">None</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="row mb-4">
+                    <div class="col-12 col-lg-8">
+                        <div class="card">
+                            <div class="card-header">
+                                <i class="fa-solid fa-calendar-days me-1"></i>
+                                Deadline
+                            </div>
+                            <div class="card-body">
+                                <input id="deadline" class="form-control" type="date" value="@ViewBag.Training.Deadline.ToString("yyyy-MM-dd")" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <i class="fa-solid fa-user-group me-1"></i>
+                                Max Capacity
+                            </div>
+                            <div class="card-body">
+                                <input id="capacity" class="form-control" type="number" min="0" value="@ViewBag.Training.Capacity" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <i class="fa-solid fa-file-pdf me-1"></i>
+                        Pre-requisites
+                        <div class="float-end">
+                            <button id="addPrerequisite" class="btn btn-sm btn-outline-secondary"><i class="fa-solid fa-add"></i></button>
+                        </div>
+                    </div>
+                    <div class="card-body p-0">
+                        <datalist id="prerequisiteList">
+                            @foreach (var PrerequisiteDetail in ViewBag.PreRequisiteDetails)
+                            {
+                                <option value="@PrerequisiteDetail" />
+                            }
+                        </datalist>
+                        <ul id="prerequisiteInputList" class="list-group list-group-flush">
+                            @if (ViewBag.PreRequisites == null)
+                            {
+                                <li class="list-group-item d-inline-flex rounded">None</li>
+                            }
+                            else
+                            {
+                                foreach (var PreRequisite in ViewBag.PreRequisites)
+                                {
+                                    <li class="list-group-item d-inline-flex rounded">
+                                        <input list="prerequisiteList" id="@("prerequisite"+PreRequisite.PreRequisiteId)" class="form-control prerequisite-input my-2 me-3" value="@PreRequisite.Detail">
+                                        <button id="deletePrerequisite" class="btn btn-sm btn-outline-danger my-2"><i class="fa fa-trash my-2"></i></button>
+                                    </li>
+                                }
+                            }
+                        </ul>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-4">
+                        @Html.ActionLink("Cancel", "Index", "Training", null, new { @class = "btn btn-danger me-2 w-100" })
+                    </div>
+                    <div class="col-8">
+                        <input type="hidden" id="trainingId"  value="@ViewBag.Training.TrainingId" />
+                        <input type="submit" id="editTraining" class="btn btn-primary me-2 w-100" value="Save Changes" />
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+

@@ -80,9 +80,8 @@ namespace SkillsLabProject.DAL
                     training.PriorityDepartment = new DepartmentModel
                     {
                         DepartmentId = (int)row["PriorityDepartmentId"],
-                        Title = row["Title"].ToString(),
+                        Title = row["DepartmentTitle"].ToString(),
                     };
-                    training.PriorityDepartment.Title = row["Title"].ToString();
                 }
             }
             return training;
@@ -99,15 +98,23 @@ namespace SkillsLabProject.DAL
                 new SqlParameter("@Description", training.Description),
                 new SqlParameter("@Deadline", training.Deadline),
                 new SqlParameter("@Capacity", training.Capacity),
-                new SqlParameter("@PriorityDepartmentId", training.PriorityDepartment.DepartmentId)
             };
+            if(training.PriorityDepartment == null)
+            {
+                parameters.Add(new SqlParameter("@PriorityDepartmentId", DBNull.Value));
+            }
+            else
+            {
+                parameters.Add(new SqlParameter("@PriorityDepartmentId", training.PriorityDepartment.DepartmentId));
+                
+            }
             return DBCommand.InsertUpdateData(AddTrainingQuery, parameters);
         }
         public bool Update(TrainingModel training)
         {
             const string UpdateTrainingQuery = @"
                 UPDATE [dbo].[Training]
-                SET Title=@Title, Description=@Description, Deadline=@Deadline, Capacity=@Capacity, PriorityDepartment=@PriorityDepartmentId
+                SET Title=@Title, Description=@Description, Deadline=@Deadline, Capacity=@Capacity, PriorityDepartmentId=@PriorityDepartmentId
                 WHERE TrainingId=@TrainingId;
             ";
             var parameters = new List<SqlParameter>
@@ -117,8 +124,16 @@ namespace SkillsLabProject.DAL
                 new SqlParameter("@Description",training.Description),
                 new SqlParameter("@Deadline", training.Deadline),
                 new SqlParameter("@Capacity", training.Capacity),
-                new SqlParameter("@PriorityDepartmentId", training.PriorityDepartment.DepartmentId)
             };
+            if (training.PriorityDepartment == null)
+            {
+                parameters.Add(new SqlParameter("@PriorityDepartmentId", DBNull.Value));
+            }
+            else
+            {
+                parameters.Add(new SqlParameter("@PriorityDepartmentId", training.PriorityDepartment.DepartmentId));
+
+            }
             return DBCommand.InsertUpdateData(UpdateTrainingQuery, parameters);
         }
         public bool Delete(int trainingId)

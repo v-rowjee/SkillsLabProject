@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using SkillsLabProject.DAL.Common;
+using SkillsLabProject.Models.ViewModels;
 
 namespace SkillsLabProject.BLL
 {
