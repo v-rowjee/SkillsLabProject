@@ -1,6 +1,7 @@
 ﻿$(function () {
-
-    $('#userrole').text('Employee')
+    if ($('#roleEmployee').click(() => $('#userrole').text('Employee') ))
+    if ($('#roleManager').click(() => $('#userrole').text('Manager') ))
+    if ($('#roleAdmin').click(() => $('#userrole').text('Admin') ))
 
     $('#registerForm').submit((e) => {
         e.preventDefault();
@@ -8,6 +9,7 @@
     })
 
     $('#register').click(() => {
+        var role = $('.btn-check:checked').val()
         var email = $('#email').val().trim()
         var password = $('#password').val().trim()
         var fname = $('#fname').val().trim()
@@ -39,6 +41,7 @@
         }
         else {
             var RegisterViewModelObj = {
+                Role: role,
                 Email: email,
                 Password: password,
                 FirstName: fname,
