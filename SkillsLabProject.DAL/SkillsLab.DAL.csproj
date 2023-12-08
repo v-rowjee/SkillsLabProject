@@ -62,9 +62,9 @@
     <Compile Include="RepositoryDAL\RepositoryDAL.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SkillsLabProject.Common\SkillsLabProject.Common.csproj">
+    <ProjectReference Include="..\SkillsLabProject.Common\SkillsLab.Common.csproj">
       <Project>{8367A7A2-CC75-4430-9925-FEEB447CB0EA}</Project>
-      <Name>SkillsLabProject.Common</Name>
+      <Name>SkillsLab.Common</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
