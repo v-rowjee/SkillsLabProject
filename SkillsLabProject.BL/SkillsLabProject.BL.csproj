@@ -63,9 +63,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SkillsLabProject.DAL\SkillsLab.DAL.csproj">
+    <ProjectReference Include="..\SkillsLabProject.DAL\SkillsLabProject.DAL.csproj">
       <Project>{61C1A683-D346-4CE1-A425-CAD062DCC6BA}</Project>
-      <Name>SkillsLab.DAL</Name>
+      <Name>SkillsLabProject.DAL</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

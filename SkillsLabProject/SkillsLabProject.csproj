@@ -248,17 +248,17 @@
     <Content Include="Scripts\jQuery\jquery-3.4.1.min.map" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SkillsLabProject.BL\SkillsLab.BL.csproj">
+    <ProjectReference Include="..\SkillsLabProject.BL\SkillsLabProject.BL.csproj">
       <Project>{1E36025E-EE84-4A48-B962-A9E832B997B3}</Project>
-      <Name>SkillsLab.BL</Name>
+      <Name>SkillsLabProject.BL</Name>
     </ProjectReference>
-    <ProjectReference Include="..\SkillsLabProject.Common\SkillsLab.Common.csproj">
+    <ProjectReference Include="..\SkillsLabProject.Common\SkillsLabProject.Common.csproj">
       <Project>{8367A7A2-CC75-4430-9925-FEEB447CB0EA}</Project>
-      <Name>SkillsLab.Common</Name>
+      <Name>SkillsLabProject.Common</Name>
     </ProjectReference>
-    <ProjectReference Include="..\SkillsLabProject.DAL\SkillsLab.DAL.csproj">
+    <ProjectReference Include="..\SkillsLabProject.DAL\SkillsLabProject.DAL.csproj">
       <Project>{61C1A683-D346-4CE1-A425-CAD062DCC6BA}</Project>
-      <Name>SkillsLab.DAL</Name>
+      <Name>SkillsLabProject.DAL</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
