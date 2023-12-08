@@ -7,6 +7,7 @@ $(function () {
 
     $('#enroll').click(() => {
         alert("enroll")
+
     })
 
 })
