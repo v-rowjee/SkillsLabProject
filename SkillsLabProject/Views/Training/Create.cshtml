@@ -89,16 +89,13 @@
                             }
                         </datalist>
                         <ul id="prerequisiteInputList" class="list-group list-group-flush">
-                            <li class="list-group-item d-inline-flex rounded">
-                                <input list="prerequisiteList" class="form-control my-2 me-3 prerequisite-input" placeholder="Detail" />
-                                <button id="deletePrerequisite" class="btn btn-sm btn-outline-danger my-2"><i class="fa fa-trash my-2"></i></button>
-                            </li>
+                            
                         </ul>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-4">
-                        @Html.ActionLink("Cancel", "View", "Training", null, new { @class = "btn btn-danger me-2 w-100" })
+                        @Html.ActionLink("Back", "Index", "Training", null, new { @class = "btn btn-danger me-2 w-100" })
                     </div>
                     <div class="col-8">
                         <input type="submit" id="createTraining" class="btn btn-primary me-2 w-100" value="Save Changes" />

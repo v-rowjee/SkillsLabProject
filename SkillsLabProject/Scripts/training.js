@@ -1,7 +1,15 @@
 ﻿$(function () {
 
-    // ADD TRAINING
-    var countPrerequisites = 1
+    var countPrerequisites = 0
+
+    function togglePrerequisiteNone() {
+        if (countPrerequisites > 0) {
+            $('#prerequisiteNone').addClass("d-none");
+        } else {
+            $('#prerequisiteNone').removeClass("d-none");
+        }
+    }
+    
     $('#addPrerequisite').click(() => {
         if (countPrerequisites < 5) {
             countPrerequisites++
@@ -18,12 +26,16 @@
                 actionTextColor: "#CFE2FF"
             });
         }
+        togglePrerequisiteNone()
     })
 
     $('#prerequisiteInputList').on("click", "li #deletePrerequisite", e => {
         $(e.target).closest('li').remove()
         countPrerequisites--
+        togglePrerequisiteNone()
     });
+
+    // ADD TRAINING
 
     $('#createTrainingForm').submit((e) => {
         e.preventDefault();
@@ -54,10 +66,11 @@
             });
         }
         else {
-
             var prerequisites = [];
-            $('.prerequisite-input').each( function () {
-                prerequisites.push($(this).val());
+            $('.prerequisite-input').each(function () {
+                if ($(this).val() != "") {
+                    prerequisites.push($(this).val());
+                }
             });
 
             var TrainingViewModelObj = {
@@ -93,38 +106,6 @@
         }
     })
 
-    // DELETE TRAINING
-    $('#deleteTrainingForm').submit((e) => {
-        e.preventDefault();
-        return false;
-    })
-
-    $('.deleteTraining').click(() => {
-        var trainingId = $('.trainingId').val()
-
-        $.ajax({
-            type: "POST",
-            url: "/Training/Delete",
-            data: trainingId,
-            dataType: "json",
-            success: (response) => {
-                if (response.result == "Success") {
-                    Snackbar.show({
-                        text: "Training removed!",
-                        actionTextColor: "#CFE2FF"
-                    });
-                    window.location.replace(response.url);
-                }
-                else {
-                    Snackbar.show({
-                        text: "Unable to remove training.",
-                        actionTextColor: "#CFE2FF"
-                    });
-                }
-            }
-        })
-    })
-
     // EDIT TRAINING
     $('#editTrainingForm').submit((e) => {
         e.preventDefault();
@@ -155,28 +136,28 @@
             });
         }
         else {
-
-            if (department == null) {
-                var TrainingModelObj = {
-                    TrainingId: trainingId,
-                    Title: title,
-                    Description: description,
-                    Deadline: deadline,
-                    Capacity: capacity,
-                }
+            var TrainingModelObj = {
+                TrainingId: trainingId,
+                Title: title,
+                Description: description,
+                Deadline: deadline,
+                Capacity: capacity,
             }
-            else {
-                var TrainingModelObj = {
-                    TrainingId: trainingId,
-                    Title: title,
-                    Description: description,
-                    Deadline: deadline,
-                    Capacity: capacity,
-                    DepartmentId: department
-                }
+            if (department != null) {
+                TrainingModelObj.DepartmentId = department
             }
-
             
+
+            var prerequisites = [];
+            $('.prerequisite-input').each(function () {
+                if ($(this).val() != "") {
+                    prerequisites.push($(this).val());
+                }
+            });
+
+            if (prerequisites != []) {
+                TrainingModelObj.PreRequisites = prerequisites
+            }
 
             $.ajax({
                 type: "POST",
@@ -203,3 +184,28 @@
 
     })
 })
+
+// DELETE TRAINING
+function deleteTraining(trainingId) {
+    $.ajax({
+        type: "POST",
+        url: "/Training/Delete",
+        data: { id: trainingId },
+        dataType: "json",
+        success: (response) => {
+            if (response.result == "Success") {
+                Snackbar.show({
+                    text: "Training removed!",
+                    actionTextColor: "#CFE2FF"
+                });
+                window.location.replace(response.url);
+            }
+            else {
+                Snackbar.show({
+                    text: "Unable to remove training.",
+                    actionTextColor: "#CFE2FF"
+                });
+            }
+        }
+    })
+}

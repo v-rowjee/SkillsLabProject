@@ -73,15 +73,7 @@ namespace SkillsLabProject.Controllers
             var loggeduser = Session["CurrentUser"] as LoginViewModel;
             ViewBag.Employee = _employeeBL.GetEmployee(loggeduser);
 
-            var trainingModel = new TrainingModel
-            {
-                Title = training.Title,
-                Description = training.Description,
-                Deadline = training.Deadline,
-                Capacity = training.Capacity,
-                PriorityDepartment = training.DepartmentId != null ? _departmentBL.GetDepartmentById((int)training.DepartmentId) : null,
-            };
-            var result = _trainingBL.AddTraining(trainingModel);
+            var result = _trainingBL.AddTraining(training);
 
             if (result)
             {
@@ -120,16 +112,7 @@ namespace SkillsLabProject.Controllers
         [CustomAuthorization("Admin")]
         public JsonResult Edit(TrainingViewModel training)
         {
-            var department = training.DepartmentId != null ? _departmentBL.GetDepartmentById((int)training.DepartmentId) : null;
-            var trainingModel = new TrainingModel { 
-                TrainingId = training.TrainingId,
-                Title = training.Title,
-                Description = training.Description,
-                Deadline = training.Deadline,
-                Capacity = training.Capacity,
-                PriorityDepartment = department
-            };
-            var result = _trainingBL.UpdateTraining(trainingModel);
+            var result = _trainingBL.UpdateTraining(training);
             if (result)
             {
                 return Json(new { result = "Success", url = Url.Action("View", "Training",training.TrainingId) });

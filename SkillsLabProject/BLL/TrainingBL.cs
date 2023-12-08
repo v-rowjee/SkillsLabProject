@@ -14,22 +14,39 @@ namespace SkillsLabProject.BLL
     {
         IEnumerable<TrainingModel> GetAllTrainings();
         TrainingModel GetTrainingById(int trainingId);
-        bool AddTraining(TrainingModel model);
-        bool UpdateTraining(TrainingModel model);
+        bool AddTraining(TrainingViewModel model);
+        bool UpdateTraining(TrainingViewModel model);
         bool DeleteTraining(int trainingId);
     }
     public class TrainingBL : ITrainingBL
     {
         private readonly ITrainingDAL _trainingDAL;
+        private readonly IDepartmentDAL _departmentDAL;
 
-        public TrainingBL(ITrainingDAL trainingDAL)
+        public TrainingBL(ITrainingDAL trainingDAL, IDepartmentDAL departmentDAL)
         {
             _trainingDAL = trainingDAL;
+            _departmentDAL = departmentDAL;
         }
 
-        public bool AddTraining(TrainingModel training)
+        public bool AddTraining(TrainingViewModel training)
         {
-            return _trainingDAL.Add(training);
+            if(training.PreRequisites == null)
+            {
+                var trainingModel = new TrainingModel
+                {
+                    Title = training.Title,
+                    Description = training.Description,
+                    Deadline = training.Deadline,
+                    Capacity = training.Capacity,
+                    PriorityDepartment = _departmentDAL.GetById((int)training.DepartmentId)
+                };
+                return _trainingDAL.Add(trainingModel);
+            }
+            else
+            {
+                return _trainingDAL.Add(training);
+            }
         }
         public bool DeleteTraining(int trainingId)
         {
@@ -43,9 +60,24 @@ namespace SkillsLabProject.BLL
         {
             return _trainingDAL.GetAll();
         }
-        public bool UpdateTraining(TrainingModel training)
+        public bool UpdateTraining(TrainingViewModel training)
         {
-            return _trainingDAL.Update(training);
+            if (training.PreRequisites == null)
+            {
+                var trainingModel = new TrainingModel
+                {
+                    Title = training.Title,
+                    Description = training.Description,
+                    Deadline = training.Deadline,
+                    Capacity = training.Capacity,
+                    PriorityDepartment = _departmentDAL.GetById((int)training.DepartmentId)
+                };
+                return _trainingDAL.Update(trainingModel);
+            }
+            else
+            {
+                return _trainingDAL.Update(training);
+            }
         }
     }
 }

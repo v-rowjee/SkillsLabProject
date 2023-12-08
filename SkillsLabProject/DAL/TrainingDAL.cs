@@ -4,11 +4,15 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using SkillsLabProject.Models.ViewModels;
+using System.Linq;
 
 namespace SkillsLabProject.DAL
 {
     public interface ITrainingDAL : IDAL<TrainingModel>
     {
+        bool Add(TrainingViewModel training);
+        bool Update(TrainingViewModel training);
     }
     public class TrainingDAL : ITrainingDAL
     {
@@ -86,6 +90,50 @@ namespace SkillsLabProject.DAL
             }
             return training;
         }
+        public bool Add(TrainingViewModel training)
+        {
+            const string AddTrainingQuery = @"
+                BEGIN TRANSACTION
+                    INSERT [dbo].[Training] (Title,Description, Deadline, Capacity, PriorityDepartmentId) 
+                    VALUES (@Title,@Description, @Deadline, @Capacity, @PriorityDepartmentId);
+
+                    DECLARE @TrainingId INT = @@IDENTITY
+
+                    DECLARE @Details TABLE (Detail NVARCHAR(MAX))
+                    INSERT INTO @Details
+                    SELECT value FROM STRING_SPLIT(@Prerequisites, ',')
+
+                    INSERT INTO PreRequisite (Detail)
+                    SELECT Detail
+                    FROM @Details d
+                    WHERE NOT EXISTS (SELECT 1 FROM PreRequisite WHERE Detail = d.Detail)
+
+                    INSERT INTO TrainingPreRequisite (PreRequisiteId, TrainingId)
+                    SELECT p.PreRequisiteId, @TrainingId
+                    FROM PreRequisite p
+                    JOIN @Details d ON p.Detail = d.Detail
+                COMMIT
+                ";
+            var parameters = new List<SqlParameter>
+            {
+                new SqlParameter("@Title", training.Title),
+                new SqlParameter("@Description", training.Description),
+                new SqlParameter("@Deadline", training.Deadline),
+                new SqlParameter("@Capacity", training.Capacity),
+                new SqlParameter("@Prerequisites",string.Join(",", training.PreRequisites))
+            };
+            if(training.DepartmentId == null)
+            {
+                parameters.Add(new SqlParameter("@PriorityDepartmentId", DBNull.Value));
+            }
+            else
+            {
+                parameters.Add(new SqlParameter("@PriorityDepartmentId", training.DepartmentId));
+            }
+
+            return DBCommand.InsertUpdateData(AddTrainingQuery, parameters);
+        }
+
         public bool Add(TrainingModel training)
         {
             const string AddTrainingQuery = @"
@@ -99,16 +147,60 @@ namespace SkillsLabProject.DAL
                 new SqlParameter("@Deadline", training.Deadline),
                 new SqlParameter("@Capacity", training.Capacity),
             };
-            if(training.PriorityDepartment == null)
+            if (training.PriorityDepartment == null)
             {
                 parameters.Add(new SqlParameter("@PriorityDepartmentId", DBNull.Value));
             }
             else
             {
                 parameters.Add(new SqlParameter("@PriorityDepartmentId", training.PriorityDepartment.DepartmentId));
-                
             }
             return DBCommand.InsertUpdateData(AddTrainingQuery, parameters);
+        }
+
+        public bool Update(TrainingViewModel training)
+        {
+            const string UpdateTrainingQuery = @"
+                BEGIN TRANSACTION
+                    UPDATE [dbo].[Training]
+                    SET Title=@Title, Description=@Description, Deadline=@Deadline, Capacity=@Capacity, PriorityDepartmentId=@PriorityDepartmentId
+                    WHERE TrainingId=@TrainingId;
+
+                    DECLARE @Details TABLE (Detail NVARCHAR(MAX))
+                    INSERT INTO @Details
+                    SELECT value FROM STRING_SPLIT(@Prerequisites, ',')
+
+                    MERGE INTO PreRequisite AS target
+                    USING @Details AS source ON target.Detail = source.Detail
+                    WHEN NOT MATCHED THEN
+                    INSERT (Detail) VALUES (source.Detail);
+
+                    DELETE FROM TrainingPreRequisite WHERE TrainingId = @TrainingId;
+
+                    INSERT INTO TrainingPreRequisite (PreRequisiteId, TrainingId)
+                    SELECT p.PreRequisiteId, @TrainingId
+                    FROM PreRequisite p
+                    JOIN @Details d ON p.Detail = d.Detail
+                COMMIT
+            ";
+            var parameters = new List<SqlParameter>
+            {
+                new SqlParameter("@TrainingId", training.TrainingId),
+                new SqlParameter("@Title", training.Title),
+                new SqlParameter("@Description",training.Description),
+                new SqlParameter("@Deadline", training.Deadline),
+                new SqlParameter("@Capacity", training.Capacity),
+                new SqlParameter("@Prerequisites",string.Join(",", training.PreRequisites))
+            };
+            if (training.DepartmentId == null)
+            {
+                parameters.Add(new SqlParameter("@PriorityDepartmentId", DBNull.Value));
+            }
+            else
+            {
+                parameters.Add(new SqlParameter("@PriorityDepartmentId", training.DepartmentId));
+            }
+            return DBCommand.InsertUpdateData(UpdateTrainingQuery, parameters);
         }
         public bool Update(TrainingModel training)
         {
