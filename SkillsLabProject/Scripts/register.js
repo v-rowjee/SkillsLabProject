@@ -1,12 +1,17 @@
 ﻿$(function () {
-    if ($('#roleEmployee').click(() => $('#userrole').text('Employee') ))
-    if ($('#roleManager').click(() => $('#userrole').text('Manager') ))
-    if ($('#roleAdmin').click(() => $('#userrole').text('Admin') ))
+    $('#roleEmployee').click(() => $('#userrole').text('Employee'))
+    $('#roleManager').click(() => $('#userrole').text('Manager'))
+    $('#roleAdmin').click(() => $('#userrole').text('Admin'))
 
     $('#registerForm').submit((e) => {
         e.preventDefault();
         return false;
     })
+
+    $('#phone').on('keypress', function (e) {
+        // allow numbers, plus sign and space
+        if ((e.charCode < 48 || e.charCode > 57) && e.charCode !== 43 && e.charCode !== 32) return false;
+    });
 
     $('#register').click(() => {
         var role = $('.btn-check:checked').val()
@@ -15,7 +20,7 @@
         var fname = $('#fname').val().trim()
         var lname = $('#lname').val().trim()
         var nic = $('#nic').val().trim()
-        var phone = $('#phone').val().toString()
+        var phone = $('#phone').val().trim()
         var department = $('#department').val()
 
         var error = ''
@@ -29,8 +34,10 @@
         if (!department) error += "Department required<br><br>"
 
 
-
-        $("#email-feedback").html("Please provide a valid email.");
+        if (password && password.length < 4) {
+            error += "Password should be at least 4 characters."
+            $("#password-feedback").html("Password should be at least four characters.");
+        }
 
         if (error != '') {
             error = error.slice(0, -8) // to remove the last <br><br>

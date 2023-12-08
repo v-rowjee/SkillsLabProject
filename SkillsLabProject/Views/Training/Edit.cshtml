@@ -20,7 +20,7 @@
                         Title
                     </div>
                     <div class="card-body">
-                        <input id="title" class="form-control" name="title" value="@ViewBag.Training.Title" />
+                        <input id="title" class="form-control" name="title" value="@ViewBag.Training.Title" required />
                     </div>
                 </div>
                 <div class="card mb-4">
@@ -29,7 +29,7 @@
                         Description
                     </div>
                     <div class="card-body">
-                        <textarea id="description" class="form-control" rows="3">@ViewBag.Training.Description</textarea>
+                        <textarea id="description" class="form-control" rows="3" required>@ViewBag.Training.Description</textarea>
                     </div>
                 </div>
                 <div class="card mb-4">
@@ -69,7 +69,7 @@
                                 Deadline
                             </div>
                             <div class="card-body">
-                                <input id="deadline" class="form-control" type="date" value="@ViewBag.Training.Deadline.ToString("yyyy-MM-dd")" />
+                                <input id="deadline" class="form-control" type="datetime-local" value="@ViewBag.Training.Deadline.ToString("yyyy-MM-ddTHH:mm:ss").Replace(' ','T')" required />
                             </div>
                         </div>
                     </div>
@@ -80,7 +80,7 @@
                                 Max Capacity
                             </div>
                             <div class="card-body">
-                                <input id="capacity" class="form-control" type="number" min="0" value="@ViewBag.Training.Capacity" />
+                                <input id="capacity" class="form-control" type="number" min="0" value="@ViewBag.Training.Capacity" required />
                             </div>
                         </div>
                     </div>
@@ -110,7 +110,7 @@
                                 foreach (var PreRequisite in ViewBag.PreRequisites)
                                 {
                                     <li class="list-group-item d-inline-flex rounded">
-                                        <input list="prerequisiteList" id="@("prerequisite"+PreRequisite.PreRequisiteId)" class="form-control prerequisite-input my-2 me-3" value="@PreRequisite.Detail">
+                                        <input list="prerequisiteList" id="@("prerequisite"+PreRequisite.PreRequisiteId)" class="form-control prerequisite-input my-2 me-3" value="@PreRequisite.Detail" required >
                                         <button id="deletePrerequisite" class="btn btn-sm btn-outline-danger my-2"><i class="fa fa-trash my-2"></i></button>
                                     </li>
                                 }
@@ -131,4 +131,3 @@
         </div>
     </div>
 </div>
-

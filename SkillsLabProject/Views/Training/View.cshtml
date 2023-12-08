@@ -54,38 +54,40 @@
                     </div>
                 </div>
             </div>
-            <div class="card mb-4">
-                <div class="card-header">
-                    <i class="fa-solid fa-file-pdf me-1"></i>
-                    Pre-requisites
-                </div>
-                <div class="card-body p-0">
-                    <ul class="list-group list-group-flush">
-                        @if (ViewBag.PreRequisites == null)
-                        {
-                            <li class="list-group-item rounded">None</li>
-                        }
-                        else
-                        {
-                            foreach (var PreRequisite in ViewBag.PreRequisites)
+            <form id="enrollmentForm">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <i class="fa-solid fa-file-pdf me-1"></i>
+                        Pre-requisites
+                    </div>
+                    <div class="card-body p-0">
+                        <ul class="list-group list-group-flush">
+                            @if (ViewBag.PreRequisites == null)
                             {
-                                <li class="list-group-item rounded">
-                                    <p class="m-0">@PreRequisite.Detail</p>
-                                    <input id="@("prerequisite"+PreRequisite.PreRequisiteId)" class="form-control mt-2 mb-3" type="file">
-                                </li>
+                                <li class="list-group-item rounded">None</li>
                             }
-                        }
-                    </ul>
+                            else
+                            {
+                                foreach (var PreRequisite in ViewBag.PreRequisites)
+                                {
+                                    <li class="list-group-item rounded">
+                                        <p class="m-0">@PreRequisite.Detail</p>
+                                        <input id="@("prerequisite"+PreRequisite.PreRequisiteId)" class="form-control mt-2 mb-3" type="file">
+                                    </li>
+                                }
+                            }
+                        </ul>
+                    </div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col-4">
-                    @Html.ActionLink("Cancel", "View", "Training", null, new { @class = "btn btn-danger me-2 w-100" })
+                <div class="row">
+                    <div class="col-4">
+                        @Html.ActionLink("Back", "Index", "Training", null, new { @class = "btn btn-secondary me-2 w-100" })
+                    </div>
+                    <div class="col-8">
+                        <button id="enroll" class="btn btn-primary w-100 mb-5">Enroll</button>
+                    </div>
                 </div>
-                <div class="col-8">
-                    <button class="btn btn-primary w-100 mb-5">Enroll</button>
-                </div>
-            </div>
+            </form>
         </div>
     </div>
 </div>

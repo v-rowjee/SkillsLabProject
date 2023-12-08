@@ -19,21 +19,21 @@
             <form id="loginForm" class="my-5 needs-validation" novalidate>
                 <div class="mb-3">
                     <label for="email" class="form-label">Email Address</label>
-                    <input type="email" class="form-control" id="email" required>
+                    <input type="email" class="form-control" id="email" placeholder="Ex. johndoe@example.com" required>
                     <div class="invalid-feedback">
                         Please enter your email.
                     </div>
                 </div>
                 <div class="mb-5">
                     <label for="password" class="form-label">Password</label>
-                    <input type="password" class="form-control" id="password" required>
+                    <input type="password" class="form-control" id="password" placeholder="Ex. xxxx" required>
                     <div class="invalid-feedback">
                         Please enter your password.
                     </div>
                 </div>
                 <button type="submit" id="login" class="btn btn-primary w-100 mb-4">Login</button>
                 <hr />
-                @Html.ActionLink("Create a new account", "Index", "Register", null, new { @class = "btn btn-outline-secondary w-100 mt-4" })
+                @Html.ActionLink("Create a new account", "Index", "Register", null, new { @class = "btn btn-light w-100 mt-4" })
             </form>
         </div>
     </div>

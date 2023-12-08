@@ -57,7 +57,7 @@
                                 Deadline
                             </div>
                             <div class="card-body">
-                                <input id="deadline" class="form-control" type="date" min="@DateTime.Now.ToString("yyyy-MM-dd")" value="@DateTime.Now.AddDays(10).ToString("yyyy-MM-dd")" />
+                                <input id="deadline" class="form-control" type="datetime-local" min="@DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss").Replace(' ','T')" value="@DateTime.Now.AddDays(10).ToString("yyyy-MM-ddTHH:mm:ss").Replace(' ','T')" />
                             </div>
                         </div>
                     </div>
