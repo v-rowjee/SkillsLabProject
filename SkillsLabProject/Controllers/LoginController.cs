@@ -10,7 +10,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
-namespace JEDI_Carpool.Controllers
+namespace SkillsLabProject.Controllers
 {
     public class LoginController : Controller
     {
