@@ -140,16 +140,9 @@
   <ItemGroup>
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
+    <Compile Include="App_Start\IAppUserDAL.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\UnityConfig.cs" />
-    <Compile Include="BLL\AppUserBL.cs" />
-    <Compile Include="BLL\DeclinedEnrollmentBL.cs" />
-    <Compile Include="BLL\DepartmentBL.cs" />
-    <Compile Include="BLL\EmployeeBL.cs" />
-    <Compile Include="BLL\EnrollmentBL.cs" />
-    <Compile Include="BLL\PreRequisiteBL.cs" />
-    <Compile Include="BLL\ProofBL.cs" />
-    <Compile Include="BLL\TrainingBL.cs" />
     <Compile Include="Controllers\CustomAuthorizeAttribute.cs" />
     <Compile Include="Controllers\EnrollmentController.cs" />
     <Compile Include="Controllers\ErrorController.cs" />
@@ -159,34 +152,9 @@
     <Compile Include="Controllers\TrainingController.cs" />
     <Compile Include="Custom\CustomAuthorizationAttribute.cs" />
     <Compile Include="Custom\UserSessionAttribute.cs" />
-    <Compile Include="DAL\AppUserDAL.cs" />
-    <Compile Include="DAL\Common\DAL.cs" />
-    <Compile Include="DAL\Common\DBCommand.cs" />
-    <Compile Include="DAL\Common\IDAL.cs" />
-    <Compile Include="DAL\DeclinedEnrollmentDAL.cs" />
-    <Compile Include="DAL\DepartmentDAL.cs" />
-    <Compile Include="DAL\EmployeeDAL.cs" />
-    <Compile Include="DAL\EnrollmentDAL.cs" />
-    <Compile Include="DAL\PreRequisiteDAL.cs" />
-    <Compile Include="DAL\ProofDAL.cs" />
-    <Compile Include="DAL\TrainingDAL.cs" />
-    <Compile Include="Enums\Role.cs" />
-    <Compile Include="Enums\Status.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\AppUserModel.cs" />
-    <Compile Include="Models\DeclinedEnrollmentModel.cs" />
-    <Compile Include="Models\DepartmentModel.cs" />
-    <Compile Include="Models\EmployeeModel.cs" />
-    <Compile Include="Models\EnrollmentModel.cs" />
-    <Compile Include="Models\PreRequisiteModel.cs" />
-    <Compile Include="Models\ProofModel.cs" />
-    <Compile Include="Models\TrainingModel.cs" />
-    <Compile Include="Models\TrainingPreRequisiteModel.cs" />
-    <Compile Include="Models\ViewModels\TrainingViewModel.cs" />
-    <Compile Include="Models\ViewModels\LoginViewModel.cs" />
-    <Compile Include="Models\ViewModels\RegisterViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Content Include="Scripts\enrollment.js" />
     <Content Include="Scripts\training.js" />
@@ -287,6 +255,20 @@
     <Content Include="Scripts\Bootstrap\bootstrap.bundle.js.map" />
     <Content Include="Scripts\jQuery\jquery-3.4.1.slim.min.map" />
     <Content Include="Scripts\jQuery\jquery-3.4.1.min.map" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SkillsLab.BL\SkillsLab.BL.csproj">
+      <Project>{bbaafb2d-a8e8-4622-91da-d9b475395d89}</Project>
+      <Name>SkillsLab.BL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SkillsLab.Common\SkillsLab.Common.csproj">
+      <Project>{b84c77b0-015c-4bd7-be9f-c12821fbae19}</Project>
+      <Name>SkillsLab.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SkillsLab.DAL\SkillsLab.DAL.csproj">
+      <Project>{0DDB7430-D342-4894-8DEE-AABD080467AA}</Project>
+      <Name>SkillsLab.DAL</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

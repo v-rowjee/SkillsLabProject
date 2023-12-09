@@ -1,11 +1,6 @@
-﻿using SkillsLabProject.BLL;
-using SkillsLabProject.DAL;
-using SkillsLabProject.Enums;
-using SkillsLabProject.Models.ViewModels;
-using System;
-using System.Collections.Generic;
+﻿using SkillsLabProject.BL.BL;
+using SkillsLabProject.Common.Models.ViewModels;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 
 namespace SkillsLabProject.Controllers

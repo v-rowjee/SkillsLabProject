@@ -21,11 +21,11 @@
     <div class="table-responsive p-2">
         <table id="trainingTable" class="table table-borderless table-hover pb-4">
             <thead>
-                <tr>
+                <tr style="vertical-align: middle">
                     <th>Title</th>
                     <th>Deadline</th>
                     <th>Department Priority</th>
-                    <th class="text-center">Capacity</th>
+                    <th>Capacity</th>
                     <th class="text-end">Actions</th>
                 </tr>
             </thead>
@@ -36,7 +36,7 @@
                         <td>@Training.Title</td>
                         <td>@Training.Deadline.ToString("ddd, dd MMM yyyy hh:mm tt")</td>
                         <td>@(Training.PriorityDepartment != null ? @Training.PriorityDepartment.Title : "-")</td>
-                        <td class="text-center">@Training.Capacity</td>
+                        <td>@Training.Capacity</td>
                         <td class="d-inline-flex d-lg-block text-end">
                             @Html.ActionLink("View", "View", "Training", new { @id = Training.TrainingId }, new { @class = "btn btn-sm btn-outline-primary" })
                             @if (ViewBag.CurrentRole == "Admin")

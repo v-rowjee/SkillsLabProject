@@ -1,6 +1,6 @@
-﻿using SkillsLabProject.BLL;
-using SkillsLabProject.Models;
-using SkillsLabProject.Models.ViewModels;
+﻿using SkillsLabProject.BL.BL;
+using SkillsLabProject.Common.Models;
+using SkillsLabProject.Common.Models.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;

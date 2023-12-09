@@ -1,5 +1,5 @@
-using SkillsLabProject.DAL;
-using SkillsLabProject.BLL;
+using SkillsLabProject.BL.BL;
+using SkillsLabProject.DAL.DAL;
 using System.Web.Mvc;
 using Unity;
 using Unity.Mvc5;
@@ -11,11 +11,6 @@ namespace SkillsLabProject
         public static void RegisterComponents()
         {
 			var container = new UnityContainer();
-            
-            // register all your components with the container here
-            // it is NOT necessary to register your controllers
-            
-            // e.g. container.RegisterType<ITestService, TestService>();
 
             container.RegisterType<IAppUserBL, AppUserBL>();
             container.RegisterType<IAppUserDAL, AppUserDAL>();

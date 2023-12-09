@@ -6,8 +6,11 @@ $(function () {
     })
 
     $('#enroll').click(() => {
-        alert("enroll")
-
+        if ($('input[type="file"]').length > 0) {
+            alert($('input[type="file"]').length)
+        } else {
+            alert("No Prerequisite")
+        }
     })
 
 })

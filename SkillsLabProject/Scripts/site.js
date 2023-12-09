@@ -31,7 +31,7 @@ const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstra
 $('#trainingTable').DataTable({
     order: [[1, 'desc']],
     "columnDefs": [
-        { "orderable": false, "targets": [3,4] }
+        { "orderable": false, "targets": 4 }
     ],
     language: {
     'paginate': {
