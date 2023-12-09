@@ -26,7 +26,12 @@
                 </div>
                 <div class="mb-5">
                     <label for="password" class="form-label">Password</label>
-                    <input type="password" class="form-control" id="password" placeholder="Ex. xxxx" required>
+                    <div class="input-group">
+                        <input type="password" class="form-control border-end-0" id="password" placeholder="Ex. xxxx" required>
+                        <span class="input-group-text bg-transparent" style="cursor: pointer">
+                            <i class="fa-solid fa-eye" id="togglePassword"></i>
+                        </span>
+                    </div>
                     <div class="invalid-feedback">
                         Please enter your password.
                     </div>

@@ -1,4 +1,16 @@
+// Toggle show password
+$("#togglePassword").parent().click(() => {
+    $("#togglePassword").toggleClass("fa-eye fa-eye-slash");
+    var input = $("#password");
+    if (input.attr("type") === "password") {
+        input.attr("type", "text");
+    } else {
+        input.attr("type", "password");
+    }
+})
 $(function () {
+
+
 
     $('#loginForm').submit((e) => {
         e.preventDefault();

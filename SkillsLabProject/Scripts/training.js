@@ -1,5 +1,25 @@
 ﻿$(function () {
 
+    // DataTable
+    $('#trainingTable').DataTable({
+        order: [[1, 'desc']],
+        "columnDefs": [
+            { "orderable": false, "targets": 4 }
+        ],
+        language: {
+            'paginate': {
+                'previous': '<span class="fa fa-chevron-left"></span>',
+                'next': '<span class="fa fa-chevron-right"></span>'
+            },
+            "lengthMenu": 'Number of Results: <select class="form-control input-sm mb-3">' +
+                '<option value="10">10</option>' +
+                '<option value="25">25</option>' +
+                '<option value="50">50</option>' +
+                '<option value="-1">All</option>' +
+                '</select>'
+        },
+    })
+
     var countPrerequisites = 0
 
     function togglePrerequisiteNone() {
