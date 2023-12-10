@@ -1,9 +1,6 @@
 ﻿@{
     ViewBag.Title = ViewBag.Training.Title;
 }
-@section scripts {
-    <script src="~/Scripts/enrollment.js"></script>
-}
 
 <div class="container">
     <div class="row justify-content-center">
@@ -76,7 +73,7 @@
                                 {
                                 <li class="list-group-item rounded">
                                     <p class="m-0">@PreRequisite.Detail</p>
-                                    @Html.TextBox("file", "", new { @type = "file", @class = "form-control mt-2 mb-3" })
+                                    @Html.TextBox("files", "", new { @type = "file", @class = "form-control mt-2 mb-3" })
                                 </li>
                                 }
                             }

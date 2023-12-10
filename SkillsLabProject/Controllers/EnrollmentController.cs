@@ -2,17 +2,19 @@
 using SkillsLabProject.Common.Enums;
 using SkillsLabProject.Common.Models;
 using SkillsLabProject.Common.Models.ViewModels;
+using SkillsLabProject.Custom;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Pipes;
 using System.Linq;
-using System.Security.Policy;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
-using WebGrease.Css.Extensions;
 
 namespace SkillsLabProject.Controllers
 {
+    [UserSession]
     public class EnrollmentController : Controller
     {
         private IEmployeeBL _employeeBL;
@@ -27,6 +29,7 @@ namespace SkillsLabProject.Controllers
             _preRequisiteBL = preRequisiteBL;
         }
         // GET: Enrollment
+        [CustomAuthorization("Employee,Manager,Admin")]
         public ActionResult Index()
         {
             var loggeduser = Session["CurrentUser"] as LoginViewModel;
@@ -50,46 +53,51 @@ namespace SkillsLabProject.Controllers
 
         // POST: Enroll
         [HttpPost]
-        public JsonResult Enroll(int trainingId, List<HttpPostedFileBase> files)
+        [CustomAuthorization("Employee,Manager,Admin")]
+        public async Task<JsonResult> Enroll(int trainingId, List<HttpPostedFileBase> files)
         {
+            var loggeduser = Session["CurrentUser"] as LoginViewModel;
+
             if (files != null && files.Any())
             {
-                foreach (var item in files)
+                var enrollmentWithProofs = new EnrollmentViewModel() 
+                { 
+                    EmployeeId = _employeeBL.GetEmployee(loggeduser).EmployeeId,
+                    TrainingId = trainingId,
+                    ProofUrls = new List<string>(),
+                    Status = Status.Pending
+                };
+                foreach (var file in files)
                 {
-                    if (item.ContentLength > 0)
+                    FileStream stream;
+                    if (file.ContentLength > 0)
                     {
-                        var loggeduser = Session["CurrentUser"] as LoginViewModel;
-                        var enrollment = new EnrollmentModel()
-                        {
-                            EmployeeId = _employeeBL.GetEmployee(loggeduser).EmployeeId,
-                            TrainingId = trainingId,
-                            Status = Status.Pending
-                        };
-
-                        var result = _enrollmentBL.AddEnrollment(enrollment);
-
-                        if (result)
-                        {
-                            return Json(new { result = "Success", url = Url.Action("Index", "Enrollment") });
-                        }
-                        else
-                        {
-                            return Json(new { result = "Error" });
-                        }
+                        string path = Path.Combine(Server.MapPath("~/Content/Uploads/"), file.FileName);
+                        file.SaveAs(path);
+                        stream = new FileStream(Path.Combine(path), FileMode.Open);
+                        string downloadUrl = await Task.Run(() => _enrollmentBL.UploadAndGetDownloadUrl(stream, file.FileName));
+                        enrollmentWithProofs.ProofUrls.Add(downloadUrl);
                     }
                 }
-                return Json(new { result = "No file found." });
+                var result = _enrollmentBL.AddEnrollment(enrollmentWithProofs);
+
+                if (result)
+                {
+                    return Json(new { result = "Success", url = Url.Action("Index", "Enrollment") });
+                }
+                else
+                {
+                    return Json(new { result = "Error" });
+                }
             }
             else
             {
-                var loggeduser = Session["CurrentUser"] as LoginViewModel;
                 var enrollment = new EnrollmentModel()
                 {
                     EmployeeId = _employeeBL.GetEmployee(loggeduser).EmployeeId,
                     TrainingId = trainingId,
                     Status = Status.Pending
                 };
-
                 var result = _enrollmentBL.AddEnrollment(enrollment);
 
                 if (result)

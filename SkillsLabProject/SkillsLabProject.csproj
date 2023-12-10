@@ -143,7 +143,6 @@
     <Compile Include="App_Start\IAppUserDAL.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\UnityConfig.cs" />
-    <Compile Include="Controllers\CustomAuthorizeAttribute.cs" />
     <Compile Include="Controllers\EnrollmentController.cs" />
     <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -156,7 +155,6 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Content Include="Scripts\enrollment.js" />
     <Content Include="Scripts\training.js" />
     <Content Include="Content\Images\register.png" />
     <Content Include="Scripts\register.js" />
@@ -228,6 +226,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Content\Uploads\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\Bootstrap\bootstrap.rtl.min.css.map" />
