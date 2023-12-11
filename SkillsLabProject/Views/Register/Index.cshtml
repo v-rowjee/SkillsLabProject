@@ -81,13 +81,14 @@
                 </div>
                 <div class="mb-5">
                     <label for="password" class="form-label">Password</label>
-                    <input type="password" class="form-control" id="password" minlength="4" placeholder="Ex. xxxx" required>
-                    <span class="input-group-text">
-                        <i class="fa-solid fa-eye" id="togglePassword"
-                           style="cursor: pointer"></i>
-                    </span>
-                    <div id="password-feedback" class="invalid-feedback">
-                        Please provide a valid password.
+                    <div class="input-group">
+                        <input type="password" class="form-control" id="password" placeholder="Ex. xxxx" required>
+                        <span class="input-group-text bg-light bg-opacity-10" style="cursor: pointer">
+                            <i class="fa-solid fa-eye" id="togglePassword"></i>
+                        </span>
+                    </div>
+                    <div class="invalid-feedback">
+                        Please enter your password.
                     </div>
                 </div>
                 <button type="submit" id="register" class="btn btn-primary w-100 mb-4">Register</button>

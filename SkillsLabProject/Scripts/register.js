@@ -3,6 +3,16 @@
     $('#roleManager').click(() => $('#userrole').text('Manager'))
     $('#roleAdmin').click(() => $('#userrole').text('Admin'))
 
+    $("#togglePassword").parent().click(() => {
+        $("#togglePassword").toggleClass("fa-eye fa-eye-slash");
+        var input = $("#password");
+        if (input.attr("type") === "password") {
+            input.attr("type", "text");
+        } else {
+            input.attr("type", "password");
+        }
+    })
+
     $('#registerForm').submit((e) => {
         e.preventDefault();
         return false;
