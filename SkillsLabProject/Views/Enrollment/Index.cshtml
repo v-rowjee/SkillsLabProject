@@ -13,6 +13,7 @@
                     <th>Description</th>
                     <th>Department Priority</th>
                     <th>Capacity</th>
+                    <th>Proofs</th>
                     <th>Status</th>
                     <th class="text-end">Actions</th>
                 </tr>
@@ -25,7 +26,15 @@
                         <td>@Training.Description</td>
                         <td>@(Training.PriorityDepartment != null ? @Training.PriorityDepartment.Title : '-')</td>
                         <td>@Training.Capacity</td>
-                        <td> <span class="badge text-bg-warning text-nowrap">In Progress</span></td>
+                        @foreach (var Enrollment in ViewBag.Enrollments)
+                        {
+                            if (Enrollment.TrainingId == Training.TrainingId)
+                            {
+                                <td>@Enrollment.ProofUrls.Count</td>
+                                <td> <span class="badge text-bg-warning text-nowrap">@Enrollment.Status</span></td>
+                                break;
+                            }
+                        }
                         <td class="text-end rounded-end">
                             <button type="button" class="btn btn-sm btn-outline-primary text-nowrap" data-bs-toggle="modal" data-bs-target="#imgModal">
                                 View Uploads

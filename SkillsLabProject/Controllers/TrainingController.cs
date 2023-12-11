@@ -1,7 +1,9 @@
 ﻿using SkillsLabProject.BL.BL;
+using SkillsLabProject.Common.Models;
 using SkillsLabProject.Common.Models.ViewModels;
 using SkillsLabProject.Custom;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 
@@ -32,6 +34,7 @@ namespace SkillsLabProject.Controllers
             ViewBag.Employee = employee;
             var trainings = _trainingBL.GetAllTrainings().Where(t => t.Deadline >= DateTime.Now);
             ViewBag.Trainings = trainings;
+
             return View();
         }
                     
@@ -43,6 +46,7 @@ namespace SkillsLabProject.Controllers
             var training = _trainingBL.GetTrainingById((int)id);
             if (training == null) return RedirectToAction("Index");
             ViewBag.Training = training;
+
             var loggeduser = Session["CurrentUser"] as LoginViewModel;
             ViewBag.Employee = _employeeBL.GetEmployee(loggeduser);
             var preRequisites = _preRequisiteBL.GetAllPreRequisites().Where(p => p.TrainingId == training.TrainingId).ToList();
