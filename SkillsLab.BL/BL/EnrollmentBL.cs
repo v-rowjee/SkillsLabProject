@@ -61,7 +61,7 @@ namespace SkillsLabProject.BL.BL
 
         public Task<string> UploadAndGetDownloadUrl(FileStream stream, string fileName)
         {
-            var uniqueFileName = $@"{fileName}-{Guid.NewGuid()}-{DateTime.Now.Ticks}.txt";
+            var uniqueFileName = $@"{fileName}-{Guid.NewGuid()}";
             var downloadUrl = _enrollmentDAL.UploadAndGetDownloadUrlAsync(stream, uniqueFileName);
             return downloadUrl;
         }

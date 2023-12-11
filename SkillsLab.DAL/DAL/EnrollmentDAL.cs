@@ -6,6 +6,7 @@ using SkillsLabProject.Common.Models;
 using SkillsLabProject.Common.Models.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.IO;
@@ -21,10 +22,14 @@ namespace SkillsLabProject.DAL.DAL
     }
     public class EnrollmentDAL : IEnrollmentDAL
     {
+        private string _ApiKey = ConfigurationManager.AppSettings["FirebaseApiKey"].ToString();
+        private string _Bucket = ConfigurationManager.AppSettings["FirebaseBucket"].ToString();
+        private string _Email = ConfigurationManager.AppSettings["FirebaseEmail"].ToString();
+        private string _Password = ConfigurationManager.AppSettings["FirebasePassword"].ToString();
         public IEnumerable<EnrollmentModel> GetAll()
         {
             const string GetAllEnrollmentsQuery = @"
-                SELECT EnrollmentId, EmployeeId, EnrollmentId, StatusId
+                SELECT EnrollmentId, EmployeeId, TrainingId, StatusId
                 FROM [dbo].[Enrollment]
             ";
             var dt = DBCommand.GetData(GetAllEnrollmentsQuery);
@@ -35,9 +40,8 @@ namespace SkillsLabProject.DAL.DAL
                 Enrollment = new EnrollmentModel();
                 Enrollment.EnrollmentId = int.Parse(row["EnrollmentId"].ToString());
                 Enrollment.EmployeeId = int.Parse(row["EmployeeId"].ToString());
-                Enrollment.EnrollmentId = int.Parse(row["EnrollmentId"].ToString());
+                Enrollment.TrainingId = int.Parse(row["TrainingId"].ToString());
                 Enrollment.Status =  (Status) int.Parse(row["StatusId"].ToString());
-
                 Enrollments.Add(Enrollment);
             }
             return Enrollments;
@@ -45,7 +49,7 @@ namespace SkillsLabProject.DAL.DAL
         public EnrollmentModel GetById(int EnrollmentId)
         {
             const string GetEnrollmentQuery = @"
-                SELECT EnrollmentId, EmployeeId, EnrollmentId, StatusId
+                SELECT EnrollmentId, EmployeeId, TrainingId, StatusId
                 FROM [dbo].[Enrollment]
                 WHERE [EnrollmentId] = @EnrollmentId
             ";
@@ -128,7 +132,16 @@ namespace SkillsLabProject.DAL.DAL
         }
         public async Task<string> UploadAndGetDownloadUrlAsync(FileStream stream, string fileName)
         {
-            var task = new FirebaseStorage("gs://skillslab-89154.appspot.com")
+            var auth = new FirebaseAuthProvider(new FirebaseConfig(_ApiKey));
+            var a = await auth.SignInWithEmailAndPasswordAsync(_Email, _Password);
+
+            var task = new FirebaseStorage(
+                _Bucket,
+                new FirebaseStorageOptions
+                {
+                    AuthTokenAsyncFactory = () => Task.FromResult(a.FirebaseToken),
+                    ThrowOnCancel = true,
+                })
                 .Child("images")
                 .Child(fileName)
                 .PutAsync(stream);

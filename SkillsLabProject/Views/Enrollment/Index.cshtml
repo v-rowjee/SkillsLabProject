@@ -1,32 +1,60 @@
 ﻿
 @{
-    ViewBag.Title = "Enrollemnts";
+    ViewBag.Title = "Enrollments";
 }
 
 <div class="container">
     <h1>Enrollments</h1>
     <div class="table-responsive">
-        <table class="table table-hover">
+        <table class="table table-borderless table-hover">
             <thead>
                 <tr>
-                    <th scope="col">Title</th>
-                    <th scope="col">Deadline</th>
-                    <th scope="col">Department Priority</th>
-                    <th scope="col" class="text-center">Capacity</th>
-                    <th scope="col" class="text-end">Actions</th>
+                    <th>Title</th>
+                    <th>Description</th>
+                    <th>Department Priority</th>
+                    <th>Capacity</th>
+                    <th>Status</th>
+                    <th class="text-end">Actions</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach (var Training in ViewBag.Trainings)
                 {
                     <tr>
-                        <td>@Training.Title</td>
-                        <td>@Training.Deadline.ToString("ddd, dd MMM yyyy hh:mm tt")</td>
+                        <td class="rounded-start">@Training.Title</td>
+                        <td>@Training.Description</td>
                         <td>@(Training.PriorityDepartment != null ? @Training.PriorityDepartment.Title : '-')</td>
-                        <td class="text-center">@Training.Capacity</td>
-                        <td class="text-end">
-                            @Html.ActionLink("View", "View", "Training", new { @id = Training.TrainingId }, new { @class = "btn btn-sm btn-outline-primary me-2" })
+                        <td>@Training.Capacity</td>
+                        <td> <span class="badge text-bg-warning text-nowrap">In Progress</span></td>
+                        <td class="text-end rounded-end">
+                            <button type="button" class="btn btn-sm btn-outline-primary text-nowrap" data-bs-toggle="modal" data-bs-target="#imgModal">
+                                View Uploads
+                            </button>
                         </td>
+                    </tr>
+                    <div class="modal fade" id="imgModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="exampleModalLabel">Uploaded Files</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    ...
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                    <button type="button" class="btn btn-primary">Previous</button>
+                                    <button type="button" class="btn btn-primary">Next</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+                @if(ViewBag.Enrollments.Count == 0)
+                {
+                    <tr>
+                        <td colspan="6" class="text-center rounded">No Enrollments found.</td>
                     </tr>
                 }
             </tbody>
