@@ -88,7 +88,9 @@ namespace SkillsLabProject.Controllers
             var loggeduser = Session["CurrentUser"] as LoginViewModel;
             bool result;
 
-            if (files != null && files.Any())
+            var prerequisites = _preRequisiteBL.GetAllPreRequisites().Where(p => p.TrainingId ==  trainingId).ToList();
+
+            if (files != null && files.Any() && files.Count == prerequisites.Count)
             {
                 var enrollmentWithProofs = new EnrollmentViewModel() 
                 { 
@@ -111,7 +113,7 @@ namespace SkillsLabProject.Controllers
                 }
                 result = _enrollmentBL.AddEnrollment(enrollmentWithProofs);
             }
-            else
+            else if(prerequisites.Count == 0)
             {
                 var enrollment = new EnrollmentModel()
                 {
@@ -121,15 +123,12 @@ namespace SkillsLabProject.Controllers
                 };
                 result = _enrollmentBL.AddEnrollment(enrollment);
             }
-
-            if (result)
-            {
-                return Json(new { result = "Success", url = Url.Action("Index", "Enrollment") });
-            }
             else
             {
-                return Json(new { result = "Error" });
+                return Json(new { result = "FileMissing" });
             }
+
+            return result ? Json(new { result = "Success", url = Url.Action("Index", "Enrollment") }) : Json(new { result = "Error" });
         }
     }
 }

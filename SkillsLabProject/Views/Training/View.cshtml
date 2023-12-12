@@ -63,8 +63,8 @@
                     </div>
                 </div>
             </div>
-            <form id="enrollmentForm" enctype="multipart/form-data">
-                <div class="card mb-4">
+            <form id="enrollmentForm" enctype="multipart/form-data" class="needs-validation" novalidate>
+                <div id="prerequisites-card" class="card mb-4">
                     <div class="card-header">
                         <i class="fa-solid fa-file-pdf me-1"></i>
                         Pre-requisites
@@ -83,7 +83,7 @@
                                         <p class="m-0">@PreRequisite.Detail</p>
                                         @if (ViewBag.EnrolledStatus == "0")
                                         {
-                                            @Html.TextBox("files", "", new { @type = "file", @class = "form-control mt-2 mb-3" })
+                                            @Html.TextBox("files", "", new { @type = "file", @class = "form-control mt-2 mb-3", @required = true })
                                         }
                                     </li>
                                 }

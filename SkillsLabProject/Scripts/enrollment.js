@@ -5,6 +5,13 @@ $(function () {
         return false;
     })
 
+    var inputFiles = $('input[name="files"')
+    inputFiles.change(() => {
+        if (inputFiles[0].files > 0) {
+            inputFiles.removeClass("is-invalid")
+        }
+    })
+
     $('#enroll').click(() => {
 
         $('#enroll').html(`
@@ -13,14 +20,14 @@ $(function () {
         `)
         setLoading(true)
 
-        var formData = new FormData()
-        var trainingId = $('#trainingId').val()
-        var files = $('input[name="file"]');
+        var formData = new FormData();
+        var trainingId = $('#trainingId').val();
+        var inputFiles = $('input[name="files"]')[0].files;
 
         formData.append("trainingId", trainingId);
-        formData.append("httpPostedFileBase", files.each(function (i, file) {
-            formData.append("httpPostedFileBase", file);
-        }));
+        for (i = 0; i < inputFiles.length; i++) {
+            formData.append("files", $('input[name="files"]')[0].files[i]);
+        }
 
         $.ajax({
             type: "POST",
@@ -31,12 +38,19 @@ $(function () {
             processData: false,
             async: true,
             success: (response) => {
-                if (response.result) {
+                if (response.result == "Success") {
                     Snackbar.show({
                         text: "Training enrolled successfully!",
                         actionTextColor: "#CFE2FF"
                     });
                     window.location.replace(response.url);
+                }
+                else if (response.result == "FileMissing") {
+                    $('#enrollmentForm input[name="files"]').addClass("is-invalid")
+                    Snackbar.show({
+                        text: "Please upload all pre-requisite files.",
+                        actionTextColor: "#CFE2FF"
+                    });
                 }
                 else {
                     Snackbar.show({
