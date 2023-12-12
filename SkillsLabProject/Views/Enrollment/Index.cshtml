@@ -1,5 +1,4 @@
-﻿
-@{
+﻿@{
     ViewBag.Title = "Enrollments";
 }
 
@@ -9,12 +8,12 @@
         <table class="table table-borderless table-hover">
             <thead>
                 <tr>
+                    <th>Status</th>
                     <th>Title</th>
                     <th>Description</th>
-                    <th>Department Priority</th>
+                    <th class="text-nowrap">Department Priority</th>
                     <th>Capacity</th>
                     <th>Proofs</th>
-                    <th>Status</th>
                     <th class="text-end">Actions</th>
                 </tr>
             </thead>
@@ -22,30 +21,53 @@
                 @foreach (var Training in ViewBag.Trainings)
                 {
                     <tr>
-                        <td class="rounded-start">@Training.Title</td>
-                        <td>@Training.Description</td>
-                        <td>@(Training.PriorityDepartment != null ? @Training.PriorityDepartment.Title : '-')</td>
-                        <td>@Training.Capacity</td>
                         @foreach (var Enrollment in ViewBag.Enrollments)
                         {
                             if (Enrollment.TrainingId == Training.TrainingId)
                             {
-                                <td>@Enrollment.ProofUrls.Count</td>
                                 <td> <span class="badge text-bg-warning text-nowrap">@Enrollment.Status</span></td>
+                                <td class="rounded-start">@Training.Title</td>
+                                <td>@Training.Description</td>
+                                <td>
+                                    @if (Training.PriorityDepartment != null)
+                                    {@Training.PriorityDepartment.Title}
+                                else
+                                { <p class="opacity-25 m-0">None</p>}
+                                </td>
+                                <td>@Training.Capacity</td>
+                                <td>@(Enrollment.ProofUrls.Count == 0 ? "-" : Enrollment.ProofUrls.Count)</td>
+                                <td class="text-end rounded-end">
+                                    <div class="d-flex justify-content-center">
+                                        @if (Enrollment.ProofUrls.Count == 0)
+                                        {
+                                            <button class="btn btn-sm btn-outline-primary text-nowrap" data-bs-toggle="modal" data-bs-target="#imgModal" disabled>
+                                                View Uploads
+                                            </button>
+                                        }
+                                        else
+                                        {
+                                            <button class="btn btn-sm btn-outline-primary text-nowrap" data-bs-toggle="modal" data-bs-target="#imgModal">
+                                                View Uploads
+                                            </button>
+                                        }
+                                        <form>
+                                            <input type="hidden" value="@Training.TrainingId" />
+                                            <button class="btn btn-sm btn-outline-danger ms-2">
+                                                <i class="fa-solid fa-xmark"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
                                 break;
                             }
                         }
-                        <td class="text-end rounded-end">
-                            <button type="button" class="btn btn-sm btn-outline-primary text-nowrap" data-bs-toggle="modal" data-bs-target="#imgModal">
-                                View Uploads
-                            </button>
-                        </td>
+
                     </tr>
-                    <div class="modal fade" id="imgModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal fade" id="imgModal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h1 class="modal-title fs-5" id="exampleModalLabel">Uploaded Files</h1>
+                                    <h1 class="modal-title fs-5" id="modalLabel"><i class="fa-solid fa-graduation-cap me-2"></i>@Training.Title - Uploaded Files</h1>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">

@@ -1,6 +1,9 @@
 ﻿@{
     ViewBag.Title = ViewBag.Training.Title;
 }
+@section scripts {
+    <script src="~/Scripts/enrollment.js"></script>
+}
 
 <div class="container">
     <div class="row justify-content-center">
@@ -54,8 +57,7 @@
                     </div>
                 </div>
             </div>
-            @using (Html.BeginForm("Enroll", "Enrollment", FormMethod.Post, new { enctype = "multipart/form-data" }))
-            {
+            <form id="enrollmentForm" enctype="multipart/form-data">
                 <div class="card mb-4">
                     <div class="card-header">
                         <i class="fa-solid fa-file-pdf me-1"></i>
@@ -71,10 +73,10 @@
                             {
                                 foreach (var PreRequisite in ViewBag.PreRequisites)
                                 {
-                                <li class="list-group-item rounded">
-                                    <p class="m-0">@PreRequisite.Detail</p>
-                                    @Html.TextBox("files", "", new { @type = "file", @class = "form-control mt-2 mb-3" })
-                                </li>
+                                    <li class="list-group-item rounded">
+                                        <p class="m-0">@PreRequisite.Detail</p>
+                                        @Html.TextBox("files", "", new { @type = "file", @class = "form-control mt-2 mb-3" })
+                                    </li>
                                 }
                             }
                         </ul>
@@ -85,11 +87,11 @@
                         @Html.ActionLink("Back", "Index", "Training", null, new { @class = "btn btn-secondary me-2 w-100" })
                     </div>
                     <div class="col-8">
-                        <input type="hidden" name="trainingId" value="@ViewBag.Training.TrainingId" />
+                        <input type="hidden" id="trainingId" value="@ViewBag.Training.TrainingId" />
                         <button type="submit" id="enroll" class="btn btn-primary w-100 mb-5">Enroll</button>
                     </div>
                 </div>
-            }
+            </form>
         </div>
     </div>
 </div>

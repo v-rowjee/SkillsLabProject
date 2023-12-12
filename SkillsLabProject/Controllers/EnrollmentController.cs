@@ -3,10 +3,8 @@ using SkillsLabProject.Common.Enums;
 using SkillsLabProject.Common.Models;
 using SkillsLabProject.Common.Models.ViewModels;
 using SkillsLabProject.Custom;
-using System;
 using System.Collections.Generic;
 using System.IO;
-using System.IO.Pipes;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
@@ -68,9 +66,10 @@ namespace SkillsLabProject.Controllers
         // POST: Enroll
         [HttpPost]
         [CustomAuthorization("Employee,Manager,Admin")]
-        public async Task<ActionResult> Enroll(int trainingId, List<HttpPostedFileBase> files)
+        public async Task<JsonResult> Enroll(List<HttpPostedFileBase> files, int trainingId)
         {
             var loggeduser = Session["CurrentUser"] as LoginViewModel;
+            bool result;
 
             if (files != null && files.Any())
             {
@@ -93,7 +92,7 @@ namespace SkillsLabProject.Controllers
                         enrollmentWithProofs.ProofUrls.Add(downloadUrl);
                     }
                 }
-                var result = _enrollmentBL.AddEnrollment(enrollmentWithProofs);
+                result = _enrollmentBL.AddEnrollment(enrollmentWithProofs);
             }
             else
             {
@@ -103,9 +102,17 @@ namespace SkillsLabProject.Controllers
                     TrainingId = trainingId,
                     Status = Status.Pending
                 };
-                var result = _enrollmentBL.AddEnrollment(enrollment);
+                result = _enrollmentBL.AddEnrollment(enrollment);
             }
-            return RedirectToAction("Index");
+
+            if (result)
+            {
+                return Json(new { result = "Success", url = Url.Action("Index", "Enrollment") });
+            }
+            else
+            {
+                return Json(new { result = "Error" });
+            }
         }
     }
 }
