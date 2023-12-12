@@ -12,7 +12,13 @@
                 @Html.ActionLink("Training", "Index", "Training", null, new { @class = "text-decoration-none text-black" })
                 / @ViewBag.Training.Title
             </h1>
-
+            @if (ViewBag.EnrolledStatus != "0")
+            {
+                <div class="alert alert-primary" role="alert">
+                    You have already enrolled in this training. The training status is <span class="badge text-bg-primary">@ViewBag.EnrolledStatus</span>
+                    <br /> Click @Html.ActionLink("here", "Index", "Enrollment", null, new { @class = "link" }) to view.
+                </div>
+            }
             <div class="card mb-4">
                 <div class="card-header">
                     <i class="fa-solid fa-circle-info me-1"></i>
@@ -65,7 +71,7 @@
                     </div>
                     <div class="card-body p-0">
                         <ul class="list-group list-group-flush">
-                            @if (ViewBag.PreRequisites == null)
+                            @if (ViewBag.PreRequisites == null || ViewBag.PreRequisites.Count == 0)
                             {
                                 <li class="list-group-item rounded">None</li>
                             }
@@ -75,9 +81,13 @@
                                 {
                                     <li class="list-group-item rounded">
                                         <p class="m-0">@PreRequisite.Detail</p>
-                                        @Html.TextBox("files", "", new { @type = "file", @class = "form-control mt-2 mb-3" })
+                                        @if (ViewBag.EnrolledStatus == "0")
+                                        {
+                                            @Html.TextBox("files", "", new { @type = "file", @class = "form-control mt-2 mb-3" })
+                                        }
                                     </li>
                                 }
+
                             }
                         </ul>
                     </div>
@@ -86,9 +96,17 @@
                     <div class="col-4">
                         @Html.ActionLink("Back", "Index", "Training", null, new { @class = "btn btn-secondary me-2 w-100" })
                     </div>
+
                     <div class="col-8">
-                        <input type="hidden" id="trainingId" value="@ViewBag.Training.TrainingId" />
-                        <button type="submit" id="enroll" class="btn btn-primary w-100 mb-5">Enroll</button>
+                        @if (ViewBag.EnrolledStatus == "0")
+                        {
+                            <input type="hidden" id="trainingId" value="@ViewBag.Training.TrainingId" />
+                            <button type="submit" id="enroll" class="btn btn-primary w-100 mb-5">Enroll</button>
+                        }
+                        else
+                        {
+                            @Html.ActionLink("View Enrollment", "Index", "Enrollment", null, new { @class = "btn btn-primary w-100" })
+                        }
                     </div>
                 </div>
             </form>

@@ -203,10 +203,21 @@
         }
 
     })
+
+    $('#trainingForm').submit((e) => {
+        e.preventDefault()
+        return false;
+    })
 })
 
 // DELETE TRAINING
-function deleteTraining(trainingId) {
+function deleteTraining(deleteBtn) {
+    $(deleteBtn).html(`
+        <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+    `)
+
+    var trainingId = $(deleteBtn).siblings('input[type="hidden"]').val();
+
     $.ajax({
         type: "POST",
         url: "/Training/Delete",
@@ -226,6 +237,9 @@ function deleteTraining(trainingId) {
                     actionTextColor: "#CFE2FF"
                 });
             }
+        },
+        complete: () => {
+            $(deleteBtn).html(`<i class="fa-solid fa-trash"></i>`)
         }
     })
 }

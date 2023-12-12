@@ -1,18 +1,18 @@
 $(function () {
 
     $('#enrollmentForm').submit((e) => {
-        $('#enroll').prop('disabled', true);
-        $('#enroll').html(`
-            <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
-            <span role="status">Uploading files...</span>
-        `)
-        $('#overlay-spinner').show()
-
         e.preventDefault()
         return false;
     })
 
     $('#enroll').click(() => {
+
+        $('#enroll').html(`
+            <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+            <span role="status">Uploading files...</span>
+        `)
+        setLoading(true)
+
         var formData = new FormData()
         var trainingId = $('#trainingId').val()
         var files = $('input[name="file"]');
@@ -52,12 +52,58 @@ $(function () {
                 });
             },
             complete: () => {
-                $('#enroll').prop('disabled', false);
                 $('#enroll').html('Enroll')
-                $('#overlay-spinner').hide()
+                setLoading(false)
             }
         });
     })
 
+    $('#deleteEnrollmentForm').submit((e) => {
+        e.preventDefault()
+        return false;
+    })
 
 })
+
+// DELETE ENROLLMENT
+function deleteEnrollment(deleteBtn) {
+    $(deleteBtn).html(`
+        <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+        <span role="status">Removing Enrollment...</span>
+    `)
+
+    var enrollmentId = $(deleteBtn).siblings('input[type="hidden"]').val();
+
+    $.ajax({
+        type: "POST",
+        url: '/Enrollment/Delete',
+        data: { id: enrollmentId },
+        dataType: 'json',
+        success: (response) => {
+            if (response.result) {
+                Snackbar.show({
+                    text: "Enrollemnt has been removed!",
+                    actionTextColor: "#CFE2FF"
+                });
+                window.location.replace(response.url);
+            }
+            else {
+                Snackbar.show({
+                    text: "Unable to remove enrollment of this training.",
+                    actionTextColor: "#CFE2FF"
+                });
+            }
+        },
+        error: () => {
+            Snackbar.show({
+                text: "Unable to remove enrollment of this training.",
+                actionTextColor: "#CFE2FF"
+            });
+        },
+        complete: () => {
+            $(deleteBtn).html('Cancel Enrollment')
+            setLoading(false)
+        }
+    });
+
+}

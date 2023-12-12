@@ -6,6 +6,11 @@
 //    }, 750);
 //})
 
+// prevent form resubmission
+if (window.history.replaceState) {
+    window.history.replaceState(null, null, window.location.href);
+}
+
 // Bootstrap Form Validations
 (() => {
     'use strict'
@@ -30,3 +35,13 @@ const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstra
 
 // Spinner
 $('#overlay-spinner').hide()
+
+function setLoading(flag) {
+    if (flag) {
+        $('#enroll').prop('disabled', true);
+        $('#overlay-spinner').show()
+    } else {
+        $('#enroll').prop('disabled', false);
+        $('#overlay-spinner').hide()
+    }
+}

@@ -50,6 +50,7 @@ namespace SkillsLabProject.Controllers
 
                 var enrollmentView = new EnrollmentViewModel()
                 {
+                    EnrollmentId = enrollment.EnrollmentId,
                     EmployeeId = enrollment.EmployeeId,
                     TrainingId = enrollment.TrainingId,
                     Status = enrollment.Status,
@@ -61,6 +62,22 @@ namespace SkillsLabProject.Controllers
             ViewBag.Trainings = trainings;
             ViewBag.Enrollments = enrollmentsViews;
             return View();
+        }
+
+        // Post: Delete
+        [HttpPost]
+        [CustomAuthorization("Employee,Manager,Admin")]
+        public JsonResult Delete(int id)
+        {
+            var result = _enrollmentBL.DeleteEnrollment(id);
+            if (result)
+            {
+                return Json(new { result = "Success", url = Url.Action("Index", "Enrollment") });
+            }
+            else
+            {
+                return Json(new { result = "Error" });
+            }
         }
 
         // POST: Enroll

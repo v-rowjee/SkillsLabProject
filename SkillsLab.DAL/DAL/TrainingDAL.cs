@@ -231,9 +231,10 @@ namespace SkillsLabProject.DAL.DAL
         {
             const string DeleteTrainingQuery = @"
                 BEGIN TRANSACTION
-                    DELETE FROM [dbo].[TrainingPreRequisite] WHERE TrainingId=@TrainingId;
-                    DELETE FROM [dbo].[Enrollment] WHERE TrainingId=@TrainingId;
-                    DELETE FROM [dbo].[Training] WHERE TrainingId=@TrainingId
+                    DELETE FROM [dbo].[TrainingPreRequisite] WHERE TrainingId = @TrainingId;
+                    DELETE FROM [dbo].[Proof] WHERE EnrollmentId IN (SELECT EnrollmentId FROM [dbo].[Enrollment] WHERE TrainingId = @TrainingId);
+                    DELETE FROM [dbo].[Enrollment] WHERE TrainingId = @TrainingId;
+                    DELETE FROM [dbo].[Training] WHERE TrainingId = @TrainingId;
                 COMMIT
             ";
             var parameter = new SqlParameter("@TrainingId", trainingId);

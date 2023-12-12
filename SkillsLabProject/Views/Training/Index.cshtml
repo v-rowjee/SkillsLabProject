@@ -18,41 +18,47 @@
             </div>
         }
     </div>
-    <div class="table-responsive p-2">
-        <table id="trainingTable" class="table table-borderless table-hover pb-4">
-            <thead>
-                <tr class="align-middle">
-                    <th>Title</th>
-                    <th>Deadline</th>
-                    <th class="text-nowrap">Department Priority</th>
-                    <th>Capacity</th>
-                    <th class="text-end">Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var Training in ViewBag.Trainings)
-                {
-                    <tr>
-                        <td class="rounded-start">@Training.Title</td>
-                        <td>@Training.Deadline.ToString("ddd, dd MMM yyyy - hh:mm tt")</td>
-                        <td>@if (Training.PriorityDepartment != null) { @Training.PriorityDepartment.Title} else { <p class="opacity-25 m-0">None</p> }</td>
-                        <td>@Training.Capacity</td>
-                        <td class="rounded-end text-end">
-                            <div class="d-flex justify-content-end">
-                                @Html.ActionLink("View", "View", "Training", new { @id = Training.TrainingId }, new { @class = "btn btn-sm btn-outline-primary" })
-                                @if (ViewBag.CurrentRole == "Admin")
-                                {
-                                    @Html.ActionLink("Edit", "Edit", "Training", new { @id = Training.TrainingId }, new { @class = "btn btn-sm btn-outline-secondary ms-2" })
-                                    <button class="btn btn-sm btn-outline-danger ms-2" onclick="deleteTraining(@Training.TrainingId)">
-                                        <i class="fa-solid fa-trash"></i>
-                                    </button>
-                                }
-                            </div>
-                        </td>
+    <form id="trainingForm">
+        <div class="table-responsive p-2">
+            <table id="trainingTable" class="table table-borderless table-hover pb-4">
+                <thead>
+                    <tr class="align-middle">
+                        <th>Title</th>
+                        <th>Deadline</th>
+                        <th class="text-nowrap">Department Priority</th>
+                        <th>Capacity</th>
+                        <th class="text-end">Actions</th>
                     </tr>
-                }
-            </tbody>
-        </table>
-    </div>
+                </thead>
+                <tbody>
+                    @foreach (var Training in ViewBag.Trainings)
+                    {
+                        <tr>
+                            <td class="rounded-start">@Training.Title</td>
+                            <td>@Training.Deadline.ToString("ddd, dd MMM yyyy - hh:mm tt")</td>
+                            <td>@if (Training.PriorityDepartment != null)
+                            {@Training.PriorityDepartment.Title}
+                        else
+                        { <p class="opacity-25 m-0">None</p>}</td>
+                            <td>@Training.Capacity</td>
+                            <td class="rounded-end text-end">
+                                <div class="d-flex justify-content-end">
+                                    @Html.ActionLink("View", "View", "Training", new { @id = Training.TrainingId }, new { @class = "btn btn-sm btn-outline-primary" })
+                                    @if (ViewBag.CurrentRole == "Admin")
+                                    {
+                                        @Html.ActionLink("Edit", "Edit", "Training", new { @id = Training.TrainingId }, new { @class = "btn btn-sm btn-outline-secondary ms-2" })
+                                        <button class="btn btn-sm btn-outline-danger ms-2" onclick="deleteTraining(this)">
+                                            <i class="fa-solid fa-trash"></i>
+                                        </button>
+                                        <input type="hidden" value="@Training.TrainingId" />
+                                    }
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </form>
 </div>
 

@@ -16,12 +16,14 @@ namespace SkillsLabProject.Controllers
         private ITrainingBL _trainingBL;
         private IPreRequisiteBL _preRequisiteBL;
         private IDepartmentBL _departmentBL;
-        public TrainingController(IEmployeeBL employeeBL, ITrainingBL trainingBL, IPreRequisiteBL preRequisiteBL, IDepartmentBL departmentBL)
+        private IEnrollmentBL _enrollmentBL;
+        public TrainingController(IEmployeeBL employeeBL, ITrainingBL trainingBL, IPreRequisiteBL preRequisiteBL, IDepartmentBL departmentBL, IEnrollmentBL enrollmentBL)
         {
             _employeeBL = employeeBL;
             _trainingBL = trainingBL;
             _preRequisiteBL = preRequisiteBL;
             _departmentBL = departmentBL;
+            _enrollmentBL = enrollmentBL;
         }
         [HttpGet]
         [CustomAuthorization("Employee,Manager,Admin")]
@@ -48,9 +50,13 @@ namespace SkillsLabProject.Controllers
             ViewBag.Training = training;
 
             var loggeduser = Session["CurrentUser"] as LoginViewModel;
-            ViewBag.Employee = _employeeBL.GetEmployee(loggeduser);
+            var employee = _employeeBL.GetEmployee(loggeduser);
+            ViewBag.Employee = employee;
             var preRequisites = _preRequisiteBL.GetAllPreRequisites().Where(p => p.TrainingId == training.TrainingId).ToList();
             ViewBag.Prerequisites = preRequisites.Any() ? preRequisites : null;
+
+            var enrolledStatus = _enrollmentBL.GetAllEnrollments().Where(e => e.EmployeeId == employee.EmployeeId).Where(e => e.TrainingId == training.TrainingId).Select(e => e.Status).FirstOrDefault().ToString();
+            ViewBag.EnrolledStatus = enrolledStatus;
             return View();
         }
         [HttpGet]
