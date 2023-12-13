@@ -16,7 +16,7 @@
     </style>
 </head>
 <body>
-    <div class="d-flex align-items-center justify-content-center vh-100">
+    <main class="d-flex align-items-center justify-content-center vh-100">
         <div class="text-center">
             <h1 class="display-1 fw-bold">@ViewBag.ErrorCode</h1>
             <p class="fs-3"> <span class="text-danger">Opps!</span>@ViewBag.ErrorName</p>
@@ -25,6 +25,6 @@
             </p>
             @Html.ActionLink("Go Back", "Index", "Home", null, new { @class = "btn btn-primary" })
         </div>
-    </div>
+    </main>
 </body>
 </html>

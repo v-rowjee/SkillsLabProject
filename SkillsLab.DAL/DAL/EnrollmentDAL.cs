@@ -96,9 +96,9 @@ namespace SkillsLabProject.DAL.DAL
             var parameters = new List<SqlParameter>
             {
                 new SqlParameter("@EmployeeId", model.EmployeeId),
-                new SqlParameter("@TrainingId", model.TrainingId),
+                new SqlParameter("@TrainingId", model.Training.TrainingId),
                 new SqlParameter("@StatusId", model.Status),
-                new SqlParameter("@Proofs", string.Join(",",model.ProofUrls))
+                new SqlParameter("@Proofs", string.Join(",",model.Proofs.Select(p => p.Attachment)))
             };
             return DBCommand.InsertUpdateData(AddEnrollmentQuery, parameters);
         }

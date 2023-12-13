@@ -52,14 +52,12 @@ namespace SkillsLabProject.Controllers
                 {
                     EnrollmentId = enrollment.EnrollmentId,
                     EmployeeId = enrollment.EmployeeId,
-                    TrainingId = enrollment.TrainingId,
+                    Training = training,
                     Status = enrollment.Status,
-                    ProofUrls = _proofBL.GetAllProofs().Where(x => x.EnrollmentId == enrollment.EnrollmentId).Select(x => x.Attachment).ToList(),
+                    Proofs = _proofBL.GetAllProofs().Where(x => x.EnrollmentId == enrollment.EnrollmentId).ToList(),
                 };
                 enrollmentsViews.Add(enrollmentView);
-
             }
-            ViewBag.Trainings = trainings;
             ViewBag.Enrollments = enrollmentsViews;
             return View();
         }
@@ -95,8 +93,8 @@ namespace SkillsLabProject.Controllers
                 var enrollmentWithProofs = new EnrollmentViewModel() 
                 { 
                     EmployeeId = _employeeBL.GetEmployee(loggeduser).EmployeeId,
-                    TrainingId = trainingId,
-                    ProofUrls = new List<string>(),
+                    Training = new TrainingModel() { TrainingId = trainingId },
+                    Proofs = new List<ProofModel>(),
                     Status = Status.Pending
                 };
                 foreach (var file in files)
@@ -108,7 +106,7 @@ namespace SkillsLabProject.Controllers
                         file.SaveAs(path);
                         stream = new FileStream(Path.Combine(path), FileMode.Open);
                         string downloadUrl = await _enrollmentBL.UploadAndGetDownloadUrl(stream, file.FileName);
-                        enrollmentWithProofs.ProofUrls.Add(downloadUrl);
+                        enrollmentWithProofs.Proofs.Add(new ProofModel() { Attachment = downloadUrl });
                     }
                 }
                 result = _enrollmentBL.AddEnrollment(enrollmentWithProofs);

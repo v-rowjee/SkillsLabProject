@@ -12,8 +12,8 @@ namespace SkillsLabProject.Common.Models.ViewModels
     {
         public int EnrollmentId { get; set; }
         public int EmployeeId { get; set; }
-        public int TrainingId { get; set; }
-        public List<string> ProofUrls { get; set; }
+        public TrainingModel Training { get; set; }
+        public List<ProofModel> Proofs { get; set; }
         public Status Status { get; set; }
     }
 }

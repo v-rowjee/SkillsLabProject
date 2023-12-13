@@ -5,118 +5,110 @@
     <script src="~/Scripts/enrollment.js"></script>
 }
 
-<div class="container">
+<main class="container">
     <h1>Enrollments</h1>
     <form id="deleteEnrollmentForm" class="w-100">
         <div class="row">
-            @foreach (var Training in ViewBag.Trainings)
+            @foreach (var Enrollment in ViewBag.Enrollments)
             {
-                foreach (var Enrollment in ViewBag.Enrollments)
-                {
-                    if (Enrollment.TrainingId == Training.TrainingId)
-                    {
-                        <div class="col-lg-6 p-3">
-                            <div class="card">
-                                <div class="card-header">
-                                    <div class="float-start fw-bold">
-                                        <i class="fa-solid fa-graduation-cap"></i>
-                                        @Training.Title
-                                    </div>
-                                    <div class="float-end">
-                                        <span class="badge text-bg-warning text-nowrap">@Enrollment.Status</span>
-                                    </div>
-                                </div>
-                                <div class="card-body">
-                                    <div class="card-text" style="min-height: 60px;">
-                                        @Training.Description
-                                    </div>
-                                    <div class="row justify-content-between mt-4">
-                                        <div class="col-4 text-center mb-3">
-                                            <div class="d-block badge text-bg-light mb-1">Department</div>
-                                            @if (Training.PriorityDepartment != null)
-                                            {<div class="text-center">@Training.PriorityDepartment.Title</div>}
-                                        else
-                                        { <div class="opacity-25 text-center">None</div>}
-                                        </div>
-                                        <div class="col-4 mb-3">
-                                            <div class="d-block badge text-bg-light mb-1">Capacity</div>
-                                            <div class="text-center">@Training.Capacity</div>
-                                        </div>
-                                        <div class="col-4 mb-3">
-                                            <div class="d-block badge text-bg-light mb-1">Uploads</div>
-                                            <div class="text-center">
-                                                @if (Enrollment.ProofUrls.Count == 0)
-                                                {<div class="opacity-25">None</div> }
-                                                else
-                                                { <div>@Enrollment.ProofUrls.Count</div>}
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row mt-4 gap-3 gap-md-0">
-                                        <div class="col-md-6">
-                                            <input type="hidden" value="@Enrollment.EnrollmentId" />
-                                            <button class="btn btn-sm btn-outline-danger w-100" onclick="deleteEnrollment(this)">
-                                                Cancel Enrollment
-                                            </button>
-                                        </div>
-                                        @if (Enrollment.ProofUrls.Count > 0)
-                                        {
-                                            <div class="col-md-6">
-                                                <button class="btn btn-sm btn-outline-primary text-nowrap w-100" data-bs-toggle="modal" data-bs-target="#modal-@(Training.TrainingId)">
-                                                    View Uploads
-                                                </button>
-                                            </div>
-                                            <div class="modal fade" id="modal-@(Training.TrainingId)" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
-                                                <div class="modal-dialog modal-dialog-centered">
-                                                    <div class="modal-content">
-                                                        <div class="modal-header">
-                                                            <h1 class="modal-title fs-5" id="modalLabel"><i class="fa-solid fa-graduation-cap me-2"></i>@Training.Title - Uploaded Files</h1>
-                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                        </div>
-                                                        <div class="modal-body">
-                                                            <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
-                                                                <div class="carousel-inner">
-                                                                    @foreach (var proofUrl in Enrollment.ProofUrls)
-                                                                    {
-                                                                        <div class="carousel-item">
-                                                                            <img src="https://source.unsplash.com/random" class="d-block w-100" alt="...">
-                                                                        </div>
-                                                                    }
-                                                                </div>
-                                                                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
-                                                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                                                    <span class="visually-hidden">Previous</span>
-                                                                </button>
-                                                                <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
-                                                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                                                    <span class="visually-hidden">Next</span>
-                                                                </button>
-                                                            </div>
-                                                        </div>
-                                                        <div class="modal-footer">
-                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        }
-                                        else
-                                        {
-                                            <div class="col-md-6">
-                                                <button disabled class="btn btn-sm btn-outline-primary text-nowrap w-100">
-                                                    View Uploads
-                                                </button>
-                                            </div>
-                                        }
-                                    </div>
+            <div class="col-lg-6 p-3">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="float-start fw-bold">
+                            <i class="fa-solid fa-graduation-cap"></i>
+                            @Enrollment.Training.Title
+                        </div>
+                        <div class="float-end">
+                            <span class="badge text-bg-warning text-nowrap">@Enrollment.Status</span>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="card-text" style="min-height: 60px;">
+                            @Enrollment.Training.Description
+                        </div>
+                        <div class="row justify-content-between mt-4">
+                            <div class="col-4 text-center mb-3">
+                                <div class="d-block badge text-bg-light mb-1 opacity-75">Department</div>
+                                @if (Enrollment.Training.PriorityDepartment != null)
+                                {<div class="text-center">@Enrollment.Training.PriorityDepartment.Title</div>}
+                            else
+                            { <div class="opacity-25 text-center">None</div>}
+                            </div>
+                            <div class="col-4 mb-3">
+                                <div class="d-block badge text-bg-light mb-1 opacity-75">Capacity</div>
+                                <div class="text-center">@Enrollment.Training.Capacity</div>
+                            </div>
+                            <div class="col-4 mb-3">
+                                <div class="d-block badge text-bg-light mb-1 opacity-75">Uploads</div>
+                                <div class="text-center">
+                                    @if (Enrollment.Proofs.Count == 0)
+                                    {<div class="opacity-25">None</div> }
+                                    else
+                                    { <div>@Enrollment.Proofs.Count</div>}
                                 </div>
                             </div>
                         </div>
-
-                        break;
-                    }
-                }
+                        <div class="row mt-4 gap-3 gap-md-0">
+                            <div class="col-md-6">
+                                <input type="hidden" value="@Enrollment.EnrollmentId" />
+                                <button class="btn btn-sm btn-outline-danger w-100" onclick="deleteEnrollment(this)">
+                                    Cancel Enrollment
+                                </button>
+                            </div>
+                            @if (Enrollment.Proofs.Count > 0)
+                            {
+                                <div class="col-md-6">
+                                    <button class="btn btn-sm btn-outline-primary text-nowrap w-100" data-bs-toggle="modal" data-bs-target="#modal-@(Enrollment.Training.TrainingId)">
+                                        View Uploads
+                                    </button>
+                                </div>
+                                <div class="modal fade" id="modal-@(Enrollment.Training.TrainingId)" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h1 class="modal-title fs-5" id="modalLabel"><i class="fa-solid fa-graduation-cap me-2"></i>@Enrollment.Training.Title - Uploaded Files</h1>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+                                                    <div class="carousel-inner">
+                                                        @foreach (var proofUrl in Enrollment.Proofs)
+                                                        {
+                                                            <div class="carousel-item">
+                                                                <img src="https://source.unsplash.com/random" class="d-block w-100" alt="...">
+                                                            </div>
+                                                        }
+                                                    </div>
+                                                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+                                                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                                        <span class="visually-hidden">Previous</span>
+                                                    </button>
+                                                    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+                                                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                                        <span class="visually-hidden">Next</span>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="col-md-6">
+                                    <button disabled class="btn btn-sm btn-outline-primary text-nowrap w-100">
+                                        View Uploads
+                                    </button>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
             }
         </div>
     </form>
-</div>
+</main>

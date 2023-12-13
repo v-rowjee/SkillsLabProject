@@ -11,6 +11,9 @@
 body{
     height: 100vh;
 }
+body > main {
+    min-height: calc(100% - 160.67px);
+}
 .logo {
     height: 2.5rem;
 }
