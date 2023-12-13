@@ -95,7 +95,7 @@ namespace SkillsLabProject.DAL.DAL
             ";
             var parameters = new List<SqlParameter>
             {
-                new SqlParameter("@EmployeeId", model.EmployeeId),
+                new SqlParameter("@EmployeeId", model.Employee.EmployeeId),
                 new SqlParameter("@TrainingId", model.Training.TrainingId),
                 new SqlParameter("@StatusId", model.Status),
                 new SqlParameter("@Proofs", string.Join(",",model.Proofs.Select(p => p.Attachment)))

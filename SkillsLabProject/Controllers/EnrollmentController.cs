@@ -51,7 +51,7 @@ namespace SkillsLabProject.Controllers
                 var enrollmentView = new EnrollmentViewModel()
                 {
                     EnrollmentId = enrollment.EnrollmentId,
-                    EmployeeId = enrollment.EmployeeId,
+                    Employee = employee,
                     Training = training,
                     Status = enrollment.Status,
                     Proofs = _proofBL.GetAllProofs().Where(x => x.EnrollmentId == enrollment.EnrollmentId).ToList(),
@@ -61,7 +61,33 @@ namespace SkillsLabProject.Controllers
             ViewBag.Enrollments = enrollmentsViews;
             return View();
         }
+        // Get: All
+        [CustomAuthorization("Manager")]
+        public ActionResult All()
+        {
+            var loggeduser = Session["CurrentUser"] as LoginViewModel;
+            if (loggeduser == null) return RedirectToAction("Index", "Login");
 
+            var employee = _employeeBL.GetEmployee(loggeduser);
+            ViewBag.Employee = employee;
+            var enrollments = _enrollmentBL.GetAllEnrollments().ToList();
+
+            var enrollmentsViews = new List<EnrollmentViewModel>();
+            foreach (var enrollment in enrollments)
+            {
+                var enrollmentView = new EnrollmentViewModel()
+                {
+                    EnrollmentId = enrollment.EnrollmentId,
+                    Employee = _employeeBL.GetAllEmployees().Where(e => e.EmployeeId == enrollment.EmployeeId).FirstOrDefault(),
+                    Training = _trainingBL.GetTrainingById(enrollment.TrainingId),
+                    Status = enrollment.Status,
+                    Proofs = _proofBL.GetAllProofs().Where(x => x.EnrollmentId == enrollment.EnrollmentId).ToList(),
+                };
+                enrollmentsViews.Add(enrollmentView);
+            }
+            ViewBag.Enrollments = enrollmentsViews;
+            return View();
+        }
         // Post: Delete
         [HttpPost]
         [CustomAuthorization("Employee,Manager,Admin")]
@@ -92,7 +118,7 @@ namespace SkillsLabProject.Controllers
             {
                 var enrollmentWithProofs = new EnrollmentViewModel() 
                 { 
-                    EmployeeId = _employeeBL.GetEmployee(loggeduser).EmployeeId,
+                    Employee = _employeeBL.GetEmployee(loggeduser),
                     Training = new TrainingModel() { TrainingId = trainingId },
                     Proofs = new List<ProofModel>(),
                     Status = Status.Pending

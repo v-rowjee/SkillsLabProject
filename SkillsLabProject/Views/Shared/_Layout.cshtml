@@ -35,7 +35,14 @@
                         @Html.ActionLink("Trainings", "Index", "Training", null, new { @class = @ViewBag.Title == "Trainings" ? "nav-link active" : "nav-link" })
                     </li>
                     <li class="nav-item mx-2">
-                        @Html.ActionLink("Enrollments", "Index", "Enrollment", null, new { @class = @ViewBag.Title == "Enrollments" ? "nav-link active" : "nav-link" })
+                        @if (ViewBag.Employee.Role.ToString() == "Manager")
+                        {
+                            @Html.ActionLink("Enrollments", "All", "Enrollment", null, new { @class = @ViewBag.Title == "Enrollments" ? "nav-link active" : "nav-link" })
+                        }
+                        else
+                        {
+                            @Html.ActionLink("Enrollments", "Index", "Enrollment", null, new { @class = @ViewBag.Title == "Enrollments" ? "nav-link active" : "nav-link" })
+                        }
                     </li>
                 </ul>
                 <ul class="navbar-nav">
