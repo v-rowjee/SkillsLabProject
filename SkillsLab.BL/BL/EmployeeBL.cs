@@ -13,6 +13,7 @@ namespace SkillsLabProject.BL.BL
     {
         IEnumerable<EmployeeModel> GetAllEmployees();
         EmployeeModel GetEmployee(LoginViewModel model);
+        EmployeeModel GetEmployeeById(int employeeId);
         bool UpdateEmployee(EmployeeModel employee);
         bool DeleteEmployee(int employeeId);
     }
@@ -24,14 +25,13 @@ namespace SkillsLabProject.BL.BL
         {
             _employeeDAL = employeeDAL;
         }
-        public EmployeeBL()
-        {
-            _employeeDAL = new EmployeeDAL();
-        }
-
         public EmployeeModel GetEmployee(LoginViewModel model)
         { 
             return _employeeDAL.GetEmployee(model);
+        }
+        public EmployeeModel GetEmployeeById(int employeeId)
+        {
+            return _employeeDAL.GetEmployeeById(employeeId);
         }
         public IEnumerable<EmployeeModel> GetAllEmployees() 
         { 

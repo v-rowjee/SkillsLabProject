@@ -38,27 +38,9 @@ namespace SkillsLabProject.Controllers
             var employee = _employeeBL.GetEmployee(loggeduser);
             ViewBag.Employee = employee;
 
-            var enrollments = _enrollmentBL.GetAllEnrollments().Where(x => x.EmployeeId==employee.EmployeeId).ToList();
+            var enrollments = _enrollmentBL.GetAllEnrollmentsOfEmployee(employee.EmployeeId).ToList();
 
-            var trainings = new List<TrainingModel>();
-            var enrollmentsViews = new List<EnrollmentViewModel>();
-            foreach (var enrollment in enrollments)
-            {
-                var training = new TrainingModel();
-                training = _trainingBL.GetTrainingById(enrollment.TrainingId);
-                trainings.Add(training);
-
-                var enrollmentView = new EnrollmentViewModel()
-                {
-                    EnrollmentId = enrollment.EnrollmentId,
-                    Employee = employee,
-                    Training = training,
-                    Status = enrollment.Status,
-                    Proofs = _proofBL.GetAllProofs().Where(x => x.EnrollmentId == enrollment.EnrollmentId).ToList(),
-                };
-                enrollmentsViews.Add(enrollmentView);
-            }
-            ViewBag.Enrollments = enrollmentsViews;
+            ViewBag.Enrollments = enrollments;
             return View();
         }
         // Get: All
@@ -68,24 +50,12 @@ namespace SkillsLabProject.Controllers
             var loggeduser = Session["CurrentUser"] as LoginViewModel;
             if (loggeduser == null) return RedirectToAction("Index", "Login");
 
-            var employee = _employeeBL.GetEmployee(loggeduser);
-            ViewBag.Employee = employee;
-            var enrollments = _enrollmentBL.GetAllEnrollments().ToList();
+            var manager = _employeeBL.GetEmployee(loggeduser);
+            ViewBag.Employee = manager;
 
-            var enrollmentsViews = new List<EnrollmentViewModel>();
-            foreach (var enrollment in enrollments)
-            {
-                var enrollmentView = new EnrollmentViewModel()
-                {
-                    EnrollmentId = enrollment.EnrollmentId,
-                    Employee = _employeeBL.GetAllEmployees().Where(e => e.EmployeeId == enrollment.EmployeeId).FirstOrDefault(),
-                    Training = _trainingBL.GetTrainingById(enrollment.TrainingId),
-                    Status = enrollment.Status,
-                    Proofs = _proofBL.GetAllProofs().Where(x => x.EnrollmentId == enrollment.EnrollmentId).ToList(),
-                };
-                enrollmentsViews.Add(enrollmentView);
-            }
-            ViewBag.Enrollments = enrollmentsViews;
+            var enrollments = _enrollmentBL.GetAllEnrollmentsOfManager(manager.EmployeeId).ToList();
+            ViewBag.Enrollments = enrollments;
+
             return View();
         }
         // Post: Delete

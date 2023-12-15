@@ -12140,6 +12140,7 @@
     <Content Include="tsconfig.json" />
     <Content Include="Views\Dojo\Index.cshtml" />
     <Content Include="StaticViews\LoginWidget.html" />
+    <Content Include="Views\Enrollment\View.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

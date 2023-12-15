@@ -16,7 +16,7 @@ $(function () {
 
         $('#enroll').html(`
             <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
-            <span role="status">Uploading files...</span>
+            <span role="status">Enrolling Training...</span>
         `)
         setLoading(true)
 

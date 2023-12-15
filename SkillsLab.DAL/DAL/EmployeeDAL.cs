@@ -5,6 +5,7 @@ using System.Data.SqlClient;
 using System.Data;
 using SkillsLabProject.Common.DAL;
 using SkillsLabProject.Common.Models;
+using System.Web.UI.WebControls;
 
 namespace SkillsLabProject.DAL.DAL
 {
@@ -13,6 +14,7 @@ namespace SkillsLabProject.DAL.DAL
         bool DeleteEmployee(int employeeId);
         IEnumerable<EmployeeModel> GetAllEmployees();
         EmployeeModel GetEmployee(LoginViewModel model);
+        EmployeeModel GetEmployeeById(int employeeId);
         bool UpdateEmployee(EmployeeModel employee);
     }
     public class EmployeeDAL : IEmployeeDAL
@@ -91,6 +93,40 @@ namespace SkillsLabProject.DAL.DAL
             }
             return employee;
         }
+
+        public EmployeeModel GetEmployeeById(int employeeId)
+        {
+            const string GetEmployeeQuery = @"
+                SELECT e.EmployeeId, e.FirstName, e.LastName, e.NIC, e.PhoneNumber, e.DepartmentId, e.RoleId, a.Email, d.Title
+                FROM [dbo].[Employee] as e
+                INNER JOIN [dbo].[AppUser] as a ON e.EmployeeId = a.EmployeeId
+                INNER JOIN [dbo].[Department] as d ON e.DepartmentId = d.DepartmentId
+                WHERE e.[EmployeeId] = @EmployeeId
+            ";
+            var parameters = new List<SqlParameter>
+            {
+                new SqlParameter("@EmployeeId", employeeId)
+            };
+            var dt = DBCommand.GetDataWithCondition(GetEmployeeQuery, parameters);
+            var employee = new EmployeeModel();
+            foreach (DataRow row in dt.Rows)
+            {
+                employee.EmployeeId = int.Parse(row["EmployeeId"].ToString());
+                employee.FirstName = row["FirstName"].ToString();
+                employee.LastName = row["LastName"].ToString();
+                employee.NIC = row["NIC"].ToString();
+                employee.PhoneNumber = row["PhoneNumber"].ToString();
+                employee.Email = row["Email"].ToString();
+                employee.Department = new DepartmentModel
+                {
+                    DepartmentId = int.Parse(row["DepartmentId"].ToString()),
+                    Title = row["Title"].ToString()
+                };
+                employee.Role = (Role)int.Parse(row["RoleId"].ToString());
+            }
+            return employee;
+        }
+
         public bool UpdateEmployee(EmployeeModel employee)
         {
             const string UpdateEmployeeQuery = @"

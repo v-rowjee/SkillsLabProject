@@ -1,45 +1,53 @@
 ﻿
 @{
-    ViewBag.Title = "All";
+    ViewBag.Title = "Enrollments";
 }
 @section scripts {
     <script src="~/Scripts/custom/enrollment.js"></script>
 }
 
 <main class="container">
-    <h2>All Enrollments</h2>
+    <div class="row align-items-center mb-4">
+        <div class="col-6">
+            <h1>Enrollments</h1>
+        </div>
+        <div class="col-6 text-end">
+            <div class=" align-middle">
+                <p class="m-0 text-muted">Department:</p> <span class="badge text-bg-primary">@ViewBag.Employee.Department.Title</span>
+            </div>
+        </div>
+    </div>
 
-
-
-    <form id="enrollmentForm" class="d-none">
+    <form id="enrollmentForm">
         <div class="table-responsive p-2">
             <table id="enrollmentTable" class="table table-borderless table-hover pb-4">
-                <thead class="bg-light border-bottom">
-                    <tr class="align-middle">
-                        <th colspan="4" class="border-end">Training</th>
-                        <th colspan="3" class="border-end">Employee</th>
-                        <th colspan="2">Enrollment</th>
-                    </tr>
-                </thead>
                 <thead class="bg-light">
                     <tr class="align-middle">
-                        <th>Title</th>
+                        <th class="rounded-start border-end">Status</th>
+                        <th>Training</th>
                         <th>Deadline</th>
                         <th class="text-nowrap">Department Priority</th>
                         <th class="border-end">Capacity</th>
-                        <th>Name</th>
+                        <th>Employee</th>
                         <th>Email</th>
                         <th class="border-end">Department</th>
-                        <th>Status</th>
-                        <th class="text-end">Actions</th>
+                        <th class="rounded-end text-end">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach (var Enrollment in ViewBag.Enrollments)
                     {
                         <tr>
-                            <td class="rounded-start">@Enrollment.Training.Title</td>
-                            <td>@Enrollment.Training.Deadline.ToString("ddd, dd MMM yyyy - hh:mm tt")</td>
+                            <td class="rounded-start">
+                                @if (@Enrollment.Status.ToString() == "Approved")
+                                {<span class="badge text-bg-success">Approved</span> }
+                                else if (@Enrollment.Status.ToString() == "Denied")
+                                { <span class="badge text-bg-danger">Denied</span> }
+                                else
+                                { <span class="badge text-bg-warning">Pending</span>}
+                            </td>
+                            <td>@Enrollment.Training.Title</td>
+                            <td>@Enrollment.Training.Deadline.ToString("dd MMM yyyy hh:mm tt")</td>
                             <td>
                                 @if (Enrollment.Training.PriorityDepartment != null)
                                 {@Enrollment.Training.PriorityDepartment.Title}
@@ -47,21 +55,12 @@
                             { <p class="opacity-25 m-0">None</p>}
                             </td>
                             <td>@Enrollment.Training.Capacity</td>
-                            <td>@Enrollment.Employee.FirstName</td>
+                            <td class="text-nowrap">@Enrollment.Employee.FirstName @Enrollment.Employee.LastName</td>
                             <td>@Enrollment.Employee.Email</td>
                             <td>@Enrollment.Employee.Department.Title</td>
-                            <td>@Enrollment.Status</td>
                             <td class="rounded-end text-end">
                                 <div class="d-flex justify-content-end">
-                                    @Html.ActionLink("View", "View", "Training", new { @id = Enrollment.Training.TrainingId }, new { @class = "btn btn-sm btn-outline-primary" })
-                                    @if (ViewBag.CurrentRole == "Admin")
-                                    {
-                                        @Html.ActionLink("Edit", "Edit", "Training", new { @id = Enrollment.Training.TrainingId }, new { @class = "btn btn-sm btn-outline-secondary ms-2" })
-                                        <button class="btn btn-sm btn-outline-danger ms-2" onclick="deleteTraining(this)">
-                                            <i class="fa-solid fa-trash"></i>
-                                        </button>
-                                        <input type="hidden" value="@Enrollment.Training.TrainingId" />
-                                    }
+                                    @Html.ActionLink("View", "View", "Enrollment", new { @id = Enrollment.EnrollmentId }, new { @class = "btn btn-sm btn-outline-primary" })
                                 </div>
                             </td>
                         </tr>

@@ -14,7 +14,8 @@ namespace SkillsLabProject.BL.BL
 {
     public interface IEnrollmentBL
     {
-        IEnumerable<EnrollmentModel> GetAllEnrollments();
+        IEnumerable<EnrollmentViewModel> GetAllEnrollmentsOfEmployee(int employeeId);
+        IEnumerable<EnrollmentViewModel> GetAllEnrollmentsOfManager(int managerId);
         EnrollmentModel GetEnrollmentById(int enrollmentId);
         bool AddEnrollment(EnrollmentModel model);
         bool AddEnrollment(EnrollmentViewModel model);
@@ -26,10 +27,16 @@ namespace SkillsLabProject.BL.BL
     public class EnrollmentBL : IEnrollmentBL
     {
         private readonly IEnrollmentDAL _enrollmentDAL;
+        private readonly ITrainingDAL _trainingDAL;
+        private readonly IEmployeeDAL _employeeDAL;
+        private readonly IProofDAL _proofDAL;
 
-        public EnrollmentBL(IEnrollmentDAL enrollmentDAL)
+        public EnrollmentBL(IEnrollmentDAL enrollmentDAL, ITrainingDAL trainingDAL, IEmployeeDAL employeeDAL, IProofDAL proofDAL)
         {
             _enrollmentDAL = enrollmentDAL;
+            _trainingDAL = trainingDAL;
+            _employeeDAL = employeeDAL;
+            _proofDAL = proofDAL;
         }
 
         public bool AddEnrollment(EnrollmentModel enrollment)
@@ -50,9 +57,52 @@ namespace SkillsLabProject.BL.BL
         {
             return _enrollmentDAL.GetById(enrollmentId);
         }
-        public IEnumerable<EnrollmentModel> GetAllEnrollments()
+        public IEnumerable<EnrollmentViewModel> GetAllEnrollmentsOfEmployee(int employeeId)
         {
-            return _enrollmentDAL.GetAll();
+            var enrollments = _enrollmentDAL.GetAll().Where(e => e.EmployeeId == employeeId).ToList();
+            var enrollmentsViews = new List<EnrollmentViewModel>();
+            foreach (var enrollment in enrollments)
+            {
+                var employee = _employeeDAL.GetEmployeeById(enrollment.EmployeeId);
+                var training = _trainingDAL.GetById(enrollment.TrainingId);
+                var proofs = _proofDAL.GetAll().Where(x => x.EnrollmentId == enrollment.EnrollmentId).ToList();
+
+                var enrollmentView = new EnrollmentViewModel()
+                {
+                    EnrollmentId = enrollment.EnrollmentId,
+                    Employee = employee,
+                    Training = training,
+                    Status = enrollment.Status,
+                    Proofs = proofs,
+                };
+                enrollmentsViews.Add(enrollmentView);
+            }
+            return enrollmentsViews;
+        }
+        public IEnumerable<EnrollmentViewModel> GetAllEnrollmentsOfManager(int managerId)
+        {
+            var enrollments = _enrollmentDAL.GetAll().ToList();
+            var enrollmentsViews = new List<EnrollmentViewModel>();
+            foreach (var enrollment in enrollments)
+            {
+                var manager = _employeeDAL.GetEmployeeById(managerId);
+                var employee = _employeeDAL.GetEmployeeById(enrollment.EmployeeId);
+                var training = _trainingDAL.GetById(enrollment.TrainingId);
+                var proofs = _proofDAL.GetAll().Where(x => x.EnrollmentId == enrollment.EnrollmentId).ToList();
+
+                if (employee.Department.DepartmentId != manager.Department.DepartmentId) continue;
+
+                var enrollmentView = new EnrollmentViewModel()
+                {
+                    EnrollmentId = enrollment.EnrollmentId,
+                    Employee = employee,
+                    Training = training,
+                    Status = enrollment.Status,
+                    Proofs = proofs,
+                };
+                enrollmentsViews.Add(enrollmentView);
+            }
+            return enrollmentsViews;
         }
         public bool UpdateEnrollment(EnrollmentModel enrollment)
         {

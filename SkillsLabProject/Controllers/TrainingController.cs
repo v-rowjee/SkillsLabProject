@@ -55,7 +55,7 @@ namespace SkillsLabProject.Controllers
             var preRequisites = _preRequisiteBL.GetAllPreRequisites().Where(p => p.TrainingId == training.TrainingId).ToList();
             ViewBag.Prerequisites = preRequisites.Any() ? preRequisites : null;
 
-            var enrolledStatus = _enrollmentBL.GetAllEnrollments().Where(e => e.EmployeeId == employee.EmployeeId).Where(e => e.TrainingId == training.TrainingId).Select(e => e.Status).FirstOrDefault().ToString();
+            var enrolledStatus = _enrollmentBL.GetAllEnrollmentsOfEmployee(employee.EmployeeId).Where(e => e.Training.TrainingId == training.TrainingId).Select(e => e.Status).FirstOrDefault().ToString();
             ViewBag.EnrolledStatus = enrolledStatus;
             return View();
         }
