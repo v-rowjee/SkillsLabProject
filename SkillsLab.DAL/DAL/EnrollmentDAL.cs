@@ -64,7 +64,7 @@ namespace SkillsLabProject.DAL.DAL
                 enrollment.EnrollmentId = int.Parse(row["EnrollmentId"].ToString());
                 enrollment.EmployeeId = int.Parse(row["EmployeeId"].ToString());
                 enrollment.TrainingId = int.Parse(row["TrainingId"].ToString());
-                enrollment.Status = (Status) int.Parse(row["PriorityDepartmentId"].ToString());
+                enrollment.Status = (Status) int.Parse(row["StatusId"].ToString());
             }
             return enrollment;
         }
@@ -105,17 +105,46 @@ namespace SkillsLabProject.DAL.DAL
         public bool Update(EnrollmentModel model)
         {
             const string UpdateEnrollmentQuery = @"
-                UPDATE [dbo].[Enrollment]
-                SET EmployeeId=@EmployeeId, EnrollmentId=@EnrollmentId, StatusId=@StatusId
-                WHERE EnrollmentId=@EnrollmentId;
+                BEGIN TRANSACTION
+                    IF EXISTS (SELECT 1 FROM [dbo].[Status] WHERE StatusId = @StatusId)
+                    BEGIN
+                        UPDATE [dbo].[Enrollment]
+                        SET StatusId=@StatusId
+                        WHERE EnrollmentId=@EnrollmentId;
+                    END
+
+                    IF @StatusId = 3     -- Declined
+                    BEGIN
+                        UPDATE [dbo].[DeclinedEnrollment]
+                        SET Reason=@Reason
+                        WHERE EnrollmentId=@EnrollmentId;
+
+                        IF @@ROWCOUNT = 0
+                        BEGIN
+                            INSERT INTO [dbo].[DeclinedEnrollment] (EnrollmentId, Reason)
+                            VALUES (@EnrollmentId, @Reason);
+                        END
+                    END
+                    ELSE
+                    BEGIN
+                        DELETE FROM [dbo].[DeclinedEnrollment]
+                        WHERE EnrollmentId = @EnrollmentId;
+                    END
+                COMMIT
             ";
             var parameters = new List<SqlParameter>
             {
                 new SqlParameter("@EnrollmentId", model.EnrollmentId),
-                new SqlParameter("@Title", model.EmployeeId),
-                new SqlParameter("@Deadline", model.TrainingId),
-                new SqlParameter("@Capacity", model.Status)
+                new SqlParameter("@StatusId", (int) model.Status)
             };
+            if (model.DeclinedReason != null)
+            {
+                parameters.Add(new SqlParameter("@Reason", model.DeclinedReason));
+            }
+            else
+            {
+                parameters.Add(new SqlParameter("@Reason", DBNull.Value));
+            }
             return DBCommand.InsertUpdateData(UpdateEnrollmentQuery, parameters);
         }
         public bool Delete(int EnrollmentId)

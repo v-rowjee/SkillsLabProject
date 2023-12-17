@@ -30,8 +30,8 @@
                         <th class="border-end">Capacity</th>
                         <th>Employee</th>
                         <th>Email</th>
-                        <th class="border-end">Department</th>
-                        <th class="rounded-end text-end">Actions</th>
+                        <th class="border-end text-nowrap">Phone Number</th>
+                        <th class="rounded-end text-end">Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -41,13 +41,13 @@
                             <td class="rounded-start">
                                 @if (@Enrollment.Status.ToString() == "Approved")
                                 {<span class="badge text-bg-success">Approved</span> }
-                                else if (@Enrollment.Status.ToString() == "Denied")
-                                { <span class="badge text-bg-danger">Denied</span> }
+                                else if (@Enrollment.Status.ToString() == "Declined")
+                                { <span class="badge text-bg-danger">Declined</span> }
                                 else
                                 { <span class="badge text-bg-warning">Pending</span>}
                             </td>
                             <td>@Enrollment.Training.Title</td>
-                            <td>@Enrollment.Training.Deadline.ToString("dd MMM yyyy hh:mm tt")</td>
+                            <td>@Enrollment.Training.Deadline.ToString("dd MMM yyyy")</td>
                             <td>
                                 @if (Enrollment.Training.PriorityDepartment != null)
                                 {@Enrollment.Training.PriorityDepartment.Title}
@@ -57,7 +57,7 @@
                             <td>@Enrollment.Training.Capacity</td>
                             <td class="text-nowrap">@Enrollment.Employee.FirstName @Enrollment.Employee.LastName</td>
                             <td>@Enrollment.Employee.Email</td>
-                            <td>@Enrollment.Employee.Department.Title</td>
+                            <td>@Enrollment.Employee.PhoneNumber</td>
                             <td class="rounded-end text-end">
                                 <div class="d-flex justify-content-end">
                                     @Html.ActionLink("View", "View", "Enrollment", new { @id = Enrollment.EnrollmentId }, new { @class = "btn btn-sm btn-outline-primary" })

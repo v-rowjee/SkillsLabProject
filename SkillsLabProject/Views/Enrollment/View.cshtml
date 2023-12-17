@@ -1,9 +1,201 @@
-﻿
-@{
+﻿@{
     ViewBag.Title = "Enrollments";
+}
+@section scripts {
+    <script src="~/Scripts/custom/enrollment.js"></script>
 }
 
 <main class="container">
-
+    <div class="row">
+        <div class="col-lg-4 pe-lg-4">
+            <h2 class="display-6 mb-3">Training</h2>
+            <div class="card mb-3">
+                <div class="card-header">
+                    <i class="fa-solid fa-graduation-cap me-1"></i>
+                    Title
+                </div>
+                <div class="card-body">
+                    @ViewBag.Enrollment.Training.Title
+                </div>
+            </div>
+            <div class="card mb-3">
+                <div class="card-header">
+                    <i class="fa-solid fa-circle-info me-1"></i>
+                    Description
+                </div>
+                <div class="card-body">
+                    @ViewBag.Enrollment.Training.Description
+                </div>
+            </div>
+            <div class="card mb-3">
+                <div class="card-header">
+                    <i class="fa-solid fa-calendar-days me-1"></i>
+                    Deadline
+                </div>
+                <div class="card-body">
+                    @ViewBag.Enrollment.Training.Deadline.ToString("ddd, dd MMM yyyy hh:mm tt")
+                </div>
+            </div>
+            <div class="card mb-3">
+                <div class="card-header">
+                    <i class="fa-solid fa-user-group me-1"></i>
+                    Capacity
+                </div>
+                <div class="card-body">
+                    @ViewBag.Enrollment.Training.Capacity
+                </div>
+            </div>
+            <div class="card mb-3">
+                <div class="card-header">
+                    <i class="fa-solid fa-suitcase me-1"></i>
+                    Priority Department
+                </div>
+                <div class="card-body">
+                    @(ViewBag.Enrollment.Training.PriorityDepartment != null ? ViewBag.Enrollment.Training.PriorityDepartment.Title : "None")
+                </div>
+            </div>
+            <div class="card mb-3">
+                <div class="card-header">
+                    <i class="fa-solid fa-suitcase me-1"></i>
+                    Pre-requisites
+                </div>
+                <div class="card-body p-0">
+                    <ul class="list-group list-group-flush">
+                        @if (ViewBag.PreRequisites == null || ViewBag.PreRequisites.Count == 0)
+                        {
+                            <li class="list-group-item rounded">None</li>
+                        }
+                        else
+                        {
+                            foreach (var PreRequisite in ViewBag.PreRequisites)
+                            {
+                                <li class="list-group-item rounded">
+                                    <p class="m-0">@PreRequisite.Detail</p>
+                                </li>
+                            }
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 px-lg-4">
+            <h2 class="display-6 mb-3">Employee</h2>
+            <div class="card mb-3">
+                <div class="card-header">
+                    <i class="fa-solid fa-user-graduate me-1"></i>
+                    Full Name
+                </div>
+                <div class="card-body">
+                    @ViewBag.Enrollment.Employee.FirstName @ViewBag.Enrollment.Employee.LastName
+                </div>
+            </div>
+            <div class="card mb-3">
+                <div class="card-header">
+                    <i class="fa-solid fa-envelope me-1"></i>
+                    Email
+                </div>
+                <div class="card-body">
+                    @ViewBag.Enrollment.Employee.Email
+                </div>
+            </div>
+            <div class="card mb-3">
+                <div class="card-header">
+                    <i class="fa-solid fa-address-card me-1"></i>
+                    National Identity Card Number (NIC)
+                </div>
+                <div class="card-body">
+                    @ViewBag.Enrollment.Employee.NIC
+                </div>
+            </div>
+            <div class="card mb-3">
+                <div class="card-header">
+                    <i class="fa-solid fa-phone me-1"></i>
+                    Phone Number
+                </div>
+                <div class="card-body">
+                    @ViewBag.Enrollment.Employee.PhoneNumber
+                </div>
+            </div>
+            <div class="card mb-3">
+                <div class="card-header">
+                    <i class="fa-solid fa-suitcase me-1"></i>
+                    Department
+                </div>
+                <div class="card-body">
+                    @ViewBag.Enrollment.Employee.Department.Title
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 ps-lg-4">
+            <form id="editEnrollmentForm" class="needs-validation" novalidate>
+                <h2 class="display-6 mb-3">Enrollment</h2>
+                <div class="card mb-3">
+                    <div class="card-header">
+                        <i class="fa-solid fa-file-picture-o me-1"></i>
+                        Proofs
+                    </div>
+                    <div class="card-body">
+                        @if (ViewBag.Proofs.Count > 1)
+                        {
+                            <div id="proofCarousel" class="carousel slide" data-bs-ride="carousel">
+                                <div class="carousel-inner rounded">
+                                    @for (int i = 0; i < ViewBag.Proofs.Count; i++)
+                                    {
+                                        <div class="carousel-item @(i == 0 ? "active" : "")">
+                                            <img src="@ViewBag.Proofs[i].Attachment" class="img-fluid rounded" alt="proof">
+                                        </div>
+                                    }
+                                </div>
+                                <button class="carousel-control-prev" type="button" data-bs-target="#proofCarousel" data-bs-slide="prev">
+                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Previous</span>
+                                </button>
+                                <button class="carousel-control-next" type="button" data-bs-target="#proofCarousel" data-bs-slide="next">
+                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Next</span>
+                                </button>
+                            </div>
+                        }
+                        else if (ViewBag.Proofs.Count == 1)
+                        {
+                            <div>
+                                <img src="@ViewBag.Proofs[0].Attachment" class="img-fluid rounded" alt="proof">
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="card-body">
+                                <p>No proofs available</p>
+                            </div>
+                        }
+                    </div>
+                </div>
+                <div class="card mb-3">
+                    <div class="card-header">
+                        <i class="fa-solid fa-check-circle me-1"></i>
+                        Status
+                    </div>
+                    <div class="card-body">
+                        <select id="status" class="form-select">
+                            <option value="Pending" @(ViewBag.Enrollment.Status.ToString() == "Pending" ? "selected" : "")>Pending</option>
+                            <option value="Approved" @(ViewBag.Enrollment.Status.ToString() == "Approved" ? "selected" : "")>Approve</option>
+                            <option value="Declined" @(ViewBag.Enrollment.Status.ToString() == "Declined" ? "selected" : "")>Decline</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="card mb-3 d-none" id="reasonCard">
+                    <div class="card-header">
+                        <i class="fa-solid fa-ban"></i>
+                        Reason
+                    </div>
+                    <div class="card-body">
+                        <textarea id="reason" class="form-control" rows="5" placeholder="Reason for denying enrollment." required></textarea>
+                    </div>
+                </div>
+                <input type="hidden" value="@ViewBag.Enrollment.EnrollmentId" id="enrollmentId" />
+                <button id="saveEnrollment" class="btn btn-primary w-100">Save Changes</button>
+            </form>
+        </div>
+    </div>
 </main>
 

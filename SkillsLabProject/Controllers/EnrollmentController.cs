@@ -48,8 +48,6 @@ namespace SkillsLabProject.Controllers
         public ActionResult All()
         {
             var loggeduser = Session["CurrentUser"] as LoginViewModel;
-            if (loggeduser == null) return RedirectToAction("Index", "Login");
-
             var manager = _employeeBL.GetEmployee(loggeduser);
             ViewBag.Employee = manager;
 
@@ -58,6 +56,44 @@ namespace SkillsLabProject.Controllers
 
             return View();
         }
+        // GET: View
+        [HttpGet]
+        [CustomAuthorization("Manager")]
+        public ActionResult View(int? id)
+        {
+            if (id == null) return RedirectToAction("All");
+            var enrollment = _enrollmentBL.GetEnrollmentById((int)id);
+            if (enrollment == null) return RedirectToAction("All");
+            ViewBag.Enrollment = enrollment;
+
+            var proofs = _proofBL.GetAllProofs().Where(p => p.EnrollmentId == enrollment.EnrollmentId).ToList();
+            ViewBag.Proofs = proofs;
+
+            var preRequisites = _preRequisiteBL.GetAllPreRequisites().Where(p => p.TrainingId == enrollment.Training.TrainingId).ToList();
+            ViewBag.Prerequisites = preRequisites;
+
+            var loggeduser = Session["CurrentUser"] as LoginViewModel;
+            var employee = _employeeBL.GetEmployee(loggeduser);
+            ViewBag.Employee = employee;
+            
+            return View();
+        }
+
+        // Post: Edit
+        [HttpPost]
+        [CustomAuthorization("Manager")]
+        public JsonResult Edit(EnrollmentModel model) {
+            var result = _enrollmentBL.UpdateEnrollment(model);
+            if (result)
+            {
+                return Json(new { result = "Success" });
+            }
+            else
+            {
+                return Json(new { result = "Error" });
+            }
+        }
+
         // Post: Delete
         [HttpPost]
         [CustomAuthorization("Employee,Manager,Admin")]
@@ -82,9 +118,9 @@ namespace SkillsLabProject.Controllers
             var loggeduser = Session["CurrentUser"] as LoginViewModel;
             bool result;
 
-            var prerequisites = _preRequisiteBL.GetAllPreRequisites().Where(p => p.TrainingId ==  trainingId).ToList();
+            var prerequisites = _preRequisiteBL.GetAllPreRequisites().Where(p => p.TrainingId == trainingId).ToList();
 
-            if (files != null && files.Any() && files.Count == prerequisites.Count)
+            if (files != null && files.Any() && files.Count >= prerequisites.Count)
             {
                 var enrollmentWithProofs = new EnrollmentViewModel() 
                 { 
@@ -122,7 +158,7 @@ namespace SkillsLabProject.Controllers
                 return Json(new { result = "FileMissing" });
             }
 
-            return result ? Json(new { result = "Success", url = Url.Action("Index", "Enrollment") }) : Json(new { result = "Error" });
+            return result ? Json(new { result = "Success" }) : Json(new { result = "Error" });
         }
     }
 }

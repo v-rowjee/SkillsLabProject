@@ -58,11 +58,11 @@
                                 @if (Enrollment.Proofs.Count > 0)
                                 {
                                     <div class="col-md-6">
-                                        <button class="btn btn-sm btn-outline-primary text-nowrap w-100" data-bs-toggle="modal" data-bs-target="#modal-@(Enrollment.Training.TrainingId)">
+                                        <button class="btn btn-sm btn-outline-primary text-nowrap w-100" data-bs-toggle="modal" data-bs-target="#modal-@(Enrollment.EnrollmentId)">
                                             View Uploads
                                         </button>
                                     </div>
-                                    <div class="modal fade" id="modal-@(Enrollment.Training.TrainingId)" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+                                    <div class="modal fade" id="modal-@(Enrollment.EnrollmentId)" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
                                         <div class="modal-dialog modal-dialog-centered">
                                             <div class="modal-content">
                                                 <div class="modal-header">
@@ -70,24 +70,33 @@
                                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                 </div>
                                                 <div class="modal-body">
-                                                    <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
-                                                        <div class="carousel-inner">
-                                                            @foreach (var proofUrl in Enrollment.Proofs)
-                                                            {
-                                                                <div class="carousel-item">
-                                                                    <img src="https://source.unsplash.com/random" class="d-block w-100" alt="...">
-                                                                </div>
-                                                            }
+                                                    @if (Enrollment.Proofs.Count > 1)
+                                                    {
+                                                        <div id="carouselProof" class="carousel slide" data-bs-ride="carousel">
+                                                            <div class="carousel-inner rounded">
+                                                                @for (int i = 0; i < Enrollment.Proofs.Count; i++)
+                                                                {
+                                                                    <div class="carousel-item @(i == 0 ? "active" : "")">
+                                                                        <img src="@Enrollment.Proofs[i].Attachment" class="img-fluid rounded" alt="proof">
+                                                                    </div>
+                                                                }
+                                                            </div>
+                                                            <button class="carousel-control-prev" type="button" data-bs-target="#carouselProof" data-bs-slide="prev">
+                                                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                                                <span class="visually-hidden">Previous</span>
+                                                            </button>
+                                                            <button class="carousel-control-next" type="button" data-bs-target="#carouselProof" data-bs-slide="next">
+                                                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                                                <span class="visually-hidden">Next</span>
+                                                            </button>
                                                         </div>
-                                                        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
-                                                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                                            <span class="visually-hidden">Previous</span>
-                                                        </button>
-                                                        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
-                                                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                                            <span class="visually-hidden">Next</span>
-                                                        </button>
-                                                    </div>
+                                                    }
+                                                    else
+                                                    {
+                                                        <div>
+                                                            <img src="@Enrollment.Proofs[0].Attachment" class="img-fluid rounded" alt="proof">
+                                                        </div>
+                                                    }
                                                 </div>
                                                 <div class="modal-footer">
                                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -100,7 +109,7 @@
                                 {
                                     <div class="col-md-6">
                                         <button disabled class="btn btn-sm btn-outline-primary text-nowrap w-100">
-                                            View Uploads
+                                            No Uploads
                                         </button>
                                     </div>
                                 }

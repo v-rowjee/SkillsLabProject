@@ -1,10 +1,10 @@
 //Page Loader
-//$(window).on('load', function () {
-//    $('#loading').css("width", "100%")
-//    setTimeout(() => {
-//        $('#loading').fadeOut()
-//    }, 750);
-//})
+$(window).on('load', function () {
+    $('#loading').css("width", "100%")
+    setTimeout(() => {
+        $('#loading').fadeOut()
+    }, 750);
+})
 
 // prevent form resubmission
 if (window.history.replaceState) {

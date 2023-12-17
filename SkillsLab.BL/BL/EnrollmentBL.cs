@@ -16,7 +16,7 @@ namespace SkillsLabProject.BL.BL
     {
         IEnumerable<EnrollmentViewModel> GetAllEnrollmentsOfEmployee(int employeeId);
         IEnumerable<EnrollmentViewModel> GetAllEnrollmentsOfManager(int managerId);
-        EnrollmentModel GetEnrollmentById(int enrollmentId);
+        EnrollmentViewModel GetEnrollmentById(int enrollmentId);
         bool AddEnrollment(EnrollmentModel model);
         bool AddEnrollment(EnrollmentViewModel model);
         bool UpdateEnrollment(EnrollmentModel model);
@@ -53,9 +53,18 @@ namespace SkillsLabProject.BL.BL
         {
             return _enrollmentDAL.Delete(enrollmentId);
         }
-        public EnrollmentModel GetEnrollmentById(int enrollmentId)
+        public EnrollmentViewModel GetEnrollmentById(int enrollmentId)
         {
-            return _enrollmentDAL.GetById(enrollmentId);
+            var enrollmentModel = _enrollmentDAL.GetById(enrollmentId);
+            var enrollmentViewModel = new EnrollmentViewModel()
+            {
+                EnrollmentId = enrollmentId,
+                Employee = _employeeDAL.GetEmployeeById(enrollmentModel.EmployeeId),
+                Training = _trainingDAL.GetById(enrollmentModel.TrainingId),
+                Proofs = _proofDAL.GetAll().Where(x => x.EnrollmentId == enrollmentModel.EnrollmentId).ToList(),
+                Status = enrollmentModel.Status,
+            };
+            return enrollmentViewModel;
         }
         public IEnumerable<EnrollmentViewModel> GetAllEnrollmentsOfEmployee(int employeeId)
         {
@@ -104,8 +113,16 @@ namespace SkillsLabProject.BL.BL
             }
             return enrollmentsViews;
         }
-        public bool UpdateEnrollment(EnrollmentModel enrollment)
+        public bool UpdateEnrollment(EnrollmentModel model)
         {
+            var enrollment = _enrollmentDAL.GetById(model.EnrollmentId);
+            enrollment.Status = model.Status;
+
+            if (model.DeclinedReason != null)
+            {
+                enrollment.DeclinedReason = model.DeclinedReason;
+            }
+
             return _enrollmentDAL.Update(enrollment);
         }
 

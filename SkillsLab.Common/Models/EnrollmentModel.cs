@@ -13,5 +13,6 @@ namespace SkillsLabProject.Common.Models
         public int EmployeeId { get; set; }
         public int TrainingId { get; set; }
         public Status Status { get; set; }
+        public string DeclinedReason { get; set; }
     }
 }
