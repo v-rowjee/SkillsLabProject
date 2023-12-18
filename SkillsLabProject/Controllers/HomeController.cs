@@ -31,7 +31,6 @@ namespace SkillsLabProject.Controllers
             var loggeduser = Session["CurrentUser"] as LoginViewModel;
             if (loggeduser == null) return RedirectToAction("Index", "Login");
             var employee = _employeeBL.GetEmployee(loggeduser);
-            employee.Role = Common.Enums.Role.Employee;
             ViewBag.Employee = employee;
 
             var roles = _employeeBL.GetUserRoles(employee.EmployeeId).ToList();
