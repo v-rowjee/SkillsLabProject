@@ -12145,7 +12145,7 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Content\Uploads\" />
-    <Folder Include="dist\Widget\" />
+    <Folder Include="Scripts\dist\Widget\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\Bootstrap\bootstrap.rtl.min.css.map" />
@@ -12189,7 +12189,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <TypeScriptCompile Include="src\Widget\LoginWidget.ts" />
+    <TypeScriptCompile Include="Scripts\src\Widget\LoginWidget.ts" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />

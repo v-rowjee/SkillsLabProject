@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
-    "outDir": "dist",
-    "rootDir": "src",
+    "outDir": "Scripts/dist",
+    "rootDir": "Scripts/src",
     "module": "AMD",
     "strict": false
   },
