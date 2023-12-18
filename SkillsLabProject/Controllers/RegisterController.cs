@@ -23,7 +23,7 @@ namespace SkillsLabProject.Controllers
             var loggeduser = Session["CurrentUser"] as LoginViewModel;
             if (loggeduser != null)
             {
-                return Redirect("Home/Index");
+                return RedirectToAction("Index","Home");
             }
 
             var departments = DepartmentBL.GetAllDepartments().ToList();

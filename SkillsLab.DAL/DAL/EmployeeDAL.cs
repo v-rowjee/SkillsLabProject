@@ -16,6 +16,7 @@ namespace SkillsLabProject.DAL.DAL
         EmployeeModel GetEmployee(LoginViewModel model);
         EmployeeModel GetEmployeeById(int employeeId);
         bool UpdateEmployee(EmployeeModel employee);
+        List<Role> GetUserRoles(int employeeId);
     }
     public class EmployeeDAL : IEmployeeDAL
     {
@@ -149,6 +150,29 @@ namespace SkillsLabProject.DAL.DAL
                 new SqlParameter("@RoleId", (int)employee.Role)
             };
             return DBCommand.InsertUpdateData(UpdateEmployeeQuery, parameters);
+        }
+
+        public List<Role> GetUserRoles(int employeeId)
+        {
+            const string GetRolesQuery = @"
+                SELECT u.RoleId
+                FROM [dbo].[UserRole] u
+                INNER JOIN [dbo].[AppUser] a ON u.AppUserId = a.AppUserId
+                INNER JOIN [dbo].[Employee] e ON a.EmployeeId = e.EmployeeId
+                WHERE e.EmployeeId = @EmployeeId
+            ";
+            var parameters = new List<SqlParameter>
+            {
+                new SqlParameter("@EmployeeId", employeeId)
+            };
+            var dt = DBCommand.GetDataWithCondition(GetRolesQuery, parameters);
+            var roles = new List<Role>();
+            foreach (DataRow row in dt.Rows)
+            {
+                Role role = (Role)int.Parse(row["RoleId"].ToString());
+                roles.Add(role);
+            }
+            return roles;
         }
     }
 }

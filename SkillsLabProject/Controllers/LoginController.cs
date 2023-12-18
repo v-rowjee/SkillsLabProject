@@ -6,13 +6,13 @@ namespace SkillsLabProject.Controllers
 {
     public class LoginController : Controller
     {
-        private IAppUserBL AppUserBL;
-        private IEmployeeBL EmployeeBL;
+        private IAppUserBL _appUserBL;
+        private IEmployeeBL _employeeBL;
 
         public LoginController(IAppUserBL appUserBL,IEmployeeBL employeeBL)
         {
-            this.AppUserBL = appUserBL;
-            this.EmployeeBL = employeeBL;
+            _appUserBL = appUserBL;
+            _employeeBL = employeeBL;
         }
 
         // GET: Login
@@ -21,7 +21,7 @@ namespace SkillsLabProject.Controllers
             var loggeduser = Session["CurrentUser"] as LoginViewModel;
             if (loggeduser != null)
             {
-                return Redirect("Training/Index");
+                return RedirectToAction("Role", "Home");
             }
             return View();
         }
@@ -30,14 +30,12 @@ namespace SkillsLabProject.Controllers
         [HttpPost]
         public JsonResult Authenticate(LoginViewModel model)
         {
-            var IsUserValid = AppUserBL.AuthenticateUser(model);
+            var IsUserValid = _appUserBL.AuthenticateUser(model);
             if (IsUserValid)
             {
-                this.Session["CurrentUser"] = model;
-                var employee = EmployeeBL.GetEmployee(model);
-                this.Session["CurrentRole"] = employee.Role.ToString();
+                Session["CurrentUser"] = model;
             }
-            return Json(new { result = IsUserValid, url = Url.Action("Index", "Training") });
+            return Json(new { result = IsUserValid, url = Url.Action("Role", "Home") });
 
         }
     }

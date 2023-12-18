@@ -1,0 +1,33 @@
+﻿@{
+    ViewBag.Title = "Role";
+    Layout = "~/Views/Shared/_GuestLayout.cshtml";
+}
+<main class="container">
+    <div class="row p-5 justify-content-center align-items-center">
+        <div class="col-sm-6 col-lg-4">
+            <div class="card">
+                <div class="card-header">
+                    Select Role
+                </div>
+                <div class="card-body p-4">
+                    <form id="roleForm" class="pt-4">
+                        @foreach (var Role in ViewBag.Roles)
+                        {
+                            <div class="bg-light rounded border p-2 mb-3">
+                                <div class="form-check w-100">
+                                    <input class="form-check-input" type="radio" name="role" id="@Role" checked>
+                                    <label class="form-check-label w-100" for="@Role">
+                                        @Role.ToString()
+                                    </label>
+                                </div>
+                            </div>
+                        }
+                        <button class="btn btn-primary w-100 mt-4">
+                            Next
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>

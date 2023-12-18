@@ -12141,6 +12141,7 @@
     <Content Include="Views\Dojo\Index.cshtml" />
     <Content Include="StaticViews\LoginWidget.html" />
     <Content Include="Views\Enrollment\View.cshtml" />
+    <Content Include="Views\Home\Role.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
