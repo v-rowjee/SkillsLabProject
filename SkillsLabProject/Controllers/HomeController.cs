@@ -2,6 +2,7 @@
 using SkillsLabProject.Common.Enums;
 using SkillsLabProject.Common.Models.ViewModels;
 using SkillsLabProject.Custom;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -32,12 +33,21 @@ namespace SkillsLabProject.Controllers
             var employee = _employeeBL.GetEmployee(loggeduser);
             employee.Role = Common.Enums.Role.Employee;
             ViewBag.Employee = employee;
-            //Session["CurrentRole"] = employee.Role.ToString();
 
             var roles = _employeeBL.GetUserRoles(employee.EmployeeId).ToList();
             ViewBag.Roles = roles;
 
             return View();
+        }
+        [HttpPost]
+        public JsonResult Role(string role)
+        {
+            if(Enum.TryParse(role, out Role roleEnum))
+            {
+                Session["CurrentRole"] = roleEnum.ToString();
+                return Json(new { result = "Success", url = Url.Action("Index", "Training") });
+            }
+            return Json(new { result = "Error" });
         }
 
         // GET: Home/Logout
