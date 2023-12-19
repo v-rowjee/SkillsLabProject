@@ -117,45 +117,68 @@ $(function () {
         return false
     })
 
-    $('#saveEnrollment').click(() => {
+    $('#approveEnrollment').click(() => {
         var id = $('#enrollmentId').val()
-        var status = $('#status').val()
-
-        var error = ''
+        var status = "Approved"
 
         var enrollmentObj = {
             EnrollmentId: id,
-            Status: status
-        }
-        if (status == "Declined") {
-            var reason = $('#reason').val()
-            if (!reason) {
-                error = "Reason required for declined enrollment."
-                Snackbar.show({
-                    text: error,
-                    actionTextColor: "#CFE2FF"
-                });
-            }
-            else {
-                enrollmentObj = {
-                    EnrollmentId: id,
-                    Status: status,
-                    DeclinedReason: reason
-                }
-            }
+            Status: status,
         }
 
         $.ajax({
             type: "POST",
-            url: '/Enrollment/Edit',
+            url: '/Enrollment/Approve',
             data: enrollmentObj,
             dataType: 'json',
             success: (response) => {
                 if (response.result == "Success") {
                     Snackbar.show({
-                        text: `Enrollment status changed successfully!`,
+                        text: "Enrollment approved!",
                         actionTextColor: "#CFE2FF"
                     });
+                    window.location.reload()
+                }
+                else {
+                    Snackbar.show({
+                        text: "Unable to change enrollment status.",
+                        actionTextColor: "#CFE2FF"
+                    });
+                }
+            },
+            error: () => {
+                Snackbar.show({
+                    text: "Unable to change enrollment status.",
+                    actionTextColor: "#CFE2FF"
+                });
+            }
+        });
+
+    })
+
+    $('#declineEnrollment').click(() => {
+        var id = $('#enrollmentId').val()
+        var status = "Declined"
+        var reason = $('#reason').val()
+
+        var enrollmentObj = {
+            EnrollmentId: id,
+            Status: status,
+            DeclinedReason: reason
+        }
+
+        $.ajax({
+            type: "POST",
+            url: '/Enrollment/Decline',
+            data: enrollmentObj,
+            dataType: 'json',
+            success: (response) => {
+                if (response.result == "Success") {
+                    Snackbar.show({
+                        text: "Enrollment Declined!",
+                        actionTextColor: "#CFE2FF"
+                    });
+                    window.location.reload()
                 }
                 else {
                     Snackbar.show({

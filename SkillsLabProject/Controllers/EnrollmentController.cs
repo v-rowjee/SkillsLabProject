@@ -20,13 +20,15 @@ namespace SkillsLabProject.Controllers
         private ITrainingBL _trainingBL;
         private IPreRequisiteBL _preRequisiteBL;
         private IProofBL _proofBL;
-        public EnrollmentController(IEmployeeBL employeeBL,IEnrollmentBL enrollmentBL, ITrainingBL trainingBL, IPreRequisiteBL preRequisiteBL, IProofBL proofBL)
+        private IDeclinedEnrollmentBL _declinedEnrollmentBL;
+        public EnrollmentController(IEmployeeBL employeeBL,IEnrollmentBL enrollmentBL, ITrainingBL trainingBL, IPreRequisiteBL preRequisiteBL, IProofBL proofBL, IDeclinedEnrollmentBL declinedEnrollmentBL)
         {
             _employeeBL = employeeBL;
             _enrollmentBL = enrollmentBL;
             _trainingBL = trainingBL;
             _preRequisiteBL = preRequisiteBL;
             _proofBL = proofBL;
+            _declinedEnrollmentBL = declinedEnrollmentBL;
         }
         // GET: Enrollment
         [CustomAuthorization("Employee,Manager")]
@@ -66,6 +68,9 @@ namespace SkillsLabProject.Controllers
             if (enrollment == null) return RedirectToAction("All");
             ViewBag.Enrollment = enrollment;
 
+            var declineReason = _declinedEnrollmentBL.GetAllDeclinedEnrollments().Where(d => d.EnrollmentId == id).Select(d => d.Reason).FirstOrDefault();
+            ViewBag.DeclineReason = declineReason;
+
             var proofs = _proofBL.GetAllProofs().Where(p => p.EnrollmentId == enrollment.EnrollmentId).ToList();
             ViewBag.Proofs = proofs;
 
@@ -79,10 +84,28 @@ namespace SkillsLabProject.Controllers
             return View();
         }
 
-        // Post: Edit
+        // Post: Approve
         [HttpPost]
         [CustomAuthorization("Manager")]
-        public JsonResult Edit(EnrollmentModel model) {
+        public JsonResult Approve(EnrollmentModel model) {
+            model.Status = Status.Approved;
+            var result = _enrollmentBL.UpdateEnrollment(model);
+            if (result)
+            {
+                return Json(new { result = "Success" });
+            }
+            else
+            {
+                return Json(new { result = "Error" });
+            }
+        }
+
+        // Post: Decline
+        [HttpPost]
+        [CustomAuthorization("Manager")]
+        public JsonResult Decline(EnrollmentModel model)
+        {
+            model.Status = Status.Declined;
             var result = _enrollmentBL.UpdateEnrollment(model);
             if (result)
             {
