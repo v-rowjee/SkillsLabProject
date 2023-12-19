@@ -29,7 +29,7 @@ namespace SkillsLabProject.Controllers
             _proofBL = proofBL;
         }
         // GET: Enrollment
-        [CustomAuthorization("Employee,Manager,Admin")]
+        [CustomAuthorization("Employee,Manager")]
         public ActionResult Index()
         {
             var loggeduser = Session["CurrentUser"] as LoginViewModel;
@@ -96,7 +96,7 @@ namespace SkillsLabProject.Controllers
 
         // Post: Delete
         [HttpPost]
-        [CustomAuthorization("Employee,Manager,Admin")]
+        [CustomAuthorization("Employee,Manager")]
         public JsonResult Delete(int id)
         {
             var result = _enrollmentBL.DeleteEnrollment(id);
@@ -112,53 +112,22 @@ namespace SkillsLabProject.Controllers
 
         // POST: Enroll
         [HttpPost]
-        [CustomAuthorization("Employee,Manager,Admin")]
+        [CustomAuthorization("Employee")]
         public async Task<JsonResult> Enroll(List<HttpPostedFileBase> files, int trainingId)
         {
             var loggeduser = Session["CurrentUser"] as LoginViewModel;
-            bool result;
+            var result = await _enrollmentBL.Enroll(loggeduser, trainingId, files);
 
-            var prerequisites = _preRequisiteBL.GetAllPreRequisites().Where(p => p.TrainingId == trainingId).ToList();
-
-            if (files != null && files.Any() && files.Count >= prerequisites.Count)
+            switch (result)
             {
-                var enrollmentWithProofs = new EnrollmentViewModel() 
-                { 
-                    Employee = _employeeBL.GetEmployee(loggeduser),
-                    Training = new TrainingModel() { TrainingId = trainingId },
-                    Proofs = new List<ProofModel>(),
-                    Status = Status.Pending
-                };
-                foreach (var file in files)
-                {
-                    FileStream stream;
-                    if (file.ContentLength > 0)
-                    {
-                        string path = Path.Combine(Server.MapPath("~/Content/Uploads/"), file.FileName);
-                        file.SaveAs(path);
-                        stream = new FileStream(Path.Combine(path), FileMode.Open);
-                        string downloadUrl = await _enrollmentBL.UploadAndGetDownloadUrl(stream, file.FileName);
-                        enrollmentWithProofs.Proofs.Add(new ProofModel() { Attachment = downloadUrl });
-                    }
-                }
-                result = _enrollmentBL.AddEnrollment(enrollmentWithProofs);
+                case "Success":
+                    return Json(new { result = "Success" });
+                case "FileMissing":
+                    return Json(new { result = "FileMissing" });
+                default:
+                    return Json(new { result = "Error" });
             }
-            else if(prerequisites.Count == 0)
-            {
-                var enrollment = new EnrollmentModel()
-                {
-                    EmployeeId = _employeeBL.GetEmployee(loggeduser).EmployeeId,
-                    TrainingId = trainingId,
-                    Status = Status.Pending
-                };
-                result = _enrollmentBL.AddEnrollment(enrollment);
-            }
-            else
-            {
-                return Json(new { result = "FileMissing" });
-            }
-
-            return result ? Json(new { result = "Success" }) : Json(new { result = "Error" });
         }
+
     }
 }

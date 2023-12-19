@@ -1,0 +1,36 @@
+﻿@{
+    ViewBag.Title = "Role";
+    Layout = "~/Views/Shared/_GuestLayout.cshtml";
+}
+@section scripts {
+    <script src="~/Scripts/custom/role.js"></script>
+}
+<main class="container">
+    <div class="modal show fade d-block bg-light" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Select Role</h5>
+                </div>
+                <form id="roleForm" class="pt-4">
+                    <div class="modal-body">
+                        @foreach (var Role in ViewBag.Roles)
+                        {
+                            <div class="bg-light rounded border p-2 mb-3">
+                                <div class="form-check w-100">
+                                    <input class="form-check-input" type="radio" name="role" value="@Role.ToString()" id="@Role" @(Role.ToString() == "Employee" ? "checked" : "")>
+                                    <label class="form-check-label w-100" for="@Role">
+                                        @Role.ToString()
+                                    </label>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                    <div class="modal-footer">
+                        <button id="roleBtn" type="button" class="btn btn-primary w-100">Next</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</main>

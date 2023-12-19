@@ -1,4 +1,5 @@
-﻿using SkillsLabProject.BL.BL;
+﻿using Microsoft.Ajax.Utilities;
+using SkillsLabProject.BL.BL;
 using SkillsLabProject.Common.Models;
 using SkillsLabProject.Common.Models.ViewModels;
 using SkillsLabProject.Custom;
@@ -34,12 +35,20 @@ namespace SkillsLabProject.Controllers
 
             var employee = _employeeBL.GetEmployee(loggeduser);
             ViewBag.Employee = employee;
+
             var trainings = _trainingBL.GetAllTrainings().Where(t => t.Deadline >= DateTime.Now);
             ViewBag.Trainings = trainings;
 
+            var enrollmentOfEmployee = _enrollmentBL.GetAllEnrollmentsOfEmployee(employee.EmployeeId).ToList();
+            ViewBag.IsEnrolledInTraining = new Dictionary<int, bool>();
+            foreach (var training in trainings)
+            {
+                ViewBag.IsEnrolledInTraining[training.TrainingId] = enrollmentOfEmployee.Any(e => e.Training.TrainingId == training.TrainingId);
+            }
+
             return View();
         }
-                    
+
         [HttpGet]
         [CustomAuthorization("Employee,Manager,Admin")]
         public ActionResult View(int? id)
@@ -52,11 +61,19 @@ namespace SkillsLabProject.Controllers
             var loggeduser = Session["CurrentUser"] as LoginViewModel;
             var employee = _employeeBL.GetEmployee(loggeduser);
             ViewBag.Employee = employee;
+
             var preRequisites = _preRequisiteBL.GetAllPreRequisites().Where(p => p.TrainingId == training.TrainingId).ToList();
             ViewBag.Prerequisites = preRequisites.Any() ? preRequisites : null;
 
             var enrolledStatus = _enrollmentBL.GetAllEnrollmentsOfEmployee(employee.EmployeeId).Where(e => e.Training.TrainingId == training.TrainingId).Select(e => e.Status).FirstOrDefault().ToString();
             ViewBag.EnrolledStatus = enrolledStatus;
+
+            var role = Session["CurrentRole"] as string;
+            ViewBag.CurrentRole = role;
+
+            ViewBag.IsEnrolled = enrolledStatus == "0";
+            ViewBag.IsAdmin = role == "Admin";
+
             return View();
         }
         [HttpGet]

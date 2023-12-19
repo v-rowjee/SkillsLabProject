@@ -16,6 +16,7 @@ namespace SkillsLabProject.DAL.DAL
         EmployeeModel GetEmployee(LoginViewModel model);
         EmployeeModel GetEmployeeById(int employeeId);
         bool UpdateEmployee(EmployeeModel employee);
+        List<Role> GetUserRoles(int employeeId);
     }
     public class EmployeeDAL : IEmployeeDAL
     {
@@ -32,7 +33,7 @@ namespace SkillsLabProject.DAL.DAL
         public IEnumerable<EmployeeModel> GetAllEmployees()
         {
             const string GetAllEmployeesQuery = @"
-                SELECT e.EmployeeId, FirstName, LastName, NIC, PhoneNumber, e.DepartmentId, RoleId, a.Email, d.Title
+                SELECT e.EmployeeId, FirstName, LastName, NIC, PhoneNumber, e.DepartmentId, a.Email, d.Title
                 FROM [dbo].[Employee] as e
                 INNER JOIN [dbo].[AppUser] as a ON e.EmployeeId = a.EmployeeId
                 INNER JOIN [dbo].[Department] as d ON e.DepartmentId = d.DepartmentId
@@ -55,7 +56,6 @@ namespace SkillsLabProject.DAL.DAL
                         DepartmentId = int.Parse(row["DepartmentId"].ToString()),
                         Title = row["Title"].ToString()
                     },
-                    Role = (Role)int.Parse(row["RoleId"].ToString())
                 };
                 employees.Add(employee);
             }
@@ -64,7 +64,7 @@ namespace SkillsLabProject.DAL.DAL
         public EmployeeModel GetEmployee(LoginViewModel login)
         {
             const string GetEmployeeQuery = @"
-                SELECT e.EmployeeId, e.FirstName, e.LastName, e.NIC, e.PhoneNumber, e.DepartmentId, e.RoleId, a.Email, d.Title
+                SELECT e.EmployeeId, e.FirstName, e.LastName, e.NIC, e.PhoneNumber, e.DepartmentId, a.Email, d.Title
                 FROM [dbo].[Employee] as e
                 INNER JOIN [dbo].[AppUser] as a ON e.EmployeeId = a.EmployeeId
                 INNER JOIN [dbo].[Department] as d ON e.DepartmentId = d.DepartmentId
@@ -89,7 +89,6 @@ namespace SkillsLabProject.DAL.DAL
                     DepartmentId = int.Parse(row["DepartmentId"].ToString()),
                     Title = row["Title"].ToString()
                 };
-                employee.Role = (Role)int.Parse(row["RoleId"].ToString());
             }
             return employee;
         }
@@ -97,7 +96,7 @@ namespace SkillsLabProject.DAL.DAL
         public EmployeeModel GetEmployeeById(int employeeId)
         {
             const string GetEmployeeQuery = @"
-                SELECT e.EmployeeId, e.FirstName, e.LastName, e.NIC, e.PhoneNumber, e.DepartmentId, e.RoleId, a.Email, d.Title
+                SELECT e.EmployeeId, e.FirstName, e.LastName, e.NIC, e.PhoneNumber, e.DepartmentId, a.Email, d.Title
                 FROM [dbo].[Employee] as e
                 INNER JOIN [dbo].[AppUser] as a ON e.EmployeeId = a.EmployeeId
                 INNER JOIN [dbo].[Department] as d ON e.DepartmentId = d.DepartmentId
@@ -122,7 +121,6 @@ namespace SkillsLabProject.DAL.DAL
                     DepartmentId = int.Parse(row["DepartmentId"].ToString()),
                     Title = row["Title"].ToString()
                 };
-                employee.Role = (Role)int.Parse(row["RoleId"].ToString());
             }
             return employee;
         }
@@ -133,7 +131,7 @@ namespace SkillsLabProject.DAL.DAL
                 UPDATE [dbo].[Employee] e
                 INNER JOIN [dbo].[AppUser] as a ON e.EmployeeId = a.EmployeeId
                 INNER JOIN [dbo].[Department] as d ON e.DepartmentId = d.DepartmentId
-                SET FirstName=@FirstName, LastName=@LastName, NIC=@NIC, PhoneNumber=@PhoneNumber, e.DepartmentId=@DepartmentId, RoleId=@RoleId,  a.Email=@Email, d.Title=@Title
+                SET FirstName=@FirstName, LastName=@LastName, NIC=@NIC, PhoneNumber=@PhoneNumber, e.DepartmentId=@DepartmentId, a.Email=@Email, d.Title=@Title
                 WHERE EmployeeId=@EmployeeId;
             ";
             var parameters = new List<SqlParameter>
@@ -146,9 +144,30 @@ namespace SkillsLabProject.DAL.DAL
                 new SqlParameter("@PhoneNumber", employee.PhoneNumber),
                 new SqlParameter("@DepartmentId", employee.Department.DepartmentId),
                 new SqlParameter("@Title", employee.Department.Title),
-                new SqlParameter("@RoleId", (int)employee.Role)
             };
             return DBCommand.InsertUpdateData(UpdateEmployeeQuery, parameters);
+        }
+
+        public List<Role> GetUserRoles(int employeeId)
+        {
+            const string GetRolesQuery = @"
+                SELECT u.RoleId
+                FROM [dbo].[UserRole] u
+                INNER JOIN [dbo].[AppUser] a ON u.AppUserId = a.AppUserId
+                WHERE a.EmployeeId = @EmployeeId
+            ";
+            var parameters = new List<SqlParameter>
+            {
+                new SqlParameter("@EmployeeId", employeeId)
+            };
+            var dt = DBCommand.GetDataWithCondition(GetRolesQuery, parameters);
+            var roles = new List<Role>();
+            foreach (DataRow row in dt.Rows)
+            {
+                Role role = (Role)int.Parse(row["RoleId"].ToString());
+                roles.Add(role);
+            }
+            return roles;
         }
     }
 }

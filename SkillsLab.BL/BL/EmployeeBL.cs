@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using SkillsLabProject.Common.Models.ViewModels;
+using SkillsLabProject.Common.Enums;
 
 namespace SkillsLabProject.BL.BL
 {
@@ -16,6 +17,7 @@ namespace SkillsLabProject.BL.BL
         EmployeeModel GetEmployeeById(int employeeId);
         bool UpdateEmployee(EmployeeModel employee);
         bool DeleteEmployee(int employeeId);
+        List<Role> GetUserRoles(int employeeId);
     }
     public class EmployeeBL : IEmployeeBL
     {
@@ -44,6 +46,10 @@ namespace SkillsLabProject.BL.BL
         public bool DeleteEmployee(int employeeId) 
         { 
             return _employeeDAL.DeleteEmployee(employeeId);
+        }
+        public List<Role> GetUserRoles(int employeeId)
+        {
+            return _employeeDAL.GetUserRoles(employeeId);
         }
     }
 }

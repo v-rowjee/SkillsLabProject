@@ -9,6 +9,8 @@ using SkillsLabProject.Common.Models.ViewModels;
 using SkillsLabProject.DAL.DAL;
 using System.IO;
 using SkillsLabProject.Common.Enums;
+using static System.Net.WebRequestMethods;
+using System.Web;
 
 namespace SkillsLabProject.BL.BL
 {
@@ -21,7 +23,7 @@ namespace SkillsLabProject.BL.BL
         bool AddEnrollment(EnrollmentViewModel model);
         bool UpdateEnrollment(EnrollmentModel model);
         bool DeleteEnrollment(int enrollmentId);
-        Task<string> UploadAndGetDownloadUrl(FileStream stream, string fileName);
+        Task<string> Enroll(LoginViewModel loggeduser, int trainingId, List<HttpPostedFileBase> files);
 
     }
     public class EnrollmentBL : IEnrollmentBL
@@ -30,13 +32,15 @@ namespace SkillsLabProject.BL.BL
         private readonly ITrainingDAL _trainingDAL;
         private readonly IEmployeeDAL _employeeDAL;
         private readonly IProofDAL _proofDAL;
+        private readonly IPreRequisiteDAL _preRequisiteDAL;
 
-        public EnrollmentBL(IEnrollmentDAL enrollmentDAL, ITrainingDAL trainingDAL, IEmployeeDAL employeeDAL, IProofDAL proofDAL)
+        public EnrollmentBL(IEnrollmentDAL enrollmentDAL, ITrainingDAL trainingDAL, IEmployeeDAL employeeDAL, IProofDAL proofDAL, IPreRequisiteDAL preRequisiteDAL)
         {
             _enrollmentDAL = enrollmentDAL;
             _trainingDAL = trainingDAL;
             _employeeDAL = employeeDAL;
             _proofDAL = proofDAL;
+            _preRequisiteDAL = preRequisiteDAL;
         }
 
         public bool AddEnrollment(EnrollmentModel enrollment)
@@ -126,11 +130,64 @@ namespace SkillsLabProject.BL.BL
             return _enrollmentDAL.Update(enrollment);
         }
 
-        public Task<string> UploadAndGetDownloadUrl(FileStream stream, string fileName)
+        public async Task<string> Enroll(LoginViewModel loggeduser, int trainingId, List<HttpPostedFileBase> files)
         {
-            var uniqueFileName = $@"{fileName}-{Guid.NewGuid()}";
-            var downloadUrl = _enrollmentDAL.UploadAndGetDownloadUrlAsync(stream, uniqueFileName);
-            return downloadUrl;
+            var prerequisites = _preRequisiteDAL.GetAll().Where(p => p.TrainingId == trainingId).ToList();
+
+            if (prerequisites.Count == 0)
+            {
+                var enrollment = new EnrollmentModel()
+                {
+                    EmployeeId = _employeeDAL.GetEmployee(loggeduser).EmployeeId,
+                    TrainingId = trainingId,
+                    Status = Status.Pending
+                };
+                return _enrollmentDAL.Add(enrollment) ? "Success" : "Error";
+            }
+            else if(files != null && files.Any() && files.Count < prerequisites.Count)
+            {
+                return "FileMissing";
+            }
+            else if(files != null && files.Any() && files.Count >= prerequisites.Count)
+            {
+                var enrollmentWithProofs = new EnrollmentViewModel()
+                {
+                    Employee = _employeeDAL.GetEmployee(loggeduser),
+                    Training = new TrainingModel() { TrainingId = trainingId },
+                    Proofs = new List<ProofModel>(),
+                    Status = Status.Pending
+                };
+                foreach (var file in files)
+                {
+                    if (file.ContentLength > 0)
+                    {
+                        string tempFilePath = Path.GetTempFileName();
+
+                        file.SaveAs(tempFilePath);
+
+                        using (FileStream stream = new FileStream(tempFilePath, FileMode.Open))
+                        {
+                            string uniqueFileName = GenerateUniqueFileName(file);
+                            string downloadUrl = await _enrollmentDAL.UploadAndGetDownloadUrlAsync(stream, file.FileName);
+                            enrollmentWithProofs.Proofs.Add(new ProofModel() { Attachment = downloadUrl });
+                        }
+
+                        System.IO.File.Delete(tempFilePath);
+                    }
+                }
+                return _enrollmentDAL.Add(enrollmentWithProofs) ? "Success" : "Error";
+            }
+            else
+            {
+                return "FileMissing";
+            }
+        }
+        private string GenerateUniqueFileName(HttpPostedFileBase file)
+        {
+            string fileName = Path.GetFileName(file.FileName);
+            string fileExtension = Path.GetExtension(file.FileName);
+            var uniqueFileName = $@"{fileName}-{Guid.NewGuid()}{fileExtension}";
+            return uniqueFileName;
         }
     }
 }
