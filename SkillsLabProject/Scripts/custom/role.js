@@ -17,7 +17,7 @@
         else {
             $.ajax({
                 type: "POST",
-                url: "/Home/Role",
+                url: "/Common/Role",
                 data: { role: role },
                 dataType: "json",
                 success: (response) => {

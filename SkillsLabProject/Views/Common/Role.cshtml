@@ -6,14 +6,14 @@
     <script src="~/Scripts/custom/role.js"></script>
 }
 <main class="container">
-    <div class="row p-5 justify-content-center align-items-center">
-        <div class="col-lg-4">
-            <div class="card">
-                <div class="card-header">
-                    Select Role
+    <div class="modal show fade d-block bg-light" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Select Role</h5>
                 </div>
-                <div class="card-body p-4">
-                    <form id="roleForm" class="pt-4">
+                <form id="roleForm" class="pt-4">
+                    <div class="modal-body">
                         @foreach (var Role in ViewBag.Roles)
                         {
                             <div class="bg-light rounded border p-2 mb-3">
@@ -25,11 +25,11 @@
                                 </div>
                             </div>
                         }
-                        <button id="roleBtn" class="btn btn-primary w-100 mt-4">
-                            Next
-                        </button>
-                    </form>
-                </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button id="roleBtn" type="button" class="btn btn-primary w-100">Next</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>

@@ -30,26 +30,43 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var Training in ViewBag.Trainings)
+                    @foreach (var training in ViewBag.Trainings)
                     {
                         <tr>
-                            <td class="rounded-start">@Training.Title</td>
-                            <td>@Training.Deadline.ToString("ddd, dd MMM yyyy - hh:mm tt")</td>
-                            <td>@if (Training.PriorityDepartment != null)
-                            {@Training.PriorityDepartment.Title}
-                        else
-                        { <p class="opacity-25 m-0">None</p>}</td>
-                            <td>@Training.Capacity</td>
+                            <td class="rounded-start">@training.Title</td>
+                            <td>@training.Deadline.ToString("ddd, dd MMM yyyy - hh:mm tt")</td>
+                            <td>
+                                @if (training.PriorityDepartment != null)
+                                {
+                                    @training.PriorityDepartment.Title
+                                }
+                                else
+                                {
+                                    <p class="opacity-25 m-0">None</p>
+                                }
+                            </td>
+                            <td>@training.Capacity</td>
                             <td class="rounded-end text-end">
                                 <div class="d-flex justify-content-end">
-                                    @Html.ActionLink("View", "View", "Training", new { @id = Training.TrainingId }, new { @class = "btn btn-sm btn-outline-primary" })
                                     @if (ViewBag.CurrentRole == "Admin")
                                     {
-                                        @Html.ActionLink("Edit", "Edit", "Training", new { @id = Training.TrainingId }, new { @class = "btn btn-sm btn-outline-secondary ms-2" })
-                                        <button class="btn btn-sm btn-outline-danger ms-2" onclick="deleteTraining(this)">
+                                        @Html.ActionLink("View", "View", "Training", new { @id = training.TrainingId }, new { @class = "btn btn-sm btn-outline-primary w-100" })
+                                        @Html.ActionLink("Edit", "Edit", "Training", new { @id = training.TrainingId }, new { @class = "btn btn-sm btn-outline-secondary ms-2 w-50" })
+                                        <button class="btn btn-sm btn-outline-danger w-50 ms-2" onclick="deleteTraining(this)">
                                             <i class="fa-solid fa-trash"></i>
                                         </button>
-                                        <input type="hidden" value="@Training.TrainingId" />
+                                        <input type="hidden" value="@training.TrainingId" />
+                                    }
+                                    else
+                                    {
+                                        if (ViewBag.IsEnrolledInTraining[training.TrainingId])
+                                        {
+                                            @Html.ActionLink("View", "Index", "Enrollment", null, new { @class = "btn btn-sm btn-outline-success w-100" })
+                                        }
+                                        else
+                                        {
+                                            @Html.ActionLink("Enroll", "View", "Training", new { @id = training.TrainingId }, new { @class = "btn btn-sm btn-outline-primary w-100" })
+                                        }
                                     }
                                 </div>
                             </td>

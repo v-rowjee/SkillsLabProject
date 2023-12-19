@@ -21,7 +21,7 @@ namespace SkillsLabProject.Controllers
             var loggeduser = Session["CurrentUser"] as LoginViewModel;
             if (loggeduser != null)
             {
-                return RedirectToAction("Role", "Home");
+                return RedirectToAction("Role", "Common");
             }
             return View();
         }
@@ -35,7 +35,7 @@ namespace SkillsLabProject.Controllers
             {
                 Session["CurrentUser"] = model;
             }
-            return Json(new { result = IsUserValid, url = Url.Action("Role", "Home") });
+            return Json(new { result = IsUserValid, url = Url.Action("Role", "Common") });
 
         }
     }

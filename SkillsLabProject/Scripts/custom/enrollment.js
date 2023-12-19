@@ -68,6 +68,7 @@ $(function () {
                         text: "Training enrolled successfully!",
                         actionTextColor: "#CFE2FF"
                     });
+                    window.location.reload()
                 }
                 else if (response.result == "FileMissing") {
                     $('#enrollmentForm input[name="files"]').addClass("is-invalid")

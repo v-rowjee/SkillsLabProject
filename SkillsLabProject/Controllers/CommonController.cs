@@ -11,16 +11,20 @@ using System.Web.Security;
 
 namespace SkillsLabProject.Controllers
 {
-    public class HomeController : Controller
+    public class CommonController : Controller
     {
         private IEmployeeBL _employeeBL;
-        public HomeController(IEmployeeBL employeeBL)
+        public CommonController(IEmployeeBL employeeBL)
         {
             _employeeBL = employeeBL;
         }
         // GET: Home
         public ActionResult Index()
         {
+            if (Session["CurrentRole"] as string == "Manager")
+            {
+                return RedirectToAction("All", "Enrollment");
+            }
             return RedirectToAction("Index", "Training");
         }
 
@@ -28,6 +32,8 @@ namespace SkillsLabProject.Controllers
         [HttpGet]
         public ActionResult Role()
         {
+            var role = Session["CurrentRole"] as string;
+            if (role != null) return RedirectToAction("Index", "Common");
             var loggeduser = Session["CurrentUser"] as LoginViewModel;
             if (loggeduser == null) return RedirectToAction("Index", "Login");
             var employee = _employeeBL.GetEmployee(loggeduser);
@@ -44,12 +50,16 @@ namespace SkillsLabProject.Controllers
             if(Enum.TryParse(role, out Role roleEnum))
             {
                 Session["CurrentRole"] = roleEnum.ToString();
+                if(roleEnum == Common.Enums.Role.Manager)
+                {
+                    return Json(new { result = "Success", url = Url.Action("All", "Enrollment") });
+                }
                 return Json(new { result = "Success", url = Url.Action("Index", "Training") });
             }
             return Json(new { result = "Error" });
         }
 
-        // GET: Home/Logout
+        // GET: Common/Logout
         public ActionResult Logout()
         {
             Session.Clear();

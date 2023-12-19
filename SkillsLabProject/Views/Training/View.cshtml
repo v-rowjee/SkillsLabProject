@@ -12,7 +12,7 @@
                 @Html.ActionLink("Training", "Index", "Training", null, new { @class = "text-decoration-none text-black" })
                 / @ViewBag.Training.Title
             </h1>
-            @if (ViewBag.EnrolledStatus != "0")
+            @if (!ViewBag.IsAdmin && !ViewBag.IsEnrolled)
             {
                 <div class="alert alert-primary" role="alert">
                     You have already enrolled in this training. The training status is <span class="badge text-bg-primary">@ViewBag.EnrolledStatus</span>
@@ -81,7 +81,7 @@
                                 {
                                     <li class="list-group-item rounded">
                                         <p class="m-0">@PreRequisite.Detail</p>
-                                        @if (ViewBag.EnrolledStatus == "0")
+                                        @if (ViewBag.IsEnrolled && !ViewBag.IsAdmin)
                                         {
                                             @Html.TextBox("files", "", new { @type = "file", @class = "form-control mt-2 mb-3", required = "required" })
                                         }
@@ -92,22 +92,35 @@
                         </ul>
                     </div>
                 </div>
-                <div class="row">
+                <div class="row mt-5">
                     <div class="col-4">
-                        @Html.ActionLink("Back", "Index", "Training", null, new { @class = "btn btn-secondary me-2 w-100" })
+                        @Html.ActionLink("Back", "Index", "Training", null, new { @class = "btn btn-secondary w-100" })
                     </div>
 
-                    <div class="col-8">
-                        @if (ViewBag.EnrolledStatus == "0")
-                        {
-                            <input type="hidden" id="trainingId" value="@ViewBag.Training.TrainingId" />
-                            <button type="submit" id="enroll" class="btn btn-primary w-100 mb-5">Enroll</button>
-                        }
-                        else
-                        {
+
+                    @if (ViewBag.IsEnrolled && !ViewBag.IsAdmin)
+                    {
+                        <div class="col-8">
                             @Html.ActionLink("View Enrollment", "Index", "Enrollment", null, new { @class = "btn btn-primary w-100" })
-                        }
-                    </div>
+                        </div>
+                    }
+                    else if (Session["CurrentRole"] as string == "Admin")
+                    {
+                        <div class="col-4">
+                            <button class="btn btn-danger w-100" onclick="deleteTraining(this)">Delete</button>
+                            <input type="hidden" id="trainingId" value="@ViewBag.Training.TrainingId" />
+                        </div>
+                        <div class="col-4">
+                            @Html.ActionLink("Edit", "Index", "Enrollment", new { @id = ViewBag.Training.TrainingId }, new { @class = "btn btn-primary w-100" })
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="col-8">
+                            <button type="submit" id="enroll" class="btn btn-primary w-100 mb-5">Enroll</button>
+                            <input type="hidden" id="trainingId" value="@ViewBag.Training.TrainingId" />
+                        </div>
+                    }
                 </div>
             </form>
         </div>
