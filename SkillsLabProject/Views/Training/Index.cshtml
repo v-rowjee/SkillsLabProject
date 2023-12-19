@@ -22,20 +22,20 @@
             <table id="trainingTable" class="table table-borderless table-hover pb-4">
                 <thead class="bg-light">
                     <tr class="align-middle">
-                        <th class="rounded-start">Title</th>
-                        <th>Deadline</th>
-                        <th class="text-nowrap">Department Priority</th>
-                        <th>Capacity</th>
-                        <th class="rounded-end text-end">Actions</th>
+                        <th class="rounded-start p-3 border">Title</th>
+                        <th class="p-3 border">Deadline</th>
+                        <th class="text-nowrap p-3 border">Department Priority</th>
+                        <th class="p-3 border">Capacity</th>
+                        <th class="rounded-end text-center p-3 border">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach (var training in ViewBag.Trainings)
                     {
                         <tr>
-                            <td class="rounded-start">@training.Title</td>
-                            <td>@training.Deadline.ToString("ddd, dd MMM yyyy - hh:mm tt")</td>
-                            <td>
+                            <td class="rounded-start p-3">@training.Title</td>
+                            <td class="p-3">@training.Deadline.ToString("ddd, dd MMM yyyy - hh:mm tt")</td>
+                            <td class="p-3">
                                 @if (training.PriorityDepartment != null)
                                 {
                                     @training.PriorityDepartment.Title
@@ -45,8 +45,8 @@
                                     <p class="opacity-25 m-0">None</p>
                                 }
                             </td>
-                            <td>@training.Capacity</td>
-                            <td class="rounded-end text-end">
+                            <td class="p-3">@training.Capacity</td>
+                            <td class="rounded-end p-3">
                                 <div class="d-flex justify-content-end">
                                     @if (ViewBag.CurrentRole == "Admin")
                                     {

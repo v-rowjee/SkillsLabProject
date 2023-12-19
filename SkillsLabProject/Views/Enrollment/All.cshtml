@@ -23,22 +23,22 @@
             <table id="enrollmentTable" class="table table-borderless table-hover pb-4">
                 <thead class="bg-light">
                     <tr class="align-middle">
-                        <th class="rounded-start border-end">Status</th>
-                        <th>Training</th>
-                        <th>Deadline</th>
-                        <th>Department Priority</th>
-                        <th class="border-end">Capacity</th>
-                        <th>Employee</th>
-                        <th>Email</th>
-                        <th class="border-end text-nowrap">Phone Number</th>
-                        <th class="rounded-end text-end">Action</th>
+                        <th class="rounded-start border text-center py-3">Status</th>
+                        <th class="py-3 border">Training</th>
+                        <th class="py-3 border">Deadline</th>
+                        <th class="text-nowrap py-3 border">Department Priority</th>
+                        <th class="border-end py-3 border">Capacity</th>
+                        <th class="py-3 border">Employee</th>
+                        <th class="py-3 border">Email</th>
+                        <th class="border-end text-nowrap py-3 border">Phone Number</th>
+                        <th class="rounded-end text-center py-3 border">Action</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach (var Enrollment in ViewBag.Enrollments)
                     {
                         <tr>
-                            <td class="rounded-start">
+                            <td class="rounded-start text-center py-3">
                                 @if (@Enrollment.Status.ToString() == "Approved")
                                 {<span class="badge text-bg-success">Approved</span> }
                                 else if (@Enrollment.Status.ToString() == "Declined")
@@ -46,22 +46,20 @@
                                 else
                                 { <span class="badge text-bg-warning">Pending</span>}
                             </td>
-                            <td>@Enrollment.Training.Title</td>
-                            <td>@Enrollment.Training.Deadline.ToString("dd MMM yyyy")</td>
-                            <td>
+                            <td class="py-3">@Enrollment.Training.Title</td>
+                            <td class="text-nowrap py-3">@Enrollment.Training.Deadline.ToString("dd MMM yyyy")</td>
+                            <td class="py-3">
                                 @if (Enrollment.Training.PriorityDepartment != null)
                                 {@Enrollment.Training.PriorityDepartment.Title}
                             else
                             { <p class="opacity-25 m-0">None</p>}
                             </td>
-                            <td>@Enrollment.Training.Capacity</td>
-                            <td class="text-nowrap">@Enrollment.Employee.FirstName @Enrollment.Employee.LastName</td>
-                            <td>@Enrollment.Employee.Email</td>
-                            <td>@Enrollment.Employee.PhoneNumber</td>
-                            <td class="rounded-end text-end">
-                                <div class="d-flex justify-content-end">
-                                    @Html.ActionLink("View", "View", "Enrollment", new { @id = Enrollment.EnrollmentId }, new { @class = "btn btn-sm btn-outline-primary" })
-                                </div>
+                            <td class="py-3">@Enrollment.Training.Capacity</td>
+                            <td class="text-nowrap py-3">@Enrollment.Employee.FirstName @Enrollment.Employee.LastName</td>
+                            <td class="py-3">@Enrollment.Employee.Email</td>
+                            <td class="py-3">@Enrollment.Employee.PhoneNumber</td>
+                            <td class="rounded-end text-center py-3">
+                                @Html.ActionLink("View", "View", "Enrollment", new { @id = Enrollment.EnrollmentId }, new { @class = "btn btn-sm btn-outline-primary w-100" })
                             </td>
                         </tr>
                     }
