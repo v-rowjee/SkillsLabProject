@@ -35,11 +35,16 @@ namespace SkillsLabProject.DAL.DAL
         public bool RegisterUser(RegisterViewModel registration)
         {
             const string RegisterUserQuery = @"
-                INSERT [dbo].[Employee] ([FirstName] ,[LastName] ,[NIC] ,[PhoneNumber], [DepartmentId], [RoleId])
-                VALUES (@FirstName ,@LastName, @NIC, @PhoneNumber, @DepartmentId, @RoleId);
+                BEGIN TRANSACTION
+                    INSERT [dbo].[Employee] ([FirstName] ,[LastName] ,[NIC] ,[PhoneNumber], [DepartmentId])
+                    VALUES (@FirstName ,@LastName, @NIC, @PhoneNumber, @DepartmentId);
 
-                INSERT [dbo].[AppUser] (Email, Password, EmployeeId)
-                VALUES (@Email, @Password, @@IDENTITY)
+                    INSERT [dbo].[AppUser] (Email, Password, EmployeeId)
+                    VALUES (@Email, @Password, @@IDENTITY)
+
+                    INSERT [dbo].[UserRole] (AppUserId, RoleId)
+                    VALUES (@@IDENTITY, @RoleId)
+                COMMIT
             ";
             var parameters = new List<SqlParameter>
             {

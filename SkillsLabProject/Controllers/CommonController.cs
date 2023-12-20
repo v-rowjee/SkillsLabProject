@@ -21,7 +21,11 @@ namespace SkillsLabProject.Controllers
         // GET: Home
         public ActionResult Index()
         {
-            if (Session["CurrentRole"] as string == "Manager")
+            if (Session["CurrentRole"] == null)
+            {
+                return RedirectToAction("Index", "Login");
+            }
+            else if (Session["CurrentRole"] as string == "Manager")
             {
                 return RedirectToAction("All", "Enrollment");
             }

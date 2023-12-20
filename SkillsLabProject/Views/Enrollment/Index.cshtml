@@ -19,7 +19,12 @@
                                 @Enrollment.Training.Title
                             </div>
                             <div class="float-end">
-                                <span class="badge text-bg-warning text-nowrap">@Enrollment.Status</span>
+                                @if (Enrollment.Status.ToString() == "Approved")
+                                    {<span class="badge text-bg-success text-nowrap">@Enrollment.Status</span>}
+                                else if (Enrollment.Status.ToString() == "Declined")
+                                    {<span class="badge text-bg-danger text-nowrap">@Enrollment.Status</span>}
+                                else
+                                    {<span class="badge text-bg-warning text-nowrap">@Enrollment.Status</span>}
                             </div>
                         </div>
                         <div class="card-body">

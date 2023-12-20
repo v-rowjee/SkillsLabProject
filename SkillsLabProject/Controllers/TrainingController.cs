@@ -1,6 +1,4 @@
-﻿using Microsoft.Ajax.Utilities;
-using SkillsLabProject.BL.BL;
-using SkillsLabProject.Common.Models;
+﻿using SkillsLabProject.BL.BL;
 using SkillsLabProject.Common.Models.ViewModels;
 using SkillsLabProject.Custom;
 using System;

@@ -1,4 +1,5 @@
 using SkillsLabProject.BL.BL;
+using SkillsLabProject.BL.Services;
 using SkillsLabProject.DAL.DAL;
 using System.Web.Mvc;
 using Unity;
@@ -35,6 +36,8 @@ namespace SkillsLabProject
 
             container.RegisterType<IDepartmentBL, DepartmentBL>();
             container.RegisterType<IDepartmentDAL, DepartmentDAL>();
+
+            container.RegisterType<IEmailService, EmailService>();
 
             DependencyResolver.SetResolver(new UnityDependencyResolver(container));
         }

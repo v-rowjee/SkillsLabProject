@@ -1,4 +1,5 @@
 ﻿using SkillsLabProject.BL.BL;
+using SkillsLabProject.BL.Services;
 using SkillsLabProject.Common.Enums;
 using SkillsLabProject.Common.Models;
 using SkillsLabProject.Common.Models.ViewModels;
@@ -21,7 +22,8 @@ namespace SkillsLabProject.Controllers
         private IPreRequisiteBL _preRequisiteBL;
         private IProofBL _proofBL;
         private IDeclinedEnrollmentBL _declinedEnrollmentBL;
-        public EnrollmentController(IEmployeeBL employeeBL,IEnrollmentBL enrollmentBL, ITrainingBL trainingBL, IPreRequisiteBL preRequisiteBL, IProofBL proofBL, IDeclinedEnrollmentBL declinedEnrollmentBL)
+        private IEmailService _emailService;
+        public EnrollmentController(IEmployeeBL employeeBL,IEnrollmentBL enrollmentBL, ITrainingBL trainingBL, IPreRequisiteBL preRequisiteBL, IProofBL proofBL, IDeclinedEnrollmentBL declinedEnrollmentBL, IEmailService emailService)
         {
             _employeeBL = employeeBL;
             _enrollmentBL = enrollmentBL;
@@ -29,6 +31,7 @@ namespace SkillsLabProject.Controllers
             _preRequisiteBL = preRequisiteBL;
             _proofBL = proofBL;
             _declinedEnrollmentBL = declinedEnrollmentBL;
+            _emailService = emailService;
         }
         // GET: Enrollment
         [CustomAuthorization("Employee,Manager")]
@@ -88,8 +91,11 @@ namespace SkillsLabProject.Controllers
         [HttpPost]
         [CustomAuthorization("Manager")]
         public JsonResult Approve(EnrollmentModel model) {
-            model.Status = Status.Approved;
-            var result = _enrollmentBL.UpdateEnrollment(model);
+
+            var loggeduser = Session["CurrentUser"] as LoginViewModel;
+            var manager = _employeeBL.GetEmployee(loggeduser);
+
+            var result = _enrollmentBL.ApproveEnrollment(model, manager);
             if (result)
             {
                 return Json(new { result = "Success" });

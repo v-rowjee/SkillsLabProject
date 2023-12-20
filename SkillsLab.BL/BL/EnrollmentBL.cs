@@ -9,8 +9,8 @@ using SkillsLabProject.Common.Models.ViewModels;
 using SkillsLabProject.DAL.DAL;
 using System.IO;
 using SkillsLabProject.Common.Enums;
-using static System.Net.WebRequestMethods;
 using System.Web;
+using SkillsLabProject.BL.Services;
 
 namespace SkillsLabProject.BL.BL
 {
@@ -22,6 +22,8 @@ namespace SkillsLabProject.BL.BL
         bool AddEnrollment(EnrollmentModel model);
         bool AddEnrollment(EnrollmentViewModel model);
         bool UpdateEnrollment(EnrollmentModel model);
+        bool ApproveEnrollment(EnrollmentModel model, EmployeeModel manager);
+        bool DeclineEnrollment(EnrollmentModel model);
         bool DeleteEnrollment(int enrollmentId);
         Task<string> Enroll(LoginViewModel loggeduser, int trainingId, List<HttpPostedFileBase> files);
 
@@ -33,14 +35,16 @@ namespace SkillsLabProject.BL.BL
         private readonly IEmployeeDAL _employeeDAL;
         private readonly IProofDAL _proofDAL;
         private readonly IPreRequisiteDAL _preRequisiteDAL;
+        private readonly IEmailService _emailService;
 
-        public EnrollmentBL(IEnrollmentDAL enrollmentDAL, ITrainingDAL trainingDAL, IEmployeeDAL employeeDAL, IProofDAL proofDAL, IPreRequisiteDAL preRequisiteDAL)
+        public EnrollmentBL(IEnrollmentDAL enrollmentDAL, ITrainingDAL trainingDAL, IEmployeeDAL employeeDAL, IProofDAL proofDAL, IPreRequisiteDAL preRequisiteDAL, IEmailService emailService)
         {
             _enrollmentDAL = enrollmentDAL;
             _trainingDAL = trainingDAL;
             _employeeDAL = employeeDAL;
             _proofDAL = proofDAL;
             _preRequisiteDAL = preRequisiteDAL;
+            _emailService = emailService;
         }
 
         public bool AddEnrollment(EnrollmentModel enrollment)
@@ -128,6 +132,31 @@ namespace SkillsLabProject.BL.BL
             }
 
             return _enrollmentDAL.Update(enrollment);
+        }
+
+        public bool ApproveEnrollment(EnrollmentModel model, EmployeeModel manager)
+        {
+            model.Status = Status.Approved;
+            var result = _enrollmentDAL.Update(model);
+            if (!result) return false;
+
+            var enrollment = _enrollmentDAL.GetById(model.EnrollmentId);
+            var employee = _employeeDAL.GetEmployeeById(enrollment.EmployeeId);
+            var training = _trainingDAL.GetById(enrollment.TrainingId);
+
+            var emailViewModel = new EmailViewModel()
+            {
+                Employee = employee,
+                Manager = manager,
+                Training = training,
+            };
+
+            return _emailService.SendEmail(emailViewModel);
+        }
+        public bool DeclineEnrollment(EnrollmentModel model)
+        {
+            model.Status = Status.Declined;
+            return _enrollmentDAL.Update(model);
         }
 
         public async Task<string> Enroll(LoginViewModel loggeduser, int trainingId, List<HttpPostedFileBase> files)
