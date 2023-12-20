@@ -49,21 +49,29 @@ namespace SkillsLabProject.Controllers
             return View();
         }
         // Get: All
-        [CustomAuthorization("Manager")]
+        [CustomAuthorization("Manager,Admin")]
         public ActionResult All()
         {
             var loggeduser = Session["CurrentUser"] as LoginViewModel;
             var manager = _employeeBL.GetEmployee(loggeduser);
             ViewBag.Employee = manager;
 
-            var enrollments = _enrollmentBL.GetAllEnrollmentsOfManager(manager.EmployeeId).ToList();
+            List<EnrollmentViewModel> enrollments;
+            if (Session["CurrentRole"] as string == "Admin")
+            {
+                enrollments = _enrollmentBL.GetAllEnrollments().ToList();
+            }
+            else
+            {
+                enrollments = _enrollmentBL.GetAllEnrollmentsOfManager(manager.EmployeeId).ToList();
+            }
             ViewBag.Enrollments = enrollments;
 
             return View();
         }
         // GET: View
         [HttpGet]
-        [CustomAuthorization("Manager")]
+        [CustomAuthorization("Manager,Admin")]
         public ActionResult View(int? id)
         {
             if (id == null) return RedirectToAction("All");

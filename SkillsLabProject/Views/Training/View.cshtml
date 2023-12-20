@@ -93,32 +93,41 @@
                     </div>
                 </div>
                 <div class="row mt-5">
-                    <div class="col-4">
-                        @Html.ActionLink("Back", "Index", "Training", null, new { @class = "btn btn-secondary w-100" })
-                    </div>
-
                     @if (ViewBag.IsAdmin)
                     {
-                        <div class="col-4">
+                        <div class="col-md-3 mb-3">
+                            @Html.ActionLink("Back", "Index", "Training", null, new { @class = "btn btn-secondary w-100" })
+                        </div>
+                        <div class="col-md-3 mb-3">
                             <input type="hidden" id="trainingId" value="@ViewBag.Training.TrainingId" />
                             <button class="btn btn-danger w-100" onclick="deleteTraining(this)">Delete</button>
                         </div>
-                        <div class="col-4">
+                        <div class="col-md-3 mb-3">
                             @Html.ActionLink("Edit", "Index", "Enrollment", new { @id = ViewBag.Training.TrainingId }, new { @class = "btn btn-primary w-100" })
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <input type="hidden" value="@ViewBag.Training.TrainingId" />
+                            <button type="button" class="btn btn-success w-100 text-nowrap" onclick="closeTraining(this)">Close</button>
                         </div>
                     }
                     else if (ViewBag.IsEnrolled)
                     {
+                        <div class="col-4">
+                            @Html.ActionLink("Back", "Index", "Training", null, new { @class = "btn btn-secondary w-100" })
+                        </div>
                         <div class="col-8">
                             @Html.ActionLink("View Enrollment", "Index", "Enrollment", null, new { @class = "btn btn-primary w-100" })
                         </div>
                     }
                     else
                     {
-                    <div class="col-8">
-                        <input type="hidden" id="trainingId" value="@ViewBag.Training.TrainingId" />
-                        <button id="enroll" class="btn btn-primary w-100 mb-5">Enroll</button>
-                    </div>
+                        <div class="col-4">
+                            @Html.ActionLink("Back", "Index", "Training", null, new { @class = "btn btn-secondary w-100" })
+                        </div>
+                        <div class="col-8">
+                            <input type="hidden" id="trainingId" value="@ViewBag.Training.TrainingId" />
+                            <button id="enroll" class="btn btn-primary w-100 mb-5">Enroll</button>
+                        </div>
                     }
                 </div>
             </form>

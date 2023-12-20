@@ -16,6 +16,7 @@ namespace SkillsLabProject.BL.BL
 {
     public interface IEnrollmentBL
     {
+        IEnumerable<EnrollmentViewModel> GetAllEnrollments();
         IEnumerable<EnrollmentViewModel> GetAllEnrollmentsOfEmployee(int employeeId);
         IEnumerable<EnrollmentViewModel> GetAllEnrollmentsOfManager(int managerId);
         EnrollmentViewModel GetEnrollmentById(int enrollmentId);
@@ -77,6 +78,28 @@ namespace SkillsLabProject.BL.BL
         public IEnumerable<EnrollmentViewModel> GetAllEnrollmentsOfEmployee(int employeeId)
         {
             var enrollments = _enrollmentDAL.GetAll().Where(e => e.EmployeeId == employeeId).ToList();
+            var enrollmentsViews = new List<EnrollmentViewModel>();
+            foreach (var enrollment in enrollments)
+            {
+                var employee = _employeeDAL.GetEmployeeById(enrollment.EmployeeId);
+                var training = _trainingDAL.GetById(enrollment.TrainingId);
+                var proofs = _proofDAL.GetAll().Where(x => x.EnrollmentId == enrollment.EnrollmentId).ToList();
+
+                var enrollmentView = new EnrollmentViewModel()
+                {
+                    EnrollmentId = enrollment.EnrollmentId,
+                    Employee = employee,
+                    Training = training,
+                    Status = enrollment.Status,
+                    Proofs = proofs,
+                };
+                enrollmentsViews.Add(enrollmentView);
+            }
+            return enrollmentsViews;
+        }
+        public IEnumerable<EnrollmentViewModel> GetAllEnrollments()
+        {
+            var enrollments = _enrollmentDAL.GetAll().ToList();
             var enrollmentsViews = new List<EnrollmentViewModel>();
             foreach (var enrollment in enrollments)
             {

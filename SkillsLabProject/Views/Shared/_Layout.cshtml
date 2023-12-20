@@ -34,7 +34,7 @@
                     <li class="nav-item mx-2">
                         @Html.ActionLink("Trainings", "Index", "Training", null, new { @class = @ViewBag.Title == "Trainings" ? "nav-link active" : "nav-link" })
                     </li>
-                    @if (Session["CurrentRole"] as string == "Manager")
+                    @if (Session["CurrentRole"] as string == "Manager" || Session["CurrentRole"] as string == "Admin")
                     {
                         <li class="nav-item mx-2">
                             @Html.ActionLink("Enrollments", "All", "Enrollment", null, new { @class = @ViewBag.Title == "Enrollments" ? "nav-link active" : "nav-link" })

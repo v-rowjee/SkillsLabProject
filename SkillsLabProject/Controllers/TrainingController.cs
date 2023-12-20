@@ -156,5 +156,20 @@ namespace SkillsLabProject.Controllers
             }
         }
 
+        [HttpPost]
+        [CustomAuthorization("Admin")]
+        public JsonResult Close(int id)
+        {
+            var result = false;//_trainingBL.CloseTraining(id);
+            if (result)
+            {
+                return Json(new { result = "Success", url = Url.Action("Index", "Training") });
+            }
+            else
+            {
+                return Json(new { result = "Error" });
+            }
+        }
+
     }
 }
