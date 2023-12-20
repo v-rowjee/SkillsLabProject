@@ -16,9 +16,7 @@ namespace SkillsLabProject.BL.BL
 {
     public interface IEnrollmentBL
     {
-        IEnumerable<EnrollmentViewModel> GetAllEnrollments();
-        IEnumerable<EnrollmentViewModel> GetAllEnrollmentsOfEmployee(int employeeId);
-        IEnumerable<EnrollmentViewModel> GetAllEnrollmentsOfManager(int managerId);
+        IEnumerable<EnrollmentViewModel> GetAllEnrollments(EmployeeModel employee);
         EnrollmentViewModel GetEnrollmentById(int enrollmentId);
         bool AddEnrollment(EnrollmentModel model);
         bool AddEnrollment(EnrollmentViewModel model);
@@ -75,29 +73,7 @@ namespace SkillsLabProject.BL.BL
             };
             return enrollmentViewModel;
         }
-        public IEnumerable<EnrollmentViewModel> GetAllEnrollmentsOfEmployee(int employeeId)
-        {
-            var enrollments = _enrollmentDAL.GetAll().Where(e => e.EmployeeId == employeeId).ToList();
-            var enrollmentsViews = new List<EnrollmentViewModel>();
-            foreach (var enrollment in enrollments)
-            {
-                var employee = _employeeDAL.GetEmployeeById(enrollment.EmployeeId);
-                var training = _trainingDAL.GetById(enrollment.TrainingId);
-                var proofs = _proofDAL.GetAll().Where(x => x.EnrollmentId == enrollment.EnrollmentId).ToList();
-
-                var enrollmentView = new EnrollmentViewModel()
-                {
-                    EnrollmentId = enrollment.EnrollmentId,
-                    Employee = employee,
-                    Training = training,
-                    Status = enrollment.Status,
-                    Proofs = proofs,
-                };
-                enrollmentsViews.Add(enrollmentView);
-            }
-            return enrollmentsViews;
-        }
-        public IEnumerable<EnrollmentViewModel> GetAllEnrollments()
+        public IEnumerable<EnrollmentViewModel> GetAllEnrollments(EmployeeModel currentEmployee)
         {
             var enrollments = _enrollmentDAL.GetAll().ToList();
             var enrollmentsViews = new List<EnrollmentViewModel>();
@@ -105,7 +81,7 @@ namespace SkillsLabProject.BL.BL
             {
                 var employee = _employeeDAL.GetEmployeeById(enrollment.EmployeeId);
                 var training = _trainingDAL.GetById(enrollment.TrainingId);
-                var proofs = _proofDAL.GetAll().Where(x => x.EnrollmentId == enrollment.EnrollmentId).ToList();
+                var proofs = _proofDAL.GetAll().Where(p => p.EnrollmentId == enrollment.EnrollmentId).ToList();
 
                 var enrollmentView = new EnrollmentViewModel()
                 {
@@ -115,31 +91,14 @@ namespace SkillsLabProject.BL.BL
                     Status = enrollment.Status,
                     Proofs = proofs,
                 };
-                enrollmentsViews.Add(enrollmentView);
-            }
-            return enrollmentsViews;
-        }
-        public IEnumerable<EnrollmentViewModel> GetAllEnrollmentsOfManager(int managerId)
-        {
-            var enrollments = _enrollmentDAL.GetAll().ToList();
-            var enrollmentsViews = new List<EnrollmentViewModel>();
-            foreach (var enrollment in enrollments)
-            {
-                var manager = _employeeDAL.GetEmployeeById(managerId);
-                var employee = _employeeDAL.GetEmployeeById(enrollment.EmployeeId);
-                var training = _trainingDAL.GetById(enrollment.TrainingId);
-                var proofs = _proofDAL.GetAll().Where(x => x.EnrollmentId == enrollment.EnrollmentId).ToList();
-
-                if (employee.Department.DepartmentId != manager.Department.DepartmentId) continue;
-
-                var enrollmentView = new EnrollmentViewModel()
+                if (currentEmployee.Role == Role.Employee)
                 {
-                    EnrollmentId = enrollment.EnrollmentId,
-                    Employee = employee,
-                    Training = training,
-                    Status = enrollment.Status,
-                    Proofs = proofs,
-                };
+                    if (currentEmployee.EmployeeId != enrollment.EmployeeId) continue;
+                }
+                else if (currentEmployee.Role == Role.Manager)
+                {
+                    if (currentEmployee.Department.DepartmentId != employee.Department.DepartmentId) continue;
+                }
                 enrollmentsViews.Add(enrollmentView);
             }
             return enrollmentsViews;

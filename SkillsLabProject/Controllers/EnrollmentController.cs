@@ -4,6 +4,7 @@ using SkillsLabProject.Common.Enums;
 using SkillsLabProject.Common.Models;
 using SkillsLabProject.Common.Models.ViewModels;
 using SkillsLabProject.Custom;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -23,7 +24,8 @@ namespace SkillsLabProject.Controllers
         private IProofBL _proofBL;
         private IDeclinedEnrollmentBL _declinedEnrollmentBL;
         private IEmailService _emailService;
-        public EnrollmentController(IEmployeeBL employeeBL,IEnrollmentBL enrollmentBL, ITrainingBL trainingBL, IPreRequisiteBL preRequisiteBL, IProofBL proofBL, IDeclinedEnrollmentBL declinedEnrollmentBL, IEmailService emailService)
+        private IDepartmentBL _departmentBL;
+        public EnrollmentController(IEmployeeBL employeeBL,IEnrollmentBL enrollmentBL, ITrainingBL trainingBL, IPreRequisiteBL preRequisiteBL, IProofBL proofBL, IDeclinedEnrollmentBL declinedEnrollmentBL,IDepartmentBL departmentBL, IEmailService emailService)
         {
             _employeeBL = employeeBL;
             _enrollmentBL = enrollmentBL;
@@ -31,10 +33,11 @@ namespace SkillsLabProject.Controllers
             _preRequisiteBL = preRequisiteBL;
             _proofBL = proofBL;
             _declinedEnrollmentBL = declinedEnrollmentBL;
+            _departmentBL = departmentBL;
             _emailService = emailService;
         }
         // GET: Enrollment
-        [CustomAuthorization("Employee,Manager")]
+        [CustomAuthorization("Employee,Manager,Admin")]
         public ActionResult Index()
         {
             var loggeduser = Session["CurrentUser"] as LoginViewModel;
@@ -43,29 +46,18 @@ namespace SkillsLabProject.Controllers
             var employee = _employeeBL.GetEmployee(loggeduser);
             ViewBag.Employee = employee;
 
-            var enrollments = _enrollmentBL.GetAllEnrollmentsOfEmployee(employee.EmployeeId).ToList();
-
+            Enum.TryParse(Session["CurrentRole"] as string, out Role role);
+            employee.Role = role;
+            var enrollments = _enrollmentBL.GetAllEnrollments(employee).ToList();
             ViewBag.Enrollments = enrollments;
-            return View();
-        }
-        // Get: All
-        [CustomAuthorization("Manager,Admin")]
-        public ActionResult All()
-        {
-            var loggeduser = Session["CurrentUser"] as LoginViewModel;
-            var manager = _employeeBL.GetEmployee(loggeduser);
-            ViewBag.Employee = manager;
 
-            List<EnrollmentViewModel> enrollments;
             if (Session["CurrentRole"] as string == "Admin")
             {
-                enrollments = _enrollmentBL.GetAllEnrollments().ToList();
+                var departmentsWithEnrollments = enrollments.Select(e => e.Employee.Department.DepartmentId).Distinct();
+                var departments = _departmentBL.GetAllDepartments().Where(d => departmentsWithEnrollments.Contains(d.DepartmentId)).ToList();
+
+                ViewBag.Departments = departments;
             }
-            else
-            {
-                enrollments = _enrollmentBL.GetAllEnrollmentsOfManager(manager.EmployeeId).ToList();
-            }
-            ViewBag.Enrollments = enrollments;
 
             return View();
         }
@@ -74,9 +66,9 @@ namespace SkillsLabProject.Controllers
         [CustomAuthorization("Manager,Admin")]
         public ActionResult View(int? id)
         {
-            if (id == null) return RedirectToAction("All");
+            if (id == null) return RedirectToAction("Index");
             var enrollment = _enrollmentBL.GetEnrollmentById((int)id);
-            if (enrollment == null) return RedirectToAction("All");
+            if (enrollment == null) return RedirectToAction("Index");
             ViewBag.Enrollment = enrollment;
 
             var declineReason = _declinedEnrollmentBL.GetAllDeclinedEnrollments().Where(d => d.EnrollmentId == id).Select(d => d.Reason).FirstOrDefault();

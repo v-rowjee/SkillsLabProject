@@ -242,7 +242,6 @@ function deleteEnrollment(deleteBtn) {
 }
 
 // CLOSE TRAINING
-
 function closeTraining(closeBtn) {
     $(closeBtn).html(`
         <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
@@ -281,5 +280,4 @@ function closeTraining(closeBtn) {
             $(closeBtn).html('Close')
         }
     });
-
 }

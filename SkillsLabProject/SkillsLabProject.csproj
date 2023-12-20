@@ -157,6 +157,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Content Include="Content\Images\no-enrollment.png" />
     <Content Include="gulpfile.js" />
+    <Content Include="Scripts\custom\enrollment-admin.js" />
     <Content Include="Scripts\custom\role.js" />
     <Content Include="Scripts\dojoSRC\dijit-themes\.gitignore" />
     <Content Include="Scripts\dojoSRC\dijit-themes\flat\dgrid\flat.css" />

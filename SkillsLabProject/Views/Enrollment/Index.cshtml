@@ -1,139 +1,86 @@
-﻿@{
+﻿
+@{
     ViewBag.Title = "Enrollments";
 }
 @section scripts {
     <script src="~/Scripts/custom/enrollment.js"></script>
+    <script src="~/Scripts/custom/enrollment-admin.js"></script>
 }
 
 <main class="container">
-    <h1>Enrollments</h1>
-    <form id="deleteEnrollmentForm" class="w-100 pt-3">
-        <div class="row">
-            @foreach (var Enrollment in ViewBag.Enrollments)
-            {
-                <div class="col-lg-6 p-3">
-                    <div class="card">
-                        <div class="card-header">
-                            <div class="float-start fw-bold">
-                                <i class="fa-solid fa-graduation-cap"></i>
-                                @Enrollment.Training.Title
-                            </div>
-                            <div class="float-end">
-                                @if (Enrollment.Status.ToString() == "Approved")
-                                    {<span class="badge text-bg-success text-nowrap">@Enrollment.Status</span>}
-                                else if (Enrollment.Status.ToString() == "Declined")
-                                    {<span class="badge text-bg-danger text-nowrap">@Enrollment.Status</span>}
-                                else
-                                    {<span class="badge text-bg-warning text-nowrap">@Enrollment.Status</span>}
-                            </div>
-                        </div>
-                        <div class="card-body">
-                            <div class="card-text" style="min-height: 60px;">
-                                @Enrollment.Training.Description
-                            </div>
-                            <div class="row justify-content-between mt-4">
-                                <div class="col-4 text-center mb-3">
-                                    <div class="d-block badge text-bg-light mb-1 opacity-75">Department</div>
-                                    @if (Enrollment.Training.PriorityDepartment != null)
-                                    {<div class="text-center">@Enrollment.Training.PriorityDepartment.Title</div>}
-                                else
-                                { <div class="opacity-25 text-center">None</div>}
-                                </div>
-                                <div class="col-4 mb-3">
-                                    <div class="d-block badge text-bg-light mb-1 opacity-75">Capacity</div>
-                                    <div class="text-center">@Enrollment.Training.Capacity</div>
-                                </div>
-                                <div class="col-4 mb-3">
-                                    <div class="d-block badge text-bg-light mb-1 opacity-75">Uploads</div>
-                                    <div class="text-center">
-                                        @if (Enrollment.Proofs.Count == 0)
-                                        {<div class="opacity-25">None</div> }
-                                        else
-                                        { <div>@Enrollment.Proofs.Count</div>}
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row mt-4 gap-3 gap-md-0">
-                                <div class="col-md-6">
-                                    <input type="hidden" value="@Enrollment.EnrollmentId" />
-                                    <button class="btn btn-sm btn-outline-danger w-100" onclick="deleteEnrollment(this)">
-                                        Cancel Enrollment
-                                    </button>
-                                </div>
-                                @if (Enrollment.Proofs.Count > 0)
-                                {
-                                    <div class="col-md-6">
-                                        <button class="btn btn-sm btn-outline-primary text-nowrap w-100" data-bs-toggle="modal" data-bs-target="#modal-@(Enrollment.EnrollmentId)">
-                                            View Uploads
-                                        </button>
-                                    </div>
-                                    <div class="modal fade" id="modal-@(Enrollment.EnrollmentId)" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
-                                        <div class="modal-dialog modal-dialog-centered">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h1 class="modal-title fs-5" id="modalLabel"><i class="fa-solid fa-graduation-cap me-2"></i>@Enrollment.Training.Title - Uploaded Files</h1>
-                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    @if (Enrollment.Proofs.Count > 1)
-                                                    {
-                                                        <div id="carouselProof" class="carousel slide" data-bs-ride="carousel">
-                                                            <div class="carousel-inner rounded">
-                                                                @for (int i = 0; i < Enrollment.Proofs.Count; i++)
-                                                                {
-                                                                    <div class="carousel-item @(i == 0 ? "active" : "")">
-                                                                        <img src="@Enrollment.Proofs[i].Attachment" class="img-fluid rounded" alt="proof">
-                                                                    </div>
-                                                                }
-                                                            </div>
-                                                            <button class="carousel-control-prev" type="button" data-bs-target="#carouselProof" data-bs-slide="prev">
-                                                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                                                <span class="visually-hidden">Previous</span>
-                                                            </button>
-                                                            <button class="carousel-control-next" type="button" data-bs-target="#carouselProof" data-bs-slide="next">
-                                                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                                                <span class="visually-hidden">Next</span>
-                                                            </button>
-                                                        </div>
-                                                    }
-                                                    else
-                                                    {
-                                                        <div>
-                                                            <img src="@Enrollment.Proofs[0].Attachment" class="img-fluid rounded" alt="proof">
-                                                        </div>
-                                                    }
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                }
-                                else
-                                {
-                                    <div class="col-md-6">
-                                        <button disabled class="btn btn-sm btn-outline-primary text-nowrap w-100">
-                                            No Uploads
-                                        </button>
-                                    </div>
-                                }
-                            </div>
-                        </div>
+    <div class="row align-items-center mb-4">
+        <div class="col-sm-6 text-center text-md-start">
+            <h1>Enrollments</h1>
+        </div>
+        <div class="col-sm-6 text-center text-md-end">
+            <div class="d-flex justify-content-center justify-content-md-between float-md-end mt-3 mt-md-0 align-items-center">
+                <div class="text-muted me-3">Department: </div>
+                @if (Session["CurrentRole"] as string == "Admin")
+                {
+                    <div class="d-inline-block">
+                        <select id="departments" class="form-select">
+                            @foreach (var Department in ViewBag.Departments)
+                            {
+                                <option value="@Department.DepartmentId">@Department.Title</option>
+                            }
+                        </select>
                     </div>
-                </div>
-            }
-            @if (ViewBag.Enrollments.Count == 0)
-            {
-                <div class="col-md-6 text-center">
-                    <div class="alert alert-primary" role="alert">
-                        You have not enroll in any training yet.
-                        <br />
-                        Click @Html.ActionLink("here", "Index", "Training", null, new { @class = "link" }) to view all trainings.
-                    </div>
-                    <img src="~/Content/Images/no-enrollment.png" alt="no enrollment" class="w-75" />
-                </div>
-            }
+                }
+                else
+                {
+                    <span class="badge text-bg-primary">@ViewBag.Employee.Department.Title</span>
+                }
+            </div>
+        </div>
+    </div>
+
+    <form id="enrollmentForm">
+        <div class="table-responsive p-2">
+            <table id="enrollmentTable" class="table table-borderless table-hover pb-4">
+                <thead class="bg-light">
+                    <tr class="align-middle">
+                        <th class="rounded-start border text-center py-3">Status</th>
+                        <th class="py-3 border">Training</th>
+                        <th class="py-3 border">Deadline</th>
+                        <th class="text-nowrap py-3 border">Department Priority</th>
+                        <th class="border-end py-3 border">Capacity</th>
+                        <th class="py-3 border">Employee</th>
+                        <th class="py-3 border">Email</th>
+                        <th class="border-end text-nowrap py-3 border">Phone Number</th>
+                        <th class="rounded-end text-center py-3 border">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var Enrollment in ViewBag.Enrollments)
+                    {
+                        <tr data-departmentid="@Enrollment.Employee.Department.DepartmentId">
+                            <td class="rounded-start text-center py-3">
+                                @if (@Enrollment.Status.ToString() == "Approved")
+                                {<span class="badge text-bg-success">Approved</span> }
+                                else if (@Enrollment.Status.ToString() == "Declined")
+                                { <span class="badge text-bg-danger">Declined</span> }
+                                else
+                                { <span class="badge text-bg-warning">Pending</span>}
+                            </td>
+                            <td class="py-3">@Enrollment.Training.Title</td>
+                            <td class="text-nowrap py-3">@Enrollment.Training.Deadline.ToString("dd MMM yyyy")</td>
+                            <td class="py-3">
+                                @if (Enrollment.Training.PriorityDepartment != null)
+                                {@Enrollment.Training.PriorityDepartment.Title}
+                            else
+                            { <p class="opacity-25 m-0">None</p>}
+                            </td>
+                            <td class="py-3">@Enrollment.Training.Capacity</td>
+                            <td class="text-nowrap py-3">@Enrollment.Employee.FirstName @Enrollment.Employee.LastName</td>
+                            <td class="py-3">@Enrollment.Employee.Email</td>
+                            <td class="py-3">@Enrollment.Employee.PhoneNumber</td>
+                            <td class="rounded-end text-center py-3">
+                                @Html.ActionLink("View", "View", "Enrollment", new { @id = Enrollment.EnrollmentId }, new { @class = "btn btn-sm btn-outline-primary w-100" })
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
         </div>
     </form>
 </main>

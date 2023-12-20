@@ -1,4 +1,5 @@
 ﻿using SkillsLabProject.BL.BL;
+using SkillsLabProject.Common.Enums;
 using SkillsLabProject.Common.Models.ViewModels;
 using SkillsLabProject.Custom;
 using System;
@@ -37,7 +38,9 @@ namespace SkillsLabProject.Controllers
             var trainings = _trainingBL.GetAllTrainings().Where(t => t.Deadline >= DateTime.Now);
             ViewBag.Trainings = trainings;
 
-            var enrollmentOfEmployee = _enrollmentBL.GetAllEnrollmentsOfEmployee(employee.EmployeeId).ToList();
+            Enum.TryParse(Session["CurrentRole"] as string, out Role role);
+            employee.Role = role;
+            var enrollmentOfEmployee = _enrollmentBL.GetAllEnrollments(employee).ToList();
             ViewBag.IsEnrolledInTraining = new Dictionary<int, bool>();
             foreach (var training in trainings)
             {
@@ -63,7 +66,9 @@ namespace SkillsLabProject.Controllers
             var preRequisites = _preRequisiteBL.GetAllPreRequisites().Where(p => p.TrainingId == training.TrainingId).ToList();
             ViewBag.Prerequisites = preRequisites.Any() ? preRequisites : null;
 
-            var enrolledStatus = _enrollmentBL.GetAllEnrollmentsOfEmployee(employee.EmployeeId).Where(e => e.Training.TrainingId == training.TrainingId).Select(e => e.Status).FirstOrDefault().ToString();
+            Enum.TryParse(Session["CurrentRole"] as string, out Role role);
+            employee.Role = role;
+            var enrolledStatus = _enrollmentBL.GetAllEnrollments(employee).Where(e => e.Training.TrainingId == training.TrainingId).Select(e => e.Status).FirstOrDefault().ToString();
             ViewBag.EnrolledStatus = enrolledStatus;
 
             ViewBag.IsEnrolled = enrolledStatus != "0";

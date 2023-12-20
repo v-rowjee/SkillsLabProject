@@ -17,6 +17,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/node-snackbar/0.1.16/snackbar.min.css" integrity="sha512-pKdIPri9vb1aqcci9Rsl1xO7n74wHe5+RMcqRufN36EnXVtOsbct0VKDtBdhAnSCqZeny2jiZBSpXp0iDSzZ+Q==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- Lodash-->
+    <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js"></script>
 </head>
 <body>
     <div id="overlay-spinner">
@@ -34,20 +36,14 @@
                     <li class="nav-item mx-2">
                         @Html.ActionLink("Trainings", "Index", "Training", null, new { @class = @ViewBag.Title == "Trainings" ? "nav-link active" : "nav-link" })
                     </li>
-                    @if (Session["CurrentRole"] as string == "Manager" || Session["CurrentRole"] as string == "Admin")
-                    {
-                        <li class="nav-item mx-2">
-                            @Html.ActionLink("Enrollments", "All", "Enrollment", null, new { @class = @ViewBag.Title == "Enrollments" ? "nav-link active" : "nav-link" })
-                        </li>
-                    }
-                    @if (Session["CurrentRole"] as string == "Employee")
-                    {
-                        <li class="nav-item mx-2">
-                            @Html.ActionLink("Enrollments", "Index", "Enrollment", null, new { @class = @ViewBag.Title == "Enrollments" ? "nav-link active" : "nav-link" })
-                        </li>
-                    }
+                    <li class="nav-item mx-2">
+                        @Html.ActionLink("Enrollments", "Index", "Enrollment", null, new { @class = @ViewBag.Title == "Enrollments" ? "nav-link active" : "nav-link" })
+                    </li>
                     </ul>
-                <ul class="navbar-nav">
+                <ul class="navbar-nav d-table">
+                    <li class="nav-item dropdown d-table-cell align-middle">
+                        <span class="badge text-bg-light border border-dark opacity-75">@(Session["CurrentRole"])</span>
+                    </li>
                     <li class="nav-item dropdown mx-2">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             @ViewBag.Employee.FirstName @ViewBag.Employee.LastName
@@ -56,12 +52,6 @@
                             <li>
                                 @Html.ActionLink("Account", "Index", "Account", null, new { @class = "dropdown-item" })
                             </li>
-                            @if (Session["CurrentRole"] as string == "Employee" || Session["CurrentRole"] as string == "Manager")
-                            {
-                                <li>
-                                    @Html.ActionLink("My Enrollments", "Index", "Enrollment", null, new { @class = "dropdown-item" })
-                                </li>
-                            }
                             <li><hr class="dropdown-divider"></li>
                             <li>
                                 @Html.ActionLink("Log Out", "Logout", "Common", null, new { @class = "dropdown-item" })
