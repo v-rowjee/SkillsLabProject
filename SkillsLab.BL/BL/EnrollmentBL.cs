@@ -18,10 +18,8 @@ namespace SkillsLabProject.BL.BL
     {
         IEnumerable<EnrollmentViewModel> GetAllEnrollments(EmployeeModel employee);
         EnrollmentViewModel GetEnrollmentById(int enrollmentId);
-        bool AddEnrollment(EnrollmentModel model);
-        bool AddEnrollment(EnrollmentViewModel model);
         bool UpdateEnrollment(EnrollmentModel model);
-        bool ApproveEnrollment(EnrollmentModel model, EmployeeModel manager);
+        Task<bool> ApproveEnrollment(EnrollmentModel model, EmployeeModel manager);
         bool DeclineEnrollment(EnrollmentModel model);
         bool DeleteEnrollment(int enrollmentId);
         Task<string> Enroll(LoginViewModel loggeduser, int trainingId, List<HttpPostedFileBase> files);
@@ -44,17 +42,6 @@ namespace SkillsLabProject.BL.BL
             _proofDAL = proofDAL;
             _preRequisiteDAL = preRequisiteDAL;
             _emailService = emailService;
-        }
-
-        public bool AddEnrollment(EnrollmentModel enrollment)
-        {
-            enrollment.Status = Status.Pending;
-            return _enrollmentDAL.Add(enrollment);
-        }
-        public bool AddEnrollment(EnrollmentViewModel enrollment)
-        {
-            enrollment.Status = Status.Pending;
-            return _enrollmentDAL.Add(enrollment);
         }
         public bool DeleteEnrollment(int enrollmentId)
         {
@@ -116,24 +103,27 @@ namespace SkillsLabProject.BL.BL
             return _enrollmentDAL.Update(enrollment);
         }
 
-        public bool ApproveEnrollment(EnrollmentModel model, EmployeeModel manager)
+        public async Task<bool> ApproveEnrollment(EnrollmentModel model, EmployeeModel manager)
         {
             model.Status = Status.Approved;
-            var result = _enrollmentDAL.Update(model);
-            if (!result) return false;
+            var isApproved = _enrollmentDAL.Update(model);
 
-            var enrollment = _enrollmentDAL.GetById(model.EnrollmentId);
-            var employee = _employeeDAL.GetEmployeeById(enrollment.EmployeeId);
-            var training = _trainingDAL.GetById(enrollment.TrainingId);
-
-            var emailViewModel = new EmailViewModel()
+            if (isApproved)
             {
-                Employee = employee,
-                Manager = manager,
-                Training = training,
-            };
+                var enrollment = _enrollmentDAL.GetById(model.EnrollmentId);
+                var employee = _employeeDAL.GetEmployeeById(enrollment.EmployeeId);
+                var training = _trainingDAL.GetById(enrollment.TrainingId);
 
-            return _emailService.SendEmail(emailViewModel);
+                var emailViewModel = new EmailViewModel()
+                {
+                    Employee = employee,
+                    Manager = manager,
+                    Training = training,
+                };
+
+                await _emailService.SendEmail(emailViewModel);
+            }
+            return isApproved;
         }
         public bool DeclineEnrollment(EnrollmentModel model)
         {
@@ -183,7 +173,7 @@ namespace SkillsLabProject.BL.BL
                             enrollmentWithProofs.Proofs.Add(new ProofModel() { Attachment = downloadUrl });
                         }
 
-                        System.IO.File.Delete(tempFilePath);
+                        File.Delete(tempFilePath);
                     }
                 }
                 return _enrollmentDAL.Add(enrollmentWithProofs) ? "Success" : "Error";

@@ -2,20 +2,21 @@
 using System.Configuration;
 using System.Net;
 using System.Net.Mail;
+using System.Threading.Tasks;
 using SkillsLabProject.Common.Models.ViewModels;
 
 namespace SkillsLabProject.BL.Services
 {
     public interface IEmailService
     {
-        bool SendEmail(EmailViewModel model);
+        Task<bool> SendEmail(EmailViewModel model);
     }
 
     public class EmailService : IEmailService
     {
         private readonly string _subject = "Training Enrollment Approved";
 
-        public bool SendEmail(EmailViewModel model)
+        public async Task<bool> SendEmail(EmailViewModel model)
         {
             string body = $@"<html><body>
                               <p>Dear {model.Employee.FirstName},</p>
@@ -24,27 +25,27 @@ namespace SkillsLabProject.BL.Services
 
                               <p><strong>Best regards,</strong><br/>{model.Employee.Department.Title}, SkillsLab</p>
                               </body></html>";
-            string senderEmail = ConfigurationManager.AppSettings["FirebaseEmail"].ToString();
+            string recipientEmail = model.Employee.Email;
+            string senderEmail = ConfigurationManager.AppSettings["AdminEmail"].ToString();
+            string senderPassword = ConfigurationManager.AppSettings["AdminPassword"].ToString();
             try
             {
-                using (SmtpClient client = new SmtpClient("smtp.gmail.com"))
+                using (SmtpClient client = new SmtpClient("smtp-mail.outlook.com"))
                 {
                     client.Port = 587;
                     client.EnableSsl = true;
-                    client.Credentials = new NetworkCredential(senderEmail, "xuza rdim fkyz iupb");
+                    client.Credentials = new NetworkCredential(senderEmail, senderPassword);
 
-                    MailMessage message = new MailMessage
+                    using (MailMessage message = new MailMessage(senderEmail, recipientEmail))
                     {
-                        From = new MailAddress(senderEmail, model.Employee.Department.Title),
-                        Subject = _subject,
-                        Body = body,
-                        IsBodyHtml = true,
-                    };
-                    message.To.Add(model.Employee.Email);
-                    message.CC.Add(model.Manager.Email);
+                        message.CC.Add(model.Manager.Email);
+                        message.Subject = _subject;
+                        message.Body = body;
+                        message.IsBodyHtml = true;
 
-                    client.Send(message);
-                    return true;
+                        await client.SendMailAsync(message);
+                        return true;
+                    };
                 }
             }
             catch (Exception)

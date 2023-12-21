@@ -22,10 +22,6 @@ namespace SkillsLabProject.DAL.DAL
     }
     public class EnrollmentDAL : IEnrollmentDAL
     {
-        private string _ApiKey = ConfigurationManager.AppSettings["FirebaseApiKey"].ToString();
-        private string _Bucket = ConfigurationManager.AppSettings["FirebaseBucket"].ToString();
-        private string _Email = ConfigurationManager.AppSettings["FirebaseEmail"].ToString();
-        private string _Password = ConfigurationManager.AppSettings["FirebasePassword"].ToString();
         public IEnumerable<EnrollmentModel> GetAll()
         {
             const string GetAllEnrollmentsQuery = @"
@@ -161,6 +157,11 @@ namespace SkillsLabProject.DAL.DAL
         }
         public async Task<string> UploadAndGetDownloadUrlAsync(FileStream stream, string fileName)
         {
+            string _ApiKey = ConfigurationManager.AppSettings["FirebaseApiKey"].ToString();
+            string _Bucket = ConfigurationManager.AppSettings["FirebaseBucket"].ToString();
+            string _Email = ConfigurationManager.AppSettings["AdminEmail"].ToString();
+            string _Password = ConfigurationManager.AppSettings["AdminPassword"].ToString();
+
             var auth = new FirebaseAuthProvider(new FirebaseConfig(_ApiKey));
             var a = await auth.SignInWithEmailAndPasswordAsync(_Email, _Password);
 
