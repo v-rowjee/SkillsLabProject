@@ -59,9 +59,9 @@
                                     }
                                     else
                                     {
-                                        if (ViewBag.IsEnrolledInTraining[training.TrainingId])
+                                        if (ViewBag.EnrollmentIds[training.TrainingId] != null)
                                         {
-                                            @Html.ActionLink("View", "Index", "Enrollment", null, new { @class = "btn btn-sm btn-outline-success w-100" })
+                                            @Html.ActionLink("View", "View", "Enrollment", new { @id = ViewBag.EnrollmentIds[training.TrainingId] }, new { @class = "btn btn-sm btn-outline-success w-100" })
                                         }
                                         else
                                         {

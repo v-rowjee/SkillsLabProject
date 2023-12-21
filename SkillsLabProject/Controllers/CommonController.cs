@@ -27,7 +27,7 @@ namespace SkillsLabProject.Controllers
             }
             else if (Session["CurrentRole"] as string == "Manager")
             {
-                return RedirectToAction("All", "Enrollment");
+                return RedirectToAction("Index", "Enrollment");
             }
             return RedirectToAction("Index", "Training");
         }
@@ -56,7 +56,7 @@ namespace SkillsLabProject.Controllers
                 Session["CurrentRole"] = roleEnum.ToString();
                 if(roleEnum == Common.Enums.Role.Manager)
                 {
-                    return Json(new { result = "Success", url = Url.Action("All", "Enrollment") });
+                    return Json(new { result = "Success", url = Url.Action("Index", "Enrollment") });
                 }
                 return Json(new { result = "Success", url = Url.Action("Index", "Training") });
             }

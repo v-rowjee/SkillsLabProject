@@ -30,6 +30,9 @@
                 {
                     <span class="badge text-bg-primary">@ViewBag.Employee.Department.Title</span>
                 }
+
+
+
             </div>
         </div>
     </div>
@@ -44,9 +47,12 @@
                         <th class="py-3 border">Deadline</th>
                         <th class="text-nowrap py-3 border">Department Priority</th>
                         <th class="border-end py-3 border">Capacity</th>
-                        <th class="py-3 border">Employee</th>
-                        <th class="py-3 border">Email</th>
-                        <th class="border-end text-nowrap py-3 border">Phone Number</th>
+                        @if (Session["CurrentRole"] as string != "Employee")
+                        {
+                            <th class="py-3 border">Employee</th>
+                            <th class="py-3 border">Email</th>
+                            <th class="border-end text-nowrap py-3 border">Phone Number</th>
+                        }
                         <th class="rounded-end text-center py-3 border">Action</th>
                     </tr>
                 </thead>
@@ -71,9 +77,12 @@
                             { <p class="opacity-25 m-0">None</p>}
                             </td>
                             <td class="py-3">@Enrollment.Training.Capacity</td>
-                            <td class="text-nowrap py-3">@Enrollment.Employee.FirstName @Enrollment.Employee.LastName</td>
-                            <td class="py-3">@Enrollment.Employee.Email</td>
-                            <td class="py-3">@Enrollment.Employee.PhoneNumber</td>
+                            @if (Session["CurrentRole"] as string != "Employee")
+                            {
+                                <td class="text-nowrap py-3">@Enrollment.Employee.FirstName @Enrollment.Employee.LastName</td>
+                                <td class="py-3">@Enrollment.Employee.Email</td>
+                                <td class="py-3">@Enrollment.Employee.PhoneNumber</td>
+                            }
                             <td class="rounded-end text-center py-3">
                                 @Html.ActionLink("View", "View", "Enrollment", new { @id = Enrollment.EnrollmentId }, new { @class = "btn btn-sm btn-outline-primary w-100" })
                             </td>

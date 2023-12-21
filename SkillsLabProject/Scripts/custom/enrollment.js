@@ -4,7 +4,7 @@ $(function () {
     $('#enrollmentTable').DataTable({
         order: [[1, 'desc']],
         "columnDefs": [
-            { "orderable": false, "targets": [8] }
+            { "orderable": false, "targets": [-1] }
         ],
         language: {
             'paginate': {

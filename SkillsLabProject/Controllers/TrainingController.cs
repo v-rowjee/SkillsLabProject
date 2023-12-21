@@ -41,14 +41,15 @@ namespace SkillsLabProject.Controllers
             Enum.TryParse(Session["CurrentRole"] as string, out Role role);
             employee.Role = role;
             var enrollmentOfEmployee = _enrollmentBL.GetAllEnrollments(employee).ToList();
-            ViewBag.IsEnrolledInTraining = new Dictionary<int, bool>();
+            ViewBag.EnrollmentIds = new Dictionary<int, int?>();  // Dictionary to store TrainingId and corresponding EnrollmentId
             foreach (var training in trainings)
             {
-                ViewBag.IsEnrolledInTraining[training.TrainingId] = enrollmentOfEmployee.Any(e => e.Training.TrainingId == training.TrainingId);
+                var enrollment = enrollmentOfEmployee.FirstOrDefault(e => e.Training.TrainingId == training.TrainingId);
+                ViewBag.EnrollmentIds[training.TrainingId] = enrollment?.EnrollmentId;
             }
-
             return View();
         }
+
 
         [HttpGet]
         [CustomAuthorization("Employee,Manager,Admin")]

@@ -164,8 +164,9 @@
                         }
                         else
                         {
-                            <div class="card-body">
-                                <p>No proofs available</p>
+                            <div class="card-body text-center">
+                                <h4><span class="badge text-bg-secondary">No proofs available</span></h4>
+                                <img src="~/Content/Images/no-enrollment.png" alt="No Proof" class="img-fluid" />
                             </div>
                         }
                     </div>
@@ -177,7 +178,7 @@
                 }
                 else
                 {
-                    @if (ViewBag.Enrollment.Status.ToString() == "Approved")
+                    if (ViewBag.Enrollment.Status.ToString() == "Approved")
                     {
                         <div class="card mb-3 border-success bg-success bg-opacity-10">
                             <div class="card-header border-success">
@@ -188,7 +189,11 @@
                                 <span class="badge text-bg-success">@ViewBag.Enrollment.Status.ToString()</span>
                             </div>
                         </div>
-                        <button type="button" class="btn btn-danger w-100" data-bs-toggle="modal" data-bs-target="#declineReasonModal">Decline</button>
+                        if (Session["CurrentRole"] as string == "Manager")
+                        {
+                            <button type="button" class="btn btn-danger w-100" data-bs-toggle="modal" data-bs-target="#declineReasonModal">Decline</button>
+                        }
+
                     }
                     else if (ViewBag.Enrollment.Status.ToString() == "Declined")
                     {
@@ -210,7 +215,11 @@
                                 @ViewBag.DeclineReason
                             </div>
                         </div>
-                        <button id="approveEnrollment" class="btn btn-success w-100">Approve</button>
+                        if (Session["CurrentRole"] as string == "Manager")
+                        {
+                            <button id="approveEnrollment" class="btn btn-success w-100">Approve</button>
+                        }
+
                     }
                     else if (ViewBag.Enrollment.Status.ToString() == "Pending")
                     {
@@ -223,32 +232,38 @@
                                 <span class="badge text-bg-warning">@ViewBag.Enrollment.Status.ToString()</span>
                             </div>
                         </div>
-                        <div class="d-flex gap-3">
-                            <button type="button" class="btn btn-danger w-100" data-bs-toggle="modal" data-bs-target="#declineReasonModal">Decline</button>
-                            <button id="approveEnrollment" class="btn btn-success w-100">Approve</button>
-                        </div>
+                        if (Session["CurrentRole"] as string == "Manager")
+                        {
+                            <div class="d-flex gap-3">
+                                <button type="button" class="btn btn-danger w-100" data-bs-toggle="modal" data-bs-target="#declineReasonModal">Decline</button>
+                                <button id="approveEnrollment" class="btn btn-success w-100">Approve</button>
+                            </div>
+                        }
                     }
-                    <input type="hidden" value="@ViewBag.Enrollment.EnrollmentId" id="enrollmentId" />
+                    if (Session["CurrentRole"] as string == "Manager")
+                    {
+                        <input type="hidden" value="@ViewBag.Enrollment.EnrollmentId" id="enrollmentId" />
 
-                    <div class="modal fade" id="declineReasonModal" tabindex="-1" aria-hidden="true">
-                        <div class="modal-dialog modal-dialog-centered">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h1 class="modal-title fs-5" id="exampleModalLabel">Give a reason for declining enrollment.</h1>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body">
-                                    <textarea id="reason" class="form-control" rows="5" placeholder="Reason for denying enrollment." required></textarea>
-                                </div>
-                                <div class="modal-footer w-100">
-                                    <div class="w-100 d-flex gap-3">
-                                        <button type="button" class="btn btn-secondary w-100" data-bs-dismiss="modal">Cancel</button>
-                                        <button id="declineEnrollment" class="btn btn-danger w-100">Decline</button>
+                        <div class="modal fade" id="declineReasonModal" tabindex="-1" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h1 class="modal-title fs-5" id="exampleModalLabel">Give a reason for declining enrollment.</h1>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <textarea id="reason" class="form-control" rows="5" placeholder="Reason for denying enrollment." required></textarea>
+                                    </div>
+                                    <div class="modal-footer w-100">
+                                        <div class="w-100 d-flex gap-3">
+                                            <button type="button" class="btn btn-secondary w-100" data-bs-dismiss="modal">Cancel</button>
+                                            <button id="declineEnrollment" class="btn btn-danger w-100">Decline</button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    }
                 }
             </form>
         </div>

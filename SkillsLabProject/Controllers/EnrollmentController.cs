@@ -58,17 +58,26 @@ namespace SkillsLabProject.Controllers
 
                 ViewBag.Departments = departments;
             }
-
             return View();
         }
         // GET: View
         [HttpGet]
-        [CustomAuthorization("Manager,Admin")]
+        [CustomAuthorization("Employee,Manager,Admin")]
         public ActionResult View(int? id)
         {
             if (id == null) return RedirectToAction("Index");
+
             var enrollment = _enrollmentBL.GetEnrollmentById((int)id);
             if (enrollment == null) return RedirectToAction("Index");
+
+            var loggeduser = Session["CurrentUser"] as LoginViewModel;
+            var employee = _employeeBL.GetEmployee(loggeduser);
+            ViewBag.Employee = employee;
+
+            if (Session["CurrentRole"] as string == "Employee" && enrollment.Employee.EmployeeId != employee.EmployeeId)
+            {
+                return RedirectToAction("Unauthorized","Error");
+            }
             ViewBag.Enrollment = enrollment;
 
             var declineReason = _declinedEnrollmentBL.GetAllDeclinedEnrollments().Where(d => d.EnrollmentId == id).Select(d => d.Reason).FirstOrDefault();
@@ -80,9 +89,7 @@ namespace SkillsLabProject.Controllers
             var preRequisites = _preRequisiteBL.GetAllPreRequisites().Where(p => p.TrainingId == enrollment.Training.TrainingId).ToList();
             ViewBag.Prerequisites = preRequisites;
 
-            var loggeduser = Session["CurrentUser"] as LoginViewModel;
-            var employee = _employeeBL.GetEmployee(loggeduser);
-            ViewBag.Employee = employee;
+
             
             return View();
         }
