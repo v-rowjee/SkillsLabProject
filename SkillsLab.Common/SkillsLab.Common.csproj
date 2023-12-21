@@ -45,6 +45,7 @@
     <Compile Include="DAL\DAL.cs" />
     <Compile Include="DAL\DBCommand.cs" />
     <Compile Include="DAL\IDAL.cs" />
+    <Compile Include="Email\SmtpEmailClient.cs" />
     <Compile Include="Enums\Role.cs" />
     <Compile Include="Enums\Status.cs" />
     <Compile Include="Models\AppUserModel.cs" />

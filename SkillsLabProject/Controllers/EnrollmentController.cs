@@ -97,12 +97,12 @@ namespace SkillsLabProject.Controllers
         // Post: Approve
         [HttpPost]
         [CustomAuthorization("Manager")]
-        public async Task<JsonResult> Approve(EnrollmentModel model) {
+        public JsonResult Approve(EnrollmentModel model) {
 
             var loggeduser = Session["CurrentUser"] as LoginViewModel;
             var manager = _employeeBL.GetEmployee(loggeduser);
 
-            var result = await _enrollmentBL.ApproveEnrollment(model, manager);
+            var result = _enrollmentBL.ApproveEnrollment(model, manager);
             if (result)
             {
                 return Json(new { result = "Success" });

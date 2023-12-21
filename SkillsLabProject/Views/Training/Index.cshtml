@@ -57,6 +57,10 @@
                                         </button>
                                         <input type="hidden" value="@training.TrainingId" />
                                     }
+                                    else if (ViewBag.CurrentRole == "Manager")
+                                    {
+                                        @Html.ActionLink("View", "View", "Training", new { @id = training.TrainingId }, new { @class = "btn btn-sm btn-outline-primary w-100" })
+                                    }
                                     else
                                     {
                                         if (ViewBag.EnrollmentIds[training.TrainingId] != null)

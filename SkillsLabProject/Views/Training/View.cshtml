@@ -12,7 +12,7 @@
                 @Html.ActionLink("Training", "Index", "Training", null, new { @class = "text-decoration-none text-black" })
                 / @ViewBag.Training.Title
             </h1>
-            @if (!ViewBag.IsAdmin && ViewBag.IsEnrolled)
+            @if (ViewBag.IsEmployee && ViewBag.IsEnrolled)
             {
                 <div class="alert alert-primary" role="alert">
                     You have already enrolled in this training. The training status is <span class="badge text-bg-primary">@ViewBag.EnrolledStatus</span>
@@ -81,7 +81,7 @@
                                 {
                                     <li class="list-group-item rounded">
                                         <p class="m-0">@PreRequisite.Detail</p>
-                                        @if (!ViewBag.IsEnrolled && !ViewBag.IsAdmin)
+                                        @if (ViewBag.IsEmployee && !ViewBag.IsEnrolled)
                                         {
                                             @Html.TextBox("files", "", new { @type = "file", @class = "form-control mt-2 mb-3", required = "required" })
                                         }
@@ -93,7 +93,7 @@
                     </div>
                 </div>
                 <div class="row mt-5">
-                    @if (ViewBag.IsAdmin)
+                    @if (Session["CurrentRole"] as string == "Admin")
                     {
                         <div class="col-md-3 mb-3">
                             @Html.ActionLink("Back", "Index", "Training", null, new { @class = "btn btn-secondary w-100" })
@@ -110,7 +110,7 @@
                             <button type="button" class="btn btn-success w-100 text-nowrap" onclick="closeTraining(this)">Close</button>
                         </div>
                     }
-                    else if (ViewBag.IsEnrolled)
+                    else if (ViewBag.IsEmployee && ViewBag.IsEnrolled)
                     {
                         <div class="col-4">
                             @Html.ActionLink("Back", "Index", "Training", null, new { @class = "btn btn-secondary w-100" })

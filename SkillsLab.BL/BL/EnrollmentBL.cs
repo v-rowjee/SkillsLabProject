@@ -19,7 +19,7 @@ namespace SkillsLabProject.BL.BL
         IEnumerable<EnrollmentViewModel> GetAllEnrollments(EmployeeModel employee);
         EnrollmentViewModel GetEnrollmentById(int enrollmentId);
         bool UpdateEnrollment(EnrollmentModel model);
-        Task<bool> ApproveEnrollment(EnrollmentModel model, EmployeeModel manager);
+        bool ApproveEnrollment(EnrollmentModel model, EmployeeModel manager);
         bool DeclineEnrollment(EnrollmentModel model);
         bool DeleteEnrollment(int enrollmentId);
         Task<string> Enroll(LoginViewModel loggeduser, int trainingId, List<HttpPostedFileBase> files);
@@ -103,7 +103,7 @@ namespace SkillsLabProject.BL.BL
             return _enrollmentDAL.Update(enrollment);
         }
 
-        public async Task<bool> ApproveEnrollment(EnrollmentModel model, EmployeeModel manager)
+        public bool ApproveEnrollment(EnrollmentModel model, EmployeeModel manager)
         {
             model.Status = Status.Approved;
             var isApproved = _enrollmentDAL.Update(model);
@@ -121,7 +121,7 @@ namespace SkillsLabProject.BL.BL
                     Training = training,
                 };
 
-                await _emailService.SendEmail(emailViewModel);
+                Task.Run(() => _emailService.SendEmail(emailViewModel));
             }
             return isApproved;
         }

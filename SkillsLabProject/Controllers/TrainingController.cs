@@ -73,7 +73,7 @@ namespace SkillsLabProject.Controllers
             ViewBag.EnrolledStatus = enrolledStatus;
 
             ViewBag.IsEnrolled = enrolledStatus != "0";
-            ViewBag.IsAdmin = Session["CurrentRole"] as string == "Admin";
+            ViewBag.IsEmployee = Session["CurrentRole"] as string == "Employee";
 
             return View();
         }
