@@ -12143,6 +12143,7 @@
     <Content Include="StaticViews\LoginWidget.html" />
     <Content Include="Views\Enrollment\View.cshtml" />
     <Content Include="Views\Common\Role.cshtml" />
+    <Content Include="Views\Enrollment\_ViewPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

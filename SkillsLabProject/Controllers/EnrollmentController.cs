@@ -132,7 +132,7 @@ namespace SkillsLabProject.Controllers
 
         // Post: Delete
         [HttpPost]
-        [CustomAuthorization("Employee,Manager")]
+        [CustomAuthorization("Employee,Admin")]
         public JsonResult Delete(int id)
         {
             var result = _enrollmentBL.DeleteEnrollment(id);

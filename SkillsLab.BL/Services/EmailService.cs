@@ -28,7 +28,7 @@ namespace SkillsLabProject.BL.Services
             string ccEmail = model.Manager.Email;
 
             SmtpEmailClient smtp = new SmtpEmailClient();
-            return await smtp.SendEmail(recipientEmail, ccEmail, subject, body);
+            return await smtp.SendEmailAsync(recipientEmail, ccEmail, subject, body);
         }
     }
 }

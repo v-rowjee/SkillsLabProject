@@ -72,6 +72,9 @@ namespace SkillsLabProject.Controllers
             var enrolledStatus = _enrollmentBL.GetAllEnrollments(employee).Where(e => e.Training.TrainingId == training.TrainingId).Select(e => e.Status).FirstOrDefault().ToString();
             ViewBag.EnrolledStatus = enrolledStatus;
 
+            var enrollmentId = _enrollmentBL.GetAllEnrollments(employee).Where(e => e.Training.TrainingId == training.TrainingId).Select(e => e.EnrollmentId).FirstOrDefault();
+            ViewBag.EnrollmentId = enrollmentId;
+
             ViewBag.IsEnrolled = enrolledStatus != "0";
             ViewBag.IsEmployee = Session["CurrentRole"] as string == "Employee";
 

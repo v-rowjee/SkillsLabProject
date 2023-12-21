@@ -137,52 +137,50 @@ namespace SkillsLabProject.BL.BL
 
             if (prerequisites.Count == 0)
             {
-                var enrollment = new EnrollmentModel()
+                var enrollment = new EnrollmentModel
                 {
                     EmployeeId = _employeeDAL.GetEmployee(loggeduser).EmployeeId,
                     TrainingId = trainingId,
                     Status = Status.Pending
                 };
+
                 return _enrollmentDAL.Add(enrollment) ? "Success" : "Error";
             }
-            else if(files != null && files.Any() && files.Count < prerequisites.Count)
+
+            if (files == null || !files.Any() || files.Count < prerequisites.Count)
             {
                 return "FileMissing";
             }
-            else if(files != null && files.Any() && files.Count >= prerequisites.Count)
+
+            var employee = _employeeDAL.GetEmployee(loggeduser);
+
+            var enrollmentWithProofs = new EnrollmentViewModel
             {
-                var enrollmentWithProofs = new EnrollmentViewModel()
+                Employee = employee,
+                Training = new TrainingModel { TrainingId = trainingId },
+                Proofs = new List<ProofModel>(),
+                Status = Status.Pending
+            };
+
+            foreach (var file in files.Where(f => f.ContentLength > 0))
+            {
+                string tempFilePath = Path.GetTempFileName();
+
+                file.SaveAs(tempFilePath);
+
+                var fileName = GenerateUniqueFileName(file);
+
+                using (FileStream stream = new FileStream(tempFilePath, FileMode.Open))
                 {
-                    Employee = _employeeDAL.GetEmployee(loggeduser),
-                    Training = new TrainingModel() { TrainingId = trainingId },
-                    Proofs = new List<ProofModel>(),
-                    Status = Status.Pending
-                };
-                foreach (var file in files)
-                {
-                    if (file.ContentLength > 0)
-                    {
-                        string tempFilePath = Path.GetTempFileName();
-
-                        file.SaveAs(tempFilePath);
-
-                        using (FileStream stream = new FileStream(tempFilePath, FileMode.Open))
-                        {
-                            string uniqueFileName = GenerateUniqueFileName(file);
-                            string downloadUrl = await _enrollmentDAL.UploadAndGetDownloadUrlAsync(stream, file.FileName);
-                            enrollmentWithProofs.Proofs.Add(new ProofModel() { Attachment = downloadUrl });
-                        }
-
-                        File.Delete(tempFilePath);
-                    }
+                    string downloadUrl = await _enrollmentDAL.UploadAndGetDownloadUrlAsync(stream, fileName);
+                    enrollmentWithProofs.Proofs.Add(new ProofModel { Attachment = downloadUrl });
+                    File.Delete(tempFilePath);
                 }
-                return _enrollmentDAL.Add(enrollmentWithProofs) ? "Success" : "Error";
             }
-            else
-            {
-                return "FileMissing";
-            }
+
+            return _enrollmentDAL.Add(enrollmentWithProofs) ? "Success" : "Error";
         }
+
         private string GenerateUniqueFileName(HttpPostedFileBase file)
         {
             string fileName = Path.GetFileName(file.FileName);

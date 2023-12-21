@@ -1,6 +1,4 @@
-﻿using Firebase.Auth;
-using Firebase.Storage;
-using SkillsLabProject.Common.DAL;
+﻿using SkillsLabProject.Common.DAL;
 using SkillsLabProject.Common.Enums;
 using SkillsLabProject.Common.Models;
 using SkillsLabProject.Common.Models.ViewModels;
@@ -157,34 +155,8 @@ namespace SkillsLabProject.DAL.DAL
         }
         public async Task<string> UploadAndGetDownloadUrlAsync(FileStream stream, string fileName)
         {
-            string _ApiKey = ConfigurationManager.AppSettings["FirebaseApiKey"].ToString();
-            string _Bucket = ConfigurationManager.AppSettings["FirebaseBucket"].ToString();
-            string _Email = ConfigurationManager.AppSettings["AdminEmail"].ToString();
-            string _Password = ConfigurationManager.AppSettings["AdminPassword"].ToString();
-
-            var auth = new FirebaseAuthProvider(new FirebaseConfig(_ApiKey));
-            var a = await auth.SignInWithEmailAndPasswordAsync(_Email, _Password);
-
-            var task = new FirebaseStorage(
-                _Bucket,
-                new FirebaseStorageOptions
-                {
-                    AuthTokenAsyncFactory = () => Task.FromResult(a.FirebaseToken),
-                    ThrowOnCancel = true,
-                })
-                .Child("images")
-                .Child(fileName)
-                .PutAsync(stream);
-
-            try
-            {
-                string downloadUrl = await task;
-                return downloadUrl;
-            }
-            catch (Exception)
-            {
-                throw;
-            }
+            Firebase firebase = new Firebase();
+            return await firebase.UploadFileAsync(stream, fileName);
         }
     }
 }

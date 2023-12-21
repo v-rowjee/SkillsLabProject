@@ -4,7 +4,7 @@
     $('#trainingTable').DataTable({
         order: [[1, 'desc']],
         "columnDefs": [
-            { "orderable": false, "targets": 4 }
+            { "orderable": false, "targets": [] }
         ],
         language: {
             'paginate': {

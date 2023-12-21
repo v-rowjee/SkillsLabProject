@@ -116,7 +116,7 @@
                             @Html.ActionLink("Back", "Index", "Training", null, new { @class = "btn btn-secondary w-100" })
                         </div>
                         <div class="col-8">
-                            @Html.ActionLink("View Enrollment", "Index", "Enrollment", null, new { @class = "btn btn-primary w-100" })
+                            @Html.ActionLink("View Enrollment", "View", "Enrollment", new { @id = ViewBag.EnrollmentId }, new { @class = "btn btn-primary w-100" })
                         </div>
                     }
                     else

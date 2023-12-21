@@ -21,7 +21,7 @@ namespace SkillsLabProject.Common.Email
             _server = "smtp-mail.outlook.com";
             _port = 587;
         }
-        public async Task<bool> SendEmail(string to, string cc, string subject, string body)
+        public async Task<bool> SendEmailAsync(string to, string cc, string subject, string body)
         {
             try
             {

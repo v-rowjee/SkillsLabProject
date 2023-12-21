@@ -203,7 +203,6 @@ $(function () {
 function deleteEnrollment(deleteBtn) {
     $(deleteBtn).html(`
         <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
-        <span role="status">Removing Enrollment...</span>
     `)
 
     var enrollmentId = $(deleteBtn).siblings('input[type="hidden"]').val();
@@ -235,7 +234,7 @@ function deleteEnrollment(deleteBtn) {
             });
         },
         complete: () => {
-            $(deleteBtn).html('Cancel Enrollment')
+            $(deleteBtn).html('Cancel')
         }
     });
 
