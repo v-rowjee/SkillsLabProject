@@ -35,19 +35,16 @@ namespace SkillsLabProject.Controllers
         [HttpPost]
         public JsonResult Register(RegisterViewModel model)
         {
-            var result = AppUserBL.RegisterUser(model);
+            var results = AppUserBL.RegisterUser(model);
 
-            if (result == "Success")
+
+            if (results.Contains("Success"))
             {
-                return Json(new { result = result, url = Url.Action("Index", "Login") });
-            }
-            else if (result == "DuplicatedEmail")
-            {
-                return Json(new { result = result, url = Url.Action("Index", "Login") });
+                return Json(new { result = "Success", url = Url.Action("Index", "Login") });
             }
             else
             {
-                return Json(new { result = "Error" });
+                return Json(new { result = results.ToArray(), url = Url.Action("Index", "Login") });
             }
         }
 

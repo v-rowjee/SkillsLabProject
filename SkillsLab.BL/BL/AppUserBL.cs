@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using CryptoHelper;
 using SkillsLabProject.Common.Models.ViewModels;
@@ -9,7 +10,7 @@ namespace SkillsLabProject.BL.BL
     public interface IAppUserBL
     {
         bool AuthenticateUser(LoginViewModel model);
-        string RegisterUser(RegisterViewModel model);
+        List<string> RegisterUser(RegisterViewModel model);
     }
     public class AppUserBL : IAppUserBL
     {
@@ -25,27 +26,42 @@ namespace SkillsLabProject.BL.BL
             var hashedPassword = _appUserDAL.GetHashedPassword(model);
             return hashedPassword != null && VerifyPassword(hashedPassword, model.Password);
         }
-        public string RegisterUser(RegisterViewModel model)
+        public List<string> RegisterUser(RegisterViewModel model)
         {
-            try
+            var validations = ValidateUser(model);
+
+            if (validations.All(validation => validation == "Success"))
             {
-                if (!IsEmailAlreadyRegistered(model.Email))
-                {
-                    model.Password = HashPassword(model.Password);
-                    return _appUserDAL.RegisterUser(model) ? "Success" : "Error";
-                }
-                return "DuplicatedEmail";
+                model.Password = HashPassword(model.Password);
+                return _appUserDAL.RegisterUser(model) ? new List<string> { "Success" } : new List<string> { "Error" };
             }
-            catch (Exception error)
-            {
-                return error.Message;
-                throw;
-            }
+            return validations;
         }
-        private bool IsEmailAlreadyRegistered(string email)
+
+        private List<string> ValidateUser(RegisterViewModel model)
         {
-            return _appUserDAL.GetAllEmails().Contains(email.Trim());
+            var employees = _employeeDAL.GetAllEmployees().ToList();
+
+            var validationErrors = new List<string>();
+
+            if (employees.Any(e => e.Email == model.Email.Trim()))
+            {
+                validationErrors.Add("DuplicatedEmail");
+            }
+
+            if (employees.Any(e => e.NIC == model.NIC.Trim()))
+            {
+                validationErrors.Add("DuplicatedNIC");
+            }
+
+            if (employees.Any(e => e.PhoneNumber == model.PhoneNumber.Trim()))
+            {
+                validationErrors.Add("DuplicatedPhoneNumber");
+            }
+
+            return validationErrors.Any() ? validationErrors : new List<string> { "Success" };
         }
+
         private string HashPassword(string password)
         {
             return Crypto.HashPassword(password);

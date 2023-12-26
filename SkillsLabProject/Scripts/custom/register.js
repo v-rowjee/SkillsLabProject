@@ -1,8 +1,4 @@
 ﻿$(function () {
-    $('#roleEmployee').click(() => $('#userrole').text('Employee'))
-    $('#roleManager').click(() => $('#userrole').text('Manager'))
-    $('#roleAdmin').click(() => $('#userrole').text('Admin'))
-
     $("#togglePassword").parent().click(() => {
         $("#togglePassword").toggleClass("fa-eye fa-eye-slash");
         var input = $("#password");
@@ -80,27 +76,54 @@
                             actionTextColor: "#CFE2FF"
                         });
                         window.location.replace(response.url);
-                    }
-                    else if (response.result == "DuplicatedEmail") {
+                    } else {
+                        $("#registerForm").removeClass("was-validated")
+                        $("#email").removeClass("is-invalid");
+                        $("#nic").removeClass("is-invalid");
+                        $("#phone").removeClass("is-invalid");
 
-                        $("#email").addClass("is-invalid")
-                        $("#email-feedback").html("Email already exists.");
+                        var errorMessages = [];
+                        $.each(response.result, function (index, error) {
+                            switch (error) {
+                                case "DuplicatedEmail":
+                                    $("#email").addClass("is-invalid");
+                                    $("#email-feedback").html("Email already exists.");
+                                    errorMessages.push("An account with this email already exists.");
+                                    break;
 
-                        Snackbar.show({
-                            text: "An account with this email already exist.",
-                            actionText: "LOGIN",
-                            actionTextColor: "#CFE2FF",
-                            onActionClick: () => { window.location.replace(response.url) }
+                                case "DuplicatedNIC":
+                                    $("#nic").addClass("is-invalid");
+                                    $("#nic-feedback").html("NIC already exists.");
+                                    errorMessages.push("An account with this NIC already exists.");
+                                    break;
+
+                                case "DuplicatedPhoneNumber":
+                                    $("#phone").addClass("is-invalid");
+                                    $("#phone-feedback").html("Phone already exists.");
+                                    errorMessages.push("An account with this phone number is already registered.");
+                                    break;
+
+                                default:
+                                    errorMessages.push("An error has occurred.");
+                                    break;
+                            }
                         });
-                    }
-                    else {
-                        Snackbar.show({
-                            text: "Unable to register",
-                            actionTextColor: "#CFE2FF"
-                        });
+
+                        if (errorMessages.length > 0) {
+                            Snackbar.show({
+                                text: errorMessages.join("<br><br>"),
+                                actionText: "LOGIN",
+                                actionTextColor: "#CFE2FF",
+                                onActionClick: () => {
+                                    window.location.replace(response.url);
+                                }
+                            });
+                        }
+
                     }
                 }
-            })
+            });
+
         }
 
 

@@ -154,15 +154,7 @@ namespace SkillsLabProject.Controllers
             var loggeduser = Session["CurrentUser"] as LoginViewModel;
             var result = await _enrollmentBL.Enroll(loggeduser, trainingId, files);
 
-            switch (result)
-            {
-                case "Success":
-                    return Json(new { result = "Success" });
-                case "FileMissing":
-                    return Json(new { result = "FileMissing" });
-                default:
-                    return Json(new { result = "Error" });
-            }
+            return Json(new { result });
         }
 
     }

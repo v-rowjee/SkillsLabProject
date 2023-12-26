@@ -70,7 +70,16 @@ $(function () {
                     });
                     window.location.reload()
                 }
+                else if (response.result == "InvalidType") {
+                    $('#enrollmentForm').removeClass("was-validated")
+                    $('#enrollmentForm input[name="files"]').addClass("is-invalid")
+                    Snackbar.show({
+                        text: "Some files are not of the correct type. (jpg, jpeg or png)",
+                        actionTextColor: "#CFE2FF"
+                    });
+                }
                 else if (response.result == "FileMissing") {
+                    $('#enrollmentForm').removeClass("was-validated")
                     $('#enrollmentForm input[name="files"]').addClass("is-invalid")
                     Snackbar.show({
                         text: "Please upload all pre-requisite files.",

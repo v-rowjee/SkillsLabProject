@@ -162,7 +162,11 @@ namespace SkillsLabProject.BL.BL
                 Status = Status.Pending
             };
 
-            foreach (var file in files.Where(f => f.ContentLength > 0))
+            var invalidFiles = ValidateFiles(files);
+            if (invalidFiles.Count > 0) return "InvalidType";
+
+
+            foreach (var file in files)
             {
                 string tempFilePath = Path.GetTempFileName();
 
@@ -180,6 +184,31 @@ namespace SkillsLabProject.BL.BL
 
             return _enrollmentDAL.Add(enrollmentWithProofs) ? "Success" : "Error";
         }
+
+        private List<string> ValidateFiles(List<HttpPostedFileBase> files)
+        {
+            List<string> incorrectFiles = new List<string>();
+
+            foreach (var file in files)
+            {
+                if (file == null || file.ContentLength == 0)
+                {
+                    continue;
+                }
+
+                string fileExtension = Path.GetExtension(file.FileName);
+
+                List<string> allowedExtensions = new List<string> { ".jpg", ".jpeg", ".png" };
+
+                if (!allowedExtensions.Contains(fileExtension, StringComparer.OrdinalIgnoreCase))
+                {
+                    incorrectFiles.Add(file.FileName);
+                }
+            }
+
+            return incorrectFiles;
+        }
+
 
         private string GenerateUniqueFileName(HttpPostedFileBase file)
         {
