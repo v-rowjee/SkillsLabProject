@@ -58,14 +58,18 @@
                     {
                         <tr data-departmentid="@Enrollment.Employee.Department.DepartmentId">
                             <td class="rounded-start py-3">
-                                @if (@Enrollment.Status.ToString() == "Approved")
+                                @if (Enrollment.Status.ToString() == "Approved")
                                 {<span class="badge text-bg-success">Approved</span> }
-                                else if (@Enrollment.Status.ToString() == "Declined")
+                                else if (Enrollment.Status.ToString() == "Declined")
                                 { <span class="badge text-bg-danger">Declined</span> }
                                 else
                                 { <span class="badge text-bg-warning">Pending</span>}
                             </td>
-                            <td class="py-3">@Enrollment.Training.Title</td>
+                            <td class="py-3">
+                                @if (Enrollment.Training.IsClosed)
+                                {<span class="badge text-bg-secondary opacity-75">Closed</span>}
+                                @Enrollment.Training.Title
+                            </td>
                             <td class="text-nowrap py-3">@Enrollment.Training.Deadline.ToString("dd MMM yyyy")</td>
                             <td class="py-3">
                                 @if (Enrollment.Training.PriorityDepartment != null)

@@ -1,6 +1,8 @@
 ﻿$(function () {
-    var currentDepartment = $('#departments').val()
-    showTableData(currentDepartment);
+    var currentDepartment = $('#departments')
+    if (currentDepartment.length > 0) {
+        showTableData(currentDepartment.val());
+    }
 
     $('#departments').change(function () {
         showTableData($(this).val());
