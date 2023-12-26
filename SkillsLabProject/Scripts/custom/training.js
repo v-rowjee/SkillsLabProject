@@ -243,3 +243,43 @@ function deleteTraining(deleteBtn) {
         }
     })
 }
+
+// CLOSE TRAINING
+function closeTraining(closeBtn) {
+    $(closeBtn).html(`
+        <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+    `)
+
+    var trainingId = $(closeBtn).siblings('input[type="hidden"]').val();
+
+    $.ajax({
+        type: "POST",
+        url: '/Training/Close',
+        data: { id: trainingId },
+        dataType: 'json',
+        success: (response) => {
+            if (response.result) {
+                Snackbar.show({
+                    text: "Training has been closed!",
+                    actionTextColor: "#CFE2FF"
+                });
+                window.location.replace(response.url);
+            }
+            else {
+                Snackbar.show({
+                    text: "Unable to close training.",
+                    actionTextColor: "#CFE2FF"
+                });
+            }
+        },
+        error: () => {
+            Snackbar.show({
+                text: "Unable to close training.",
+                actionTextColor: "#CFE2FF"
+            });
+        },
+        complete: () => {
+            $(closeBtn).html('Close')
+        }
+    });
+}

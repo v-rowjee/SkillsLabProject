@@ -27,7 +27,7 @@ namespace SkillsLabProject
 
             bundles.Add(new ScriptBundle("~/Scripts/head").Include(
                 "~/Scripts/jquery/jquery-{version}.js",
-                "~/Scripts/modernizr-*"));
+                "~/Scripts/modernizr/modernizr-*"));
 
             bundles.Add(new ScriptBundle("~/Scripts/body").Include(
                 "~/Scripts/custom/site.js"));

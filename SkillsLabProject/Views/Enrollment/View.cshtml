@@ -171,7 +171,17 @@
                         }
                     </div>
                 </div>
-                @Html.Partial("_ViewPartial")
+                @if (ViewBag.Enrollment.Training.IsClosed)
+                {
+                    <div class="alert alert-primary mb-3 text-center" role="alert">
+                        Training Closed
+                    </div>
+                    @Html.ActionLink("Back","Index", "Training", null, new { @class = "btn btn-secondary w-100" })
+                }
+                else
+                {
+                    @Html.Partial("_ViewPartial")
+                }
             </form>
         </div>
     </div>

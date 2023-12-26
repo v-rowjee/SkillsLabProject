@@ -1,5 +1,7 @@
 ﻿$(function () {
-    showTableData;
+    var currentDepartment = $('#departments').val()
+    showTableData(currentDepartment);
+
     $('#departments').change(function () {
         showTableData($(this).val());
     });
@@ -13,11 +15,10 @@ function showTableData(selectedDepartmentId) {
     });
     $(filteredRows).show();
 
-    // Check if there are any filtered rows
     if (filteredRows.length > 0) {
         $(filteredRows).show();
-        $('#noDataImage').remove();
-    } else {
-        $('#enrollmentTable tbody').append('<tr id="noDataImage"><td colspan="9" class="text-center"><p>No Data</p></td></tr>');
+    }
+    else {
+        $('#enrollmentTable .dataTables_empty').html('<p>No Enrollments</p><img src="~/Content/Images/no-enrollment.png" class="w-50" alt="No Data">');
     }
 }

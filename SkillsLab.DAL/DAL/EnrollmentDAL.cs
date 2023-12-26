@@ -23,27 +23,28 @@ namespace SkillsLabProject.DAL.DAL
         public IEnumerable<EnrollmentModel> GetAll()
         {
             const string GetAllEnrollmentsQuery = @"
-                SELECT EnrollmentId, EmployeeId, TrainingId, StatusId
+                SELECT EnrollmentId, EmployeeId, TrainingId, StatusId, UpdatedOn
                 FROM [dbo].[Enrollment]
             ";
             var dt = DBCommand.GetData(GetAllEnrollmentsQuery);
-            var Enrollments = new List<EnrollmentModel>();
-            EnrollmentModel Enrollment;
+            var enrollments = new List<EnrollmentModel>();
+            EnrollmentModel enrollment;
             foreach (DataRow row in dt.Rows)
             {
-                Enrollment = new EnrollmentModel();
-                Enrollment.EnrollmentId = int.Parse(row["EnrollmentId"].ToString());
-                Enrollment.EmployeeId = int.Parse(row["EmployeeId"].ToString());
-                Enrollment.TrainingId = int.Parse(row["TrainingId"].ToString());
-                Enrollment.Status =  (Status) int.Parse(row["StatusId"].ToString());
-                Enrollments.Add(Enrollment);
+                enrollment = new EnrollmentModel();
+                enrollment.EnrollmentId = int.Parse(row["EnrollmentId"].ToString());
+                enrollment.EmployeeId = int.Parse(row["EmployeeId"].ToString());
+                enrollment.TrainingId = int.Parse(row["TrainingId"].ToString());
+                enrollment.Status =  (Status) int.Parse(row["StatusId"].ToString());
+                enrollment.UpdatedOn = DateTime.Parse(row["UpdatedOn"].ToString());
+                enrollments.Add(enrollment);
             }
-            return Enrollments;
+            return enrollments;
         }
         public EnrollmentModel GetById(int EnrollmentId)
         {
             const string GetEnrollmentQuery = @"
-                SELECT EnrollmentId, EmployeeId, TrainingId, StatusId
+                SELECT EnrollmentId, EmployeeId, TrainingId, StatusId, UpdatedOn
                 FROM [dbo].[Enrollment]
                 WHERE [EnrollmentId] = @EnrollmentId
             ";
@@ -59,6 +60,7 @@ namespace SkillsLabProject.DAL.DAL
                 enrollment.EmployeeId = int.Parse(row["EmployeeId"].ToString());
                 enrollment.TrainingId = int.Parse(row["TrainingId"].ToString());
                 enrollment.Status = (Status) int.Parse(row["StatusId"].ToString());
+                enrollment.UpdatedOn = DateTime.Parse(row["UpdatedOn"].ToString());
             }
             return enrollment;
         }

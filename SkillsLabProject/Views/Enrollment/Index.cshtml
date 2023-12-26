@@ -30,9 +30,6 @@
                 {
                     <span class="badge text-bg-primary">@ViewBag.Employee.Department.Title</span>
                 }
-
-
-
             </div>
         </div>
     </div>
@@ -42,7 +39,7 @@
             <table id="enrollmentTable" class="table table-borderless table-hover pb-4">
                 <thead class="bg-light">
                     <tr class="align-middle">
-                        <th class="rounded-start border text-center py-3">Status</th>
+                        <th class="rounded-start border p-3">Status</th>
                         <th class="py-3 border">Training</th>
                         <th class="py-3 border">Deadline</th>
                         <th class="text-nowrap py-3 border">Department Priority</th>
@@ -60,7 +57,7 @@
                     @foreach (var Enrollment in ViewBag.Enrollments)
                     {
                         <tr data-departmentid="@Enrollment.Employee.Department.DepartmentId">
-                            <td class="rounded-start text-center py-3">
+                            <td class="rounded-start py-3">
                                 @if (@Enrollment.Status.ToString() == "Approved")
                                 {<span class="badge text-bg-success">Approved</span> }
                                 else if (@Enrollment.Status.ToString() == "Declined")
@@ -79,12 +76,14 @@
                             <td class="py-3">@Enrollment.Training.Capacity</td>
                             @if (Session["CurrentRole"] as string != "Employee")
                             {
-                                <td class="text-nowrap py-3">@Enrollment.Employee.FirstName @Enrollment.Employee.LastName</td>
-                                <td class="py-3">@Enrollment.Employee.Email</td>
+                                <td class="text-truncate py-3" style="max-width: 12rem">@Enrollment.Employee.FirstName @Enrollment.Employee.LastName</td>
+                                <td class="text-truncate py-3" style="max-width: 12rem">@Enrollment.Employee.Email</td>
                                 <td class="py-3">@Enrollment.Employee.PhoneNumber</td>
                             }
                             <td class="rounded-end text-center py-3">
-                                @Html.ActionLink("View", "View", "Enrollment", new { @id = Enrollment.EnrollmentId }, new { @class = "btn btn-sm btn-outline-primary w-100" })
+                                <a href="@Url.Action("View", "Enrollment", new { id = Enrollment.EnrollmentId })" class="btn btn-sm btn-outline-primary w-100"  data-bs-toggle="tooltip" data-bs-title="View Enrollment">
+                                    <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                                </a>
                             </td>
                         </tr>
                     }

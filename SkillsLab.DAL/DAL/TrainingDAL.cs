@@ -18,10 +18,11 @@ namespace SkillsLabProject.DAL.DAL
         public IEnumerable<TrainingModel> GetAll()
         {
             const string GetAllTrainingsQuery = @"
-                SELECT t.TrainingId, t.Title, t.Description, t.Deadline, t.Capacity, t.PriorityDepartmentId, d.Title as DepartmentTitle
+                SELECT t.TrainingId, t.Title, t.Description, t.Deadline, t.Capacity, t.PriorityDepartmentId, d.Title as DepartmentTitle, t.IsClosed
                 FROM [dbo].[Training] t 
                 LEFT JOIN [dbo].[Department] d
                 ON t.PriorityDepartmentId = d.DepartmentId
+                WHERE t.IsActive = 1
             ";
             var dt = DBCommand.GetData(GetAllTrainingsQuery);
             TrainingModel training;
@@ -34,7 +35,8 @@ namespace SkillsLabProject.DAL.DAL
                     Title = row["Title"].ToString(),
                     Description = row["Description"].ToString(),
                     Deadline = DateTime.Parse(row["Deadline"].ToString()),
-                    Capacity = (int)row["Capacity"]
+                    Capacity = (int)row["Capacity"],
+                    IsClosed = (bool)row["IsClosed"]
                 };
                 if (row["PriorityDepartmentId"] is DBNull)
                 {
@@ -55,11 +57,12 @@ namespace SkillsLabProject.DAL.DAL
         public TrainingModel GetById(int trainingId)
         {
             const string GetTrainingQuery = @"
-                SELECT t.TrainingId, t.Title, t.Description, t.Deadline, t.Capacity, t.PriorityDepartmentId, d.Title as DepartmentTitle
+                SELECT t.TrainingId, t.Title, t.Description, t.Deadline, t.Capacity, t.PriorityDepartmentId, d.Title as DepartmentTitle, t.IsClosed
                 FROM [dbo].[Training] t 
                 LEFT JOIN Department d
                 ON t.PriorityDepartmentId = d.DepartmentId
                 WHERE [TrainingId] = @TrainingId
+                AND t.IsActive = 1
             ";
             var parameters = new List<SqlParameter>
             {
@@ -74,6 +77,7 @@ namespace SkillsLabProject.DAL.DAL
                 training.Description = row["Description"].ToString();
                 training.Deadline = DateTime.Parse(row["Deadline"].ToString());
                 training.Capacity = int.Parse(row["Capacity"].ToString());
+                training.IsClosed = (bool)row["IsClosed"];
                 if (row["PriorityDepartmentId"] is DBNull)
                 {
                     training.PriorityDepartment = null;
@@ -180,6 +184,8 @@ namespace SkillsLabProject.DAL.DAL
                     SELECT p.PreRequisiteId, @TrainingId
                     FROM PreRequisite p
                     JOIN @Details d ON p.Detail = d.Detail
+
+                    DELETE FROM Enrollment WHERE TrainingId = @TrainingId
                 COMMIT
             ";
             var parameters = new List<SqlParameter>
@@ -205,7 +211,7 @@ namespace SkillsLabProject.DAL.DAL
         {
             const string UpdateTrainingQuery = @"
                 UPDATE [dbo].[Training]
-                SET Title=@Title, Description=@Description, Deadline=@Deadline, Capacity=@Capacity, PriorityDepartmentId=@PriorityDepartmentId
+                SET Title=@Title, Description=@Description, Deadline=@Deadline, Capacity=@Capacity, PriorityDepartmentId=@PriorityDepartmentId, IsClosed=@IsClosed
                 WHERE TrainingId=@TrainingId;
             ";
             var parameters = new List<SqlParameter>
@@ -215,6 +221,7 @@ namespace SkillsLabProject.DAL.DAL
                 new SqlParameter("@Description",training.Description),
                 new SqlParameter("@Deadline", training.Deadline),
                 new SqlParameter("@Capacity", training.Capacity),
+                new SqlParameter("@IsClosed", training.IsClosed ? 1 : 0),
             };
             if (training.PriorityDepartment == null)
             {
@@ -230,12 +237,9 @@ namespace SkillsLabProject.DAL.DAL
         public bool Delete(int trainingId)
         {
             const string DeleteTrainingQuery = @"
-                BEGIN TRANSACTION
-                    DELETE FROM [dbo].[TrainingPreRequisite] WHERE TrainingId = @TrainingId;
-                    DELETE FROM [dbo].[Proof] WHERE EnrollmentId IN (SELECT EnrollmentId FROM [dbo].[Enrollment] WHERE TrainingId = @TrainingId);
-                    DELETE FROM [dbo].[Enrollment] WHERE TrainingId = @TrainingId;
-                    DELETE FROM [dbo].[Training] WHERE TrainingId = @TrainingId;
-                COMMIT
+                UPDATE Training
+                SET IsActive=0
+                WHERE TrainingId=@TrainingId
             ";
             var parameter = new SqlParameter("@TrainingId", trainingId);
             return DBCommand.DeleteData(DeleteTrainingQuery, parameter);

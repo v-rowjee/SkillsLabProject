@@ -2,7 +2,7 @@
     ViewBag.Title = "Trainings";
 }
 @section scripts {
-    <script src="~/Scripts/custom/training.js"></script>
+    <script src="~/Scripts/custom/Training.js"></script>
 }
 
 <main class="container">
@@ -22,54 +22,90 @@
             <table id="trainingTable" class="table table-borderless table-hover pb-4">
                 <thead class="bg-light">
                     <tr class="align-middle">
-                        <th class="rounded-start p-3 border">Title</th>
-                        <th class="p-3 border">Deadline</th>
-                        <th class="text-nowrap p-3 border">Department Priority</th>
-                        <th class="p-3 border">Capacity</th>
-                        <th class="rounded-end text-center p-3 border">Actions</th>
+                        <th class="rounded-start py-3 p-xl-3 border">Status</th>
+                        <th class="py-3 p-xl-3 border">Title</th>
+                        <th class="py-3 p-xl-3 border">Deadline</th>
+                        <th class="text-nowrap py-3 p-xl-3 border">Department Priority</th>
+                        <th class="py-3 p-xl-3 border">Capacity</th>
+                        <th class="rounded-end text-center py-3 p-xl-3 border">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var training in ViewBag.Trainings)
+                    @foreach (var Training in ViewBag.Trainings)
                     {
                         <tr>
-                            <td class="rounded-start p-3">@training.Title</td>
-                            <td class="p-3">@training.Deadline.ToString("ddd, dd MMM yyyy - hh:mm tt")</td>
-                            <td class="p-3">
-                                @if (training.PriorityDepartment != null)
+                            <td class="rounded-start py-3 p-xl-3">
+                                @if (Training.IsClosed)
                                 {
-                                    @training.PriorityDepartment.Title
+                                    <span class="badge text-bg-danger">Closed</span>
+                                }
+                                else
+                                {
+                                    <span class="badge text-bg-success">Open</span>
+                                }
+                            </td>
+                            <td class="py-3 p-xl-3">@Training.Title</td>
+                            <td class="text-nowrap py-3 p-xl-3">@Training.Deadline.ToString("ddd, dd MMM yyyy - hh:mm tt")</td>
+                            <td class="py-3 p-xl-3">
+                                @if (Training.PriorityDepartment != null)
+                                {
+                                    @Training.PriorityDepartment.Title
                                 }
                                 else
                                 {
                                     <p class="opacity-25 m-0">None</p>
                                 }
                             </td>
-                            <td class="p-3">@training.Capacity</td>
-                            <td class="rounded-end p-3">
+                            <td class="py-3 p-xl-3">@Training.Capacity</td>
+                            <td class="rounded-end py-3 p-xl-3">
                                 <div class="d-flex justify-content-end">
                                     @if (ViewBag.CurrentRole == "Admin")
                                     {
-                                        @Html.ActionLink("View", "View", "Training", new { @id = training.TrainingId }, new { @class = "btn btn-sm btn-outline-primary w-100" })
-                                        @Html.ActionLink("Edit", "Edit", "Training", new { @id = training.TrainingId }, new { @class = "btn btn-sm btn-outline-secondary ms-2 w-50" })
-                                        <button class="btn btn-sm btn-outline-danger w-50 ms-2" onclick="deleteTraining(this)">
-                                            <i class="fa-solid fa-trash"></i>
-                                        </button>
-                                        <input type="hidden" value="@training.TrainingId" />
-                                    }
-                                    else if (ViewBag.CurrentRole == "Manager")
-                                    {
-                                        @Html.ActionLink("View", "View", "Training", new { @id = training.TrainingId }, new { @class = "btn btn-sm btn-outline-primary w-100" })
-                                    }
-                                    else
-                                    {
-                                        if (ViewBag.EnrollmentIds[training.TrainingId] != null)
+                                        if (Training.IsClosed)
                                         {
-                                            @Html.ActionLink("View", "View", "Enrollment", new { @id = ViewBag.EnrollmentIds[training.TrainingId] }, new { @class = "btn btn-sm btn-outline-success w-100" })
+                                            <a href="@Url.Action("View", "Training", new { id = Training.TrainingId })" class="btn btn-sm btn-outline-primary w-25" data-bs-toggle="tooltip" data-bs-title="View Training">
+                                                <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                                            </a>
+                                            <button class="btn btn-sm btn-outline-success w-25 ms-2" disabled>
+                                                <i class="fa-solid fa-circle-check"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-outline-secondary ms-2 w-25" disabled>
+                                                <i class="fa-solid fa-pen-to-square"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-outline-danger w-25 ms-3" disabled>
+                                                <i class="fa-solid fa-trash"></i>
+                                            </button>
                                         }
                                         else
                                         {
-                                            @Html.ActionLink("Enroll", "View", "Training", new { @id = training.TrainingId }, new { @class = "btn btn-sm btn-outline-primary w-100" })
+                                            <a href="@Url.Action("View", "Training", new { id = Training.TrainingId })" class="btn btn-sm btn-outline-primary w-25" data-bs-toggle="tooltip" data-bs-title="View Training">
+                                                <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                                            </a>
+                                            <button class="btn btn-sm btn-outline-success w-25 ms-2" onclick="closeTraining(this)" data-bs-toggle="tooltip" data-bs-title="Close Training">
+                                                <i class="fa-solid fa-circle-check"></i>
+                                            </button>
+                                            <a href="@Url.Action("Edit", "Training", new { id = Training.TrainingId })" class="btn btn-sm btn-outline-secondary ms-2 w-25" data-bs-toggle="tooltip" data-bs-title="Edit Training">
+                                                <i class="fa-solid fa-pen-to-square"></i>
+                                            </a>
+                                            <button class="btn btn-sm btn-outline-danger w-25 ms-3" onclick="deleteTraining(this)" data-bs-toggle="tooltip" data-bs-title="Delete Training">
+                                                <i class="fa-solid fa-trash"></i>
+                                            </button>
+                                            <input type="hidden" value="@Training.TrainingId" />
+                                        }
+                                    }
+                                    else if (ViewBag.CurrentRole == "Manager")
+                                    {
+                                        @Html.ActionLink("View", "View", "Training", new { @id = Training.TrainingId }, new { @class = "btn btn-sm btn-outline-primary w-100" })
+                                    }
+                                    else
+                                    {
+                                        if (ViewBag.EnrollmentIds[Training.TrainingId] != null)
+                                        {
+                                            @Html.ActionLink("View", "View", "Enrollment", new { @id = ViewBag.EnrollmentIds[Training.TrainingId] }, new { @class = "btn btn-sm btn-outline-success w-100" })
+                                        }
+                                        else
+                                        {
+                                            @Html.ActionLink("Enroll", "View", "Training", new { @id = Training.TrainingId }, new { @class = "btn btn-sm btn-outline-primary w-100" })
                                         }
                                     }
                                 </div>

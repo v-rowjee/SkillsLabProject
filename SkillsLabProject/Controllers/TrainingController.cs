@@ -35,7 +35,7 @@ namespace SkillsLabProject.Controllers
             var employee = _employeeBL.GetEmployee(loggeduser);
             ViewBag.Employee = employee;
 
-            var trainings = _trainingBL.GetAllTrainings().Where(t => t.Deadline >= DateTime.Now);
+            var trainings = _trainingBL.GetAllTrainings().Where(t => t.Deadline >= DateTime.Now).ToList();
             ViewBag.Trainings = trainings;
 
             Enum.TryParse(Session["CurrentRole"] as string, out Role role);
@@ -169,7 +169,7 @@ namespace SkillsLabProject.Controllers
         [CustomAuthorization("Admin")]
         public JsonResult Close(int id)
         {
-            var result = false;//_trainingBL.CloseTraining(id);
+            var result = _trainingBL.CloseTraining(id);
             if (result)
             {
                 return Json(new { result = "Success", url = Url.Action("Index", "Training") });

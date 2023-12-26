@@ -3,6 +3,7 @@
 }
 @section scripts {
     <script src="~/Scripts/custom/enrollment.js"></script>
+    <script src="~/Scripts/custom/training.js"></script>
 }
 
 <main class="container">
@@ -17,6 +18,12 @@
                 <div class="alert alert-primary" role="alert">
                     You have already enrolled in this training. The training status is <span class="badge text-bg-primary">@ViewBag.EnrolledStatus</span>
                     <br /> Click @Html.ActionLink("here", "Index", "Enrollment", null, new { @class = "link" }) to view all enrollments.
+                </div>
+            }
+            @if (ViewBag.Training.IsClosed)
+            {
+                <div class="alert alert-primary" role="alert">
+                    Training closed.
                 </div>
             }
             <div class="card mb-4">
@@ -95,20 +102,30 @@
                 <div class="row mt-5">
                     @if (Session["CurrentRole"] as string == "Admin")
                     {
-                        <div class="col-md-3 mb-3">
-                            @Html.ActionLink("Back", "Index", "Training", null, new { @class = "btn btn-secondary w-100" })
-                        </div>
-                        <div class="col-md-3 mb-3">
-                            <input type="hidden" id="trainingId" value="@ViewBag.Training.TrainingId" />
-                            <button class="btn btn-danger w-100" onclick="deleteTraining(this)">Delete</button>
-                        </div>
-                        <div class="col-md-3 mb-3">
-                            @Html.ActionLink("Edit", "Index", "Enrollment", new { @id = ViewBag.Training.TrainingId }, new { @class = "btn btn-primary w-100" })
-                        </div>
-                        <div class="col-md-3 mb-3">
-                            <input type="hidden" value="@ViewBag.Training.TrainingId" />
-                            <button type="button" class="btn btn-success w-100 text-nowrap" onclick="closeTraining(this)">Close</button>
-                        </div>
+
+                        if (ViewBag.Training.IsClosed)
+                        {
+                            <div class="col-12 mb-3">
+                                @Html.ActionLink("Back", "Index", "Training", null, new { @class = "btn btn-secondary w-100" })
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="col-md-3 mb-3">
+                                @Html.ActionLink("Back", "Index", "Training", null, new { @class = "btn btn-secondary w-100" })
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <input type="hidden" id="trainingId" value="@ViewBag.Training.TrainingId" />
+                                <button class="btn btn-danger w-100" onclick="deleteTraining(this)">Delete</button>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                @Html.ActionLink("Edit", "Index", "Enrollment", new { @id = ViewBag.Training.TrainingId }, new { @class = "btn btn-primary w-100" })
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <input type="hidden" value="@ViewBag.Training.TrainingId" />
+                                <button type="button" class="btn btn-success w-100 text-nowrap" onclick="closeTraining(this)">Close</button>
+                            </div>
+                        }
                     }
                     else if (ViewBag.IsEmployee && ViewBag.IsEnrolled)
                     {

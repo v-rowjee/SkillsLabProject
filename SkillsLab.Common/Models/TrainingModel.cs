@@ -14,6 +14,6 @@ namespace SkillsLabProject.Common.Models
         public DateTime Deadline { get; set; }
         public int Capacity { get; set; }
         public DepartmentModel PriorityDepartment { get; set; }
-
+        public bool IsClosed { get; set; }
     }
 }

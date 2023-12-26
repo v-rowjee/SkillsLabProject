@@ -14,5 +14,6 @@ namespace SkillsLabProject.Common.Models
         public int TrainingId { get; set; }
         public Status Status { get; set; }
         public string DeclinedReason { get; set; }
+        public DateTime UpdatedOn { get; set; }
     }
 }

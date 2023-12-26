@@ -155,8 +155,30 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Content Include="Content\Bootstrap\bootstrap-grid.css" />
+    <Content Include="Content\Bootstrap\bootstrap-grid.min.css" />
+    <Content Include="Content\Bootstrap\bootstrap-grid.rtl.css" />
+    <Content Include="Content\Bootstrap\bootstrap-grid.rtl.min.css" />
+    <Content Include="Content\Bootstrap\bootstrap-reboot.css" />
+    <Content Include="Content\Bootstrap\bootstrap-reboot.min.css" />
+    <Content Include="Content\Bootstrap\bootstrap-reboot.rtl.css" />
+    <Content Include="Content\Bootstrap\bootstrap-reboot.rtl.min.css" />
+    <Content Include="Content\Bootstrap\bootstrap-utilities.css" />
+    <Content Include="Content\Bootstrap\bootstrap-utilities.min.css" />
+    <Content Include="Content\Bootstrap\bootstrap-utilities.rtl.css" />
+    <Content Include="Content\Bootstrap\bootstrap-utilities.rtl.min.css" />
+    <Content Include="Content\Bootstrap\bootstrap.css" />
+    <Content Include="Content\Bootstrap\bootstrap.min.css" />
+    <Content Include="Content\Bootstrap\bootstrap.rtl.css" />
+    <Content Include="Content\Bootstrap\bootstrap.rtl.min.css" />
     <Content Include="Content\Images\no-enrollment.png" />
     <Content Include="gulpfile.js" />
+    <Content Include="Scripts\bootstrap\bootstrap.bundle.js" />
+    <Content Include="Scripts\bootstrap\bootstrap.bundle.min.js" />
+    <Content Include="Scripts\bootstrap\bootstrap.esm.js" />
+    <Content Include="Scripts\bootstrap\bootstrap.esm.min.js" />
+    <Content Include="Scripts\bootstrap\bootstrap.js" />
+    <Content Include="Scripts\bootstrap\bootstrap.min.js" />
     <Content Include="Scripts\custom\enrollment-admin.js" />
     <Content Include="Scripts\custom\role.js" />
     <Content Include="Scripts\dojoSRC\dijit-themes\.gitignore" />
@@ -10569,22 +10591,6 @@
     <Content Include="Scripts\custom\register.js" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\Bootstrap\bootstrap-grid.css" />
-    <Content Include="Content\Bootstrap\bootstrap-grid.min.css" />
-    <Content Include="Content\Bootstrap\bootstrap-grid.rtl.css" />
-    <Content Include="Content\Bootstrap\bootstrap-grid.rtl.min.css" />
-    <Content Include="Content\Bootstrap\bootstrap-reboot.css" />
-    <Content Include="Content\Bootstrap\bootstrap-reboot.min.css" />
-    <Content Include="Content\Bootstrap\bootstrap-reboot.rtl.css" />
-    <Content Include="Content\Bootstrap\bootstrap-reboot.rtl.min.css" />
-    <Content Include="Content\Bootstrap\bootstrap-utilities.css" />
-    <Content Include="Content\Bootstrap\bootstrap-utilities.min.css" />
-    <Content Include="Content\Bootstrap\bootstrap-utilities.rtl.css" />
-    <Content Include="Content\Bootstrap\bootstrap-utilities.rtl.min.css" />
-    <Content Include="Content\Bootstrap\bootstrap.css" />
-    <Content Include="Content\Bootstrap\bootstrap.min.css" />
-    <Content Include="Content\Bootstrap\bootstrap.rtl.css" />
-    <Content Include="Content\Bootstrap\bootstrap.rtl.min.css" />
     <Content Include="Content\Icons\font-awesome.css" />
     <Content Include="Content\Icons\font-awesome.min.css" />
     <Content Include="Content\Images\login.png" />
@@ -10592,12 +10598,6 @@
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Content\site.css" />
-    <Content Include="Scripts\bootstrap\bootstrap.bundle.js" />
-    <Content Include="Scripts\bootstrap\bootstrap.bundle.min.js" />
-    <Content Include="Scripts\bootstrap\bootstrap.esm.js" />
-    <Content Include="Scripts\bootstrap\bootstrap.esm.min.js" />
-    <Content Include="Scripts\bootstrap\bootstrap.js" />
-    <Content Include="Scripts\bootstrap\bootstrap.min.js" />
     <Content Include="Scripts\dojoSRC\dijit-themes\bower.json" />
     <Content Include="Scripts\dojoSRC\dijit-themes\CONTRIBUTING.md" />
     <Content Include="Scripts\dojoSRC\dijit-themes\flat\dgrid\flat.styl" />
@@ -12104,6 +12104,28 @@
     <Content Include="Scripts\dojoSRC\util\shrinksafe\src\manifest" />
     <Content Include="Scripts\dojoSRC\util\shrinksafe\src\org\dojotoolkit\shrinksafe\resources\Messages.properties" />
     <Content Include="Scripts\dojoSRC\util\shrinksafe\tests\runner.sh" />
+    <Content Include="Scripts\bootstrap\bootstrap.min.js.map" />
+    <Content Include="Scripts\bootstrap\bootstrap.js.map" />
+    <Content Include="Scripts\bootstrap\bootstrap.esm.min.js.map" />
+    <Content Include="Scripts\bootstrap\bootstrap.esm.js.map" />
+    <Content Include="Scripts\bootstrap\bootstrap.bundle.min.js.map" />
+    <Content Include="Scripts\bootstrap\bootstrap.bundle.js.map" />
+    <Content Include="Content\Bootstrap\bootstrap.rtl.min.css.map" />
+    <Content Include="Content\Bootstrap\bootstrap.rtl.css.map" />
+    <Content Include="Content\Bootstrap\bootstrap.min.css.map" />
+    <Content Include="Content\Bootstrap\bootstrap.css.map" />
+    <Content Include="Content\Bootstrap\bootstrap-utilities.rtl.min.css.map" />
+    <Content Include="Content\Bootstrap\bootstrap-utilities.rtl.css.map" />
+    <Content Include="Content\Bootstrap\bootstrap-utilities.min.css.map" />
+    <Content Include="Content\Bootstrap\bootstrap-utilities.css.map" />
+    <Content Include="Content\Bootstrap\bootstrap-reboot.rtl.min.css.map" />
+    <Content Include="Content\Bootstrap\bootstrap-reboot.rtl.css.map" />
+    <Content Include="Content\Bootstrap\bootstrap-reboot.min.css.map" />
+    <Content Include="Content\Bootstrap\bootstrap-reboot.css.map" />
+    <Content Include="Content\Bootstrap\bootstrap-grid.rtl.min.css.map" />
+    <Content Include="Content\Bootstrap\bootstrap-grid.rtl.css.map" />
+    <Content Include="Content\Bootstrap\bootstrap-grid.min.css.map" />
+    <Content Include="Content\Bootstrap\bootstrap-grid.css.map" />
     <None Include="Scripts\jquery\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\jquery\jquery-3.4.1.js" />
     <Content Include="Scripts\jquery\jquery-3.4.1.min.js" />
@@ -12115,7 +12137,7 @@
     <Content Include="Scripts\jqueryval\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jqueryval\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\custom\login.js" />
-    <Content Include="Scripts\custom\modernizr-2.8.3.js" />
+    <Content Include="Scripts\modernizr\modernizr-2.8.3.js" />
     <Content Include="Scripts\custom\site.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
@@ -12151,29 +12173,7 @@
     <Folder Include="Scripts\dist\Widget\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\Bootstrap\bootstrap.rtl.min.css.map" />
-    <Content Include="Content\Bootstrap\bootstrap.rtl.css.map" />
-    <Content Include="Content\Bootstrap\bootstrap.min.css.map" />
-    <Content Include="Content\Bootstrap\bootstrap.css.map" />
-    <Content Include="Content\Bootstrap\bootstrap-utilities.rtl.min.css.map" />
-    <Content Include="Content\Bootstrap\bootstrap-utilities.rtl.css.map" />
-    <Content Include="Content\Bootstrap\bootstrap-utilities.min.css.map" />
-    <Content Include="Content\Bootstrap\bootstrap-utilities.css.map" />
-    <Content Include="Content\Bootstrap\bootstrap-reboot.rtl.min.css.map" />
-    <Content Include="Content\Bootstrap\bootstrap-reboot.rtl.css.map" />
-    <Content Include="Content\Bootstrap\bootstrap-reboot.min.css.map" />
-    <Content Include="Content\Bootstrap\bootstrap-reboot.css.map" />
-    <Content Include="Content\Bootstrap\bootstrap-grid.rtl.min.css.map" />
-    <Content Include="Content\Bootstrap\bootstrap-grid.rtl.css.map" />
-    <Content Include="Content\Bootstrap\bootstrap-grid.min.css.map" />
-    <Content Include="Content\Bootstrap\bootstrap-grid.css.map" />
     <None Include="packages.config" />
-    <Content Include="Scripts\bootstrap\bootstrap.min.js.map" />
-    <Content Include="Scripts\bootstrap\bootstrap.js.map" />
-    <Content Include="Scripts\bootstrap\bootstrap.esm.min.js.map" />
-    <Content Include="Scripts\bootstrap\bootstrap.esm.js.map" />
-    <Content Include="Scripts\bootstrap\bootstrap.bundle.min.js.map" />
-    <Content Include="Scripts\bootstrap\bootstrap.bundle.js.map" />
     <Content Include="Scripts\jquery\jquery-3.4.1.slim.min.map" />
     <Content Include="Scripts\jquery\jquery-3.4.1.min.map" />
   </ItemGroup>
