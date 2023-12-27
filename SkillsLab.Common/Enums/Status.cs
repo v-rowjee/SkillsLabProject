@@ -10,6 +10,8 @@ namespace SkillsLabProject.Common.Enums
     {
         Pending = 1,
         Approved = 2,
-        Declined = 3
+        Declined = 3,
+        Warning = 4,
+        Confirmed = 5
     }
 }

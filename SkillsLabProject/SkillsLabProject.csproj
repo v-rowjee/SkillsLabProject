@@ -179,7 +179,7 @@
     <Content Include="Scripts\bootstrap\bootstrap.esm.min.js" />
     <Content Include="Scripts\bootstrap\bootstrap.js" />
     <Content Include="Scripts\bootstrap\bootstrap.min.js" />
-    <Content Include="Scripts\custom\enrollment-admin.js" />
+    <Content Include="Scripts\custom\enrollment-table.js" />
     <Content Include="Scripts\custom\role.js" />
     <Content Include="Scripts\dojoSRC\dijit-themes\.gitignore" />
     <Content Include="Scripts\dojoSRC\dijit-themes\flat\dgrid\flat.css" />
@@ -12166,6 +12166,7 @@
     <Content Include="Views\Enrollment\View.cshtml" />
     <Content Include="Views\Common\Role.cshtml" />
     <Content Include="Views\Enrollment\_ViewPartial.cshtml" />
+    <Content Include="Views\Enrollment\IndexCard.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -1,0 +1,194 @@
+﻿@{
+    ViewBag.Title = "Enrollments";
+}
+@section scripts {
+    <script src="~/Scripts/custom/enrollment.js"></script>
+    <script src="~/Scripts/custom/enrollment-admin.js"></script>
+}
+
+<main class="container">
+    <div class="card mb-5">
+        <div class="card-header">
+            <div class="row align-items-center">
+                <div class="col-sm-6 text-center text-md-start">
+                    <h2>Closed Enrollments</h2>
+                </div>
+                <div class="col-sm-6 text-center text-md-end">
+                    <div class="d-flex justify-content-center justify-content-md-between float-md-end mt-3 mt-md-0 align-items-center">
+                        <div class="text-muted me-3">Department: </div>
+                        @if (Session["CurrentRole"] as string == "Admin")
+                        {
+                            <div class="d-inline-block">
+                                <select id="confirmedDepartments" class="form-select">
+                                    @foreach (var Department in ViewBag.Departments)
+                                    {
+                                        <option value="@Department.DepartmentId">@Department.Title</option>
+                                    }
+                                </select>
+                            </div>
+                        }
+                        else
+                        {
+                            <span class="badge text-bg-primary">@ViewBag.Employee.Department.Title</span>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <form id="enrollmentForm">
+                <div class="table-responsive p-2">
+                    <table id="confirmedEnrollmentTable" class="table table-borderless table-hover pb-4">
+                        <thead class="bg-light">
+                            <tr class="align-middle">
+                                <th class="rounded-start border p-3">Status</th>
+                                <th class="py-3 border">Training</th>
+                                <th class="py-3 border">Deadline</th>
+                                <th class="text-nowrap py-3 border">Department Priority</th>
+                                <th class="border-end py-3 border">Capacity</th>
+                                @if (Session["CurrentRole"] as string != "Employee")
+                                {
+                                    <th class="py-3 border">Employee</th>
+                                    <th class="py-3 border">Email</th>
+                                    <th class="border-end text-nowrap py-3 border">Phone Number</th>
+                                }
+                                <th class="rounded-end text-center py-3 border">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var Enrollment in ViewBag.ConfirmedEnrollments)
+                            {
+                                <tr data-confirmeddepartmentid="@Enrollment.Employee.Department.DepartmentId">
+                                    <td class="rounded-start py-3">
+                                        @if (Enrollment.Status.ToString() == "Approved")
+                                        {<span class="badge text-bg-success">Approved</span> }
+                                        else if (Enrollment.Status.ToString() == "Declined")
+                                        { <span class="badge text-bg-danger">Declined</span> }
+                                        else
+                                        { <span class="badge text-bg-warning">Pending</span>}
+                                    </td>
+                                    <td class="py-3">
+                                        @Enrollment.Training.Title
+                                    </td>
+                                    <td class="text-nowrap py-3">@Enrollment.Training.Deadline.ToString("dd MMM yyyy")</td>
+                                    <td class="py-3">
+                                        @if (Enrollment.Training.PriorityDepartment != null)
+                                        {@Enrollment.Training.PriorityDepartment.Title}
+                                    else
+                                    { <p class="opacity-25 m-0">None</p>}
+                                    </td>
+                                    <td class="py-3">@Enrollment.Training.Capacity</td>
+                                    @if (Session["CurrentRole"] as string != "Employee")
+                                    {
+                                        <td class="text-truncate py-3" style="max-width: 12rem">@Enrollment.Employee.FirstName @Enrollment.Employee.LastName</td>
+                                        <td class="text-truncate py-3" style="max-width: 12rem">@Enrollment.Employee.Email</td>
+                                        <td class="py-3">@Enrollment.Employee.PhoneNumber</td>
+                                    }
+                                    <td class="rounded-end text-center py-3">
+                                        <a href="@Url.Action("View", "Enrollment", new { id = Enrollment.EnrollmentId })" class="btn btn-sm btn-outline-primary w-100" data-bs-toggle="tooltip" data-bs-title="View Enrollment">
+                                            <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <div class="row align-items-center">
+                <div class="col-sm-6 text-center text-md-start">
+                    <h2>Enrollments</h2>
+                </div>
+                <div class="col-sm-6 text-center text-md-end">
+                    <div class="d-flex justify-content-center justify-content-md-between float-md-end mt-3 mt-md-0 align-items-center">
+                        <div class="text-muted me-3">Department: </div>
+                        @if (Session["CurrentRole"] as string == "Admin")
+                        {
+                            <div class="d-inline-block">
+                                <select id="departments" class="form-select">
+                                    @foreach (var Department in ViewBag.Departments)
+                                    {
+                                        <option value="@Department.DepartmentId">@Department.Title</option>
+                                    }
+                                </select>
+                            </div>
+                        }
+                        else
+                        {
+                            <span class="badge text-bg-primary">@ViewBag.Employee.Department.Title</span>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive p-2">
+                <table id="enrollmentTable" class="table table-borderless table-hover pb-4">
+                    <thead class="bg-light">
+                        <tr class="align-middle">
+                            <th class="rounded-start border p-3">Status</th>
+                            <th class="py-3 border">Training</th>
+                            <th class="py-3 border">Deadline</th>
+                            <th class="text-nowrap py-3 border">Department Priority</th>
+                            <th class="border-end py-3 border">Capacity</th>
+                            @if (Session["CurrentRole"] as string != "Employee")
+                            {
+                                <th class="py-3 border">Employee</th>
+                                <th class="py-3 border">Email</th>
+                                <th class="border-end text-nowrap py-3 border">Phone Number</th>
+                            }
+                            <th class="rounded-end text-center py-3 border">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var Enrollment in ViewBag.Enrollments)
+                        {
+                            <tr data-departmentid="@Enrollment.Employee.Department.DepartmentId">
+                                <td class="rounded-start py-3">
+                                    @if (Enrollment.Status.ToString() == "Approved")
+                                    {<span class="badge text-bg-success">Approved</span> }
+                                    else if (Enrollment.Status.ToString() == "Declined")
+                                    { <span class="badge text-bg-danger">Declined</span> }
+                                    else
+                                    { <span class="badge text-bg-warning">Pending</span>}
+                                </td>
+                                <td class="py-3">
+                                    @if (Enrollment.Training.IsClosed)
+                                    {<span class="badge text-bg-secondary opacity-75">Closed</span>}
+                                    @Enrollment.Training.Title
+                                </td>
+                                <td class="text-nowrap py-3">@Enrollment.Training.Deadline.ToString("dd MMM yyyy")</td>
+                                <td class="py-3">
+                                    @if (Enrollment.Training.PriorityDepartment != null)
+                                    {@Enrollment.Training.PriorityDepartment.Title}
+                                else
+                                { <p class="opacity-25 m-0">None</p>}
+                                </td>
+                                <td class="py-3">@Enrollment.Training.Capacity</td>
+                                @if (Session["CurrentRole"] as string != "Employee")
+                                {
+                                    <td class="text-truncate py-3" style="max-width: 12rem">@Enrollment.Employee.FirstName @Enrollment.Employee.LastName</td>
+                                    <td class="text-truncate py-3" style="max-width: 12rem">@Enrollment.Employee.Email</td>
+                                    <td class="py-3">@Enrollment.Employee.PhoneNumber</td>
+                                }
+                                <td class="rounded-end text-center py-3">
+                                    <a href="@Url.Action("View", "Enrollment", new { id = Enrollment.EnrollmentId })" class="btn btn-sm btn-outline-primary w-100" data-bs-toggle="tooltip" data-bs-title="View Enrollment">
+                                        <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+
+</main>
