@@ -12,10 +12,10 @@
             <h1 id="enrollmentHeading">Open Enrollments</h1>
         </div>
         <div class="col-sm-6 text-center text-md-end">
-            <div class="d-flex justify-content-center justify-content-sm-between float-sm-end mt-3 mt-sm-0 align-items-center mb-2">
-                <div class="text-muted me-2">Department: </div>
+            <div class="d-inline-flex justify-content-center justify-content-sm-between float-sm-end mt-3 mt-sm-0 align-items-center mb-2">
                 @if (Session["CurrentRole"] as string == "Admin")
                 {
+                    <div class="text-muted me-2">Department: </div>
                     <div class="d-inline-block">
                         <select id="departments" class="form-select">
                             @foreach (var Department in ViewBag.Departments)
@@ -27,7 +27,9 @@
                 }
                 else
                 {
-                    <span class="badge text-bg-primary">@ViewBag.Employee.Department.Title</span>
+                    <div class="text-muted me-2">Department: </div>
+                    <input class="btn btn-outline-primary" value="@ViewBag.Employee.Department.Title"/>
+                    <input id="departments" type="hidden" value="@ViewBag.Employee.Department.DepartmentId" />
                 }
             </div>
             <div class="d-flex justify-content-center justify-content-sm-between float-sm-end mt-3 mt-sm-0 align-items-center mb-2 me-xl-4">
@@ -59,7 +61,7 @@
                 <tbody>
                     @foreach (var Enrollment in ViewBag.Enrollments)
                     {
-                        <tr data-departmentid="@Enrollment.Employee.Department.DepartmentId" data-trainingclosed="@Enrollment.Training.IsClosed">
+                        <tr data-departmentid="@Enrollment.Employee.Department.DepartmentId" data-trainingclosed="@(Enrollment.Training.IsClosed ? "closed" : "open")">
                             <td class="rounded-start py-3">
                                 @if (Enrollment.Status.ToString() == "Approved")
                                 {<span class="badge text-bg-success">Approved</span> }

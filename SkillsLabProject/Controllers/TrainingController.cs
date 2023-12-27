@@ -50,7 +50,6 @@ namespace SkillsLabProject.Controllers
             return View();
         }
 
-
         [HttpGet]
         [CustomAuthorization("Employee,Manager,Admin")]
         public ActionResult View(int? id)

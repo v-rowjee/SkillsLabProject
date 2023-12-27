@@ -1,44 +1,5 @@
 $(function () {
 
-    // DataTable
-    $('#enrollmentTable').DataTable({
-        order: [[1, 'desc']],
-        "columnDefs": [
-            { "orderable": false, "targets": [-1] }
-        ],
-        language: {
-            'paginate': {
-                'previous': '<span class="fa fa-chevron-left"></span>',
-                'next': '<span class="fa fa-chevron-right"></span>'
-            },
-            "lengthMenu": 'Number of Results: <select class="form-control input-sm mb-3">' +
-                '<option value="10">10</option>' +
-                '<option value="25">25</option>' +
-                '<option value="50">50</option>' +
-                '<option value="-1">All</option>' +
-                '</select>'
-        },
-    })
-
-    $('#confirmedEnrollmentTable').DataTable({
-        order: [[1, 'desc']],
-        "columnDefs": [
-            { "orderable": false, "targets": [-1] }
-        ],
-        language: {
-            'paginate': {
-                'previous': '<span class="fa fa-chevron-left"></span>',
-                'next': '<span class="fa fa-chevron-right"></span>'
-            },
-            "lengthMenu": 'Number of Results: <select class="form-control input-sm mb-3">' +
-                '<option value="10">10</option>' +
-                '<option value="25">25</option>' +
-                '<option value="50">50</option>' +
-                '<option value="-1">All</option>' +
-                '</select>'
-        },
-    })
-
     $('#enrollmentForm').submit((e) => {
         e.preventDefault()
         return false;

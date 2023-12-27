@@ -12,6 +12,5 @@ namespace SkillsLabProject.Common.Enums
         Approved = 2,
         Declined = 3,
         Warning = 4,
-        Confirmed = 5
     }
 }
