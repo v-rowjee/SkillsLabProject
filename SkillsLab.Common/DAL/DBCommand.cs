@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Data;
-using System.Linq;
-using System.Web;
+using System.Security.Cryptography;
 
 namespace SkillsLabProject.Common.DAL
 {
@@ -97,5 +96,34 @@ namespace SkillsLabProject.Common.DAL
                 throw;
             }
         }
+
+        public static bool ExecuteStoredProcedure(string storedProcedureName, List<SqlParameter> parameters)
+        {
+            try
+            {
+                DAL dal = new DAL();
+                int rowsAffected = 0;
+                using (SqlCommand command = new SqlCommand(storedProcedureName, dal.Connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    if (parameters != null)
+                    {
+                        parameters.ForEach(parameter =>
+                        {
+                            command.Parameters.AddWithValue(parameter.ParameterName, parameter.Value);
+                        });
+                    }
+                    rowsAffected = command.ExecuteNonQuery();
+                }
+                dal.CloseConnection();
+                return rowsAffected > 0;
+            }
+            catch
+            {
+                return false;
+                throw;
+            }
+        }
+
     }
 }

@@ -5,6 +5,7 @@ using System.Data.SqlClient;
 using SkillsLabProject.Common.Models.ViewModels;
 using SkillsLabProject.Common.DAL;
 using SkillsLabProject.Common.Models;
+using Newtonsoft.Json.Linq;
 
 namespace SkillsLabProject.DAL.DAL
 {
@@ -12,6 +13,7 @@ namespace SkillsLabProject.DAL.DAL
     {
         bool Add(TrainingViewModel training);
         bool Update(TrainingViewModel training);
+        bool Close(int trainingId);
     }
     public class TrainingDAL : ITrainingDAL
     {
@@ -243,6 +245,16 @@ namespace SkillsLabProject.DAL.DAL
             ";
             var parameter = new SqlParameter("@TrainingId", trainingId);
             return DBCommand.DeleteData(DeleteTrainingQuery, parameter);
+        }
+
+        public bool Close(int trainingId)
+        {
+            List<SqlParameter> parameters = new List<SqlParameter>
+            {
+                new SqlParameter("@TrainingId", trainingId),
+            };
+
+            return DBCommand.ExecuteStoredProcedure("dbo.ProcessEnrollments", parameters);
         }
     }
 }

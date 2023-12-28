@@ -223,7 +223,7 @@ function deleteEnrollment(deleteBtn) {
             });
         },
         complete: () => {
-            $(deleteBtn).html('Cancel')
+            $(deleteBtn).html('<i class="fa-solid fa-pen-to-square"></i>')
         }
     });
 

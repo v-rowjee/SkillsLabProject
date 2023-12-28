@@ -127,24 +127,56 @@
                             </div>
                         }
                     }
-                    else if (ViewBag.IsEmployee && ViewBag.IsEnrolled)
+                    else if (Session["CurrentRole"] as string == "Manager")
                     {
                         <div class="col-4">
                             @Html.ActionLink("Back", "Index", "Training", null, new { @class = "btn btn-secondary w-100" })
                         </div>
                         <div class="col-8">
-                            @Html.ActionLink("View Enrollment", "View", "Enrollment", new { @id = ViewBag.EnrollmentId }, new { @class = "btn btn-primary w-100" })
+                            @Html.ActionLink("View Enrollments", "View", "Enrollment", null, new { @class = "btn btn-primary w-100" })
                         </div>
+                    }
+                    else if (ViewBag.Training.IsClosed)
+                    {
+                        if (ViewBag.IsEnrolled)
+                        {
+                            <div class="col-4">
+                                @Html.ActionLink("Back", "Index", "Training", null, new { @class = "btn btn-secondary w-100" })
+                            </div>
+
+                            <div class="col-8">
+                                @Html.ActionLink("View Enrollment", "View", "Enrollment", new { @id = ViewBag.EnrollmentId }, new { @class = "btn btn-primary w-100" })
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="col-12">
+                                @Html.ActionLink("Back", "Index", "Training", null, new { @class = "btn btn-secondary w-100" })
+                            </div>
+                        }
                     }
                     else
                     {
-                        <div class="col-4">
-                            @Html.ActionLink("Back", "Index", "Training", null, new { @class = "btn btn-secondary w-100" })
-                        </div>
-                        <div class="col-8">
-                            <input type="hidden" id="trainingId" value="@ViewBag.Training.TrainingId" />
-                            <button id="enroll" class="btn btn-primary w-100 mb-5">Enroll</button>
-                        </div>
+                        if (ViewBag.IsEnrolled)
+                        {
+                            <div class="col-4">
+                                @Html.ActionLink("Back", "Index", "Training", null, new { @class = "btn btn-secondary w-100" })
+                            </div>
+
+                            <div class="col-8">
+                                @Html.ActionLink("View Enrollment", "View", "Enrollment", new { @id = ViewBag.EnrollmentId }, new { @class = "btn btn-primary w-100" })
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="col-4">
+                                @Html.ActionLink("Back", "Index", "Training", null, new { @class = "btn btn-secondary w-100" })
+                            </div>
+                            <div class="col-8">
+                                <input type="hidden" id="trainingId" value="@ViewBag.Training.TrainingId" />
+                                <button id="enroll" class="btn btn-primary w-100 mb-5">Enroll</button>
+                            </div>
+                        }
                     }
                 </div>
             </form>

@@ -103,6 +103,10 @@
                                         {
                                             @Html.ActionLink("View", "View", "Enrollment", new { @id = ViewBag.EnrollmentIds[Training.TrainingId] }, new { @class = "btn btn-sm btn-outline-success w-100" })
                                         }
+                                        else if (Training.IsClosed)
+                                        {
+                                           <button class="btn btn-sm btn-outline-danger w-100" disabled>Closed</button>
+                                        }
                                         else
                                         {
                                             @Html.ActionLink("Enroll", "View", "Training", new { @id = Training.TrainingId }, new { @class = "btn btn-sm btn-outline-primary w-100" })
