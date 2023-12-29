@@ -11,6 +11,7 @@ using System.IO;
 using SkillsLabProject.Common.Enums;
 using System.Web;
 using SkillsLabProject.BL.Services;
+using System.Reflection;
 
 namespace SkillsLabProject.BL.BL
 {
@@ -114,14 +115,17 @@ namespace SkillsLabProject.BL.BL
                 var employee = _employeeDAL.GetEmployeeById(enrollment.EmployeeId);
                 var training = _trainingDAL.GetById(enrollment.TrainingId);
 
-                var emailViewModel = new EmailViewModel()
-                {
-                    Employee = employee,
-                    Manager = manager,
-                    Training = training,
-                };
+                string subject = "Training Enrollment Approved";
+                string body = $@"<html><body>
+                              <p>Dear {employee.FirstName},</p>
+                              <p>Congratulations! Your {training.Title} training enrollment has been approved by your manager {manager.FirstName} {manager.LastName}, on {DateTime.Now.ToString("dddd, dd MMMM yyyy")} at {DateTime.Now.ToString("hh:mm tt")}.</p>
+                              <p>Please check the details and make necessary arrangements.</p>
+                              <p>Best regards,<br/>{employee.Department.Title}, SkillsLab</p>
+                              </body></html>";
+                string recipientEmail = employee.Email;
+                string ccEmail = manager.Email;
 
-                Task.Run(() => _emailService.SendEmail(emailViewModel));
+                Task.Run(() => _emailService.SendEmail(subject, body, recipientEmail, ccEmail));
             }
             return isApproved;
         }
@@ -133,6 +137,8 @@ namespace SkillsLabProject.BL.BL
 
         public async Task<string> Enroll(LoginViewModel loggeduser, int trainingId, List<HttpPostedFileBase> files)
         {
+            var employee = _employeeDAL.GetEmployee(loggeduser);
+
             var prerequisites = _preRequisiteDAL.GetAll().Where(p => p.TrainingId == trainingId).ToList();
 
             if (prerequisites.Count == 0)
@@ -143,16 +149,18 @@ namespace SkillsLabProject.BL.BL
                     TrainingId = trainingId,
                     Status = Status.Pending
                 };
-
-                return _enrollmentDAL.Add(enrollment) ? "Success" : "Error";
+                var resultEnrollemnt = _enrollmentDAL.Add(enrollment);
+                if (resultEnrollemnt)
+                {
+                    sendEmailToManager(employee, trainingId);
+                }
+                return resultEnrollemnt ? "Success" : "Error";
             }
 
             if (files == null || !files.Any() || files.Count < prerequisites.Count)
             {
                 return "FileMissing";
             }
-
-            var employee = _employeeDAL.GetEmployee(loggeduser);
 
             var enrollmentWithProofs = new EnrollmentViewModel
             {
@@ -182,7 +190,14 @@ namespace SkillsLabProject.BL.BL
                 }
             }
 
-            return _enrollmentDAL.Add(enrollmentWithProofs) ? "Success" : "Error";
+            var result = _enrollmentDAL.Add(enrollmentWithProofs);
+
+            if (result)
+            {
+                sendEmailToManager(employee,trainingId);
+            }
+
+            return result ? "Success" : "Error";
         }
 
         private List<string> ValidateFiles(List<HttpPostedFileBase> files)
@@ -205,7 +220,6 @@ namespace SkillsLabProject.BL.BL
                     incorrectFiles.Add(file.FileName);
                 }
             }
-
             return incorrectFiles;
         }
 
@@ -216,6 +230,33 @@ namespace SkillsLabProject.BL.BL
             string fileExtension = Path.GetExtension(file.FileName);
             var uniqueFileName = $@"{fileName}-{Guid.NewGuid()}{fileExtension}";
             return uniqueFileName;
+        }
+
+        private void sendEmailToManager(EmployeeModel employee, int trainingId)
+        {
+            var manager = _employeeDAL.GetAllEmployees().Where(e => e.Department.DepartmentId == employee.Department.DepartmentId).FirstOrDefault();
+            var training = _trainingDAL.GetById(trainingId);
+
+            string subject = "Waiting For Approval";
+            string body = $@"
+            <html>
+              <body>
+                <p>Dear {manager.FirstName},</p>
+                <p>This is to inform you that {employee.FirstName} {employee.LastName} has enrolled in the {training.Title} training program.</p>
+                <p>Enrollment Details:</p>
+                <ul>
+                  <li><strong>Employee:</strong> {employee.FirstName} {employee.LastName}</li>
+                  <li><strong>Training Program:</strong> {training.Title}</li>
+                  <li><strong>Enrollment Date:</strong> {DateTime.Now:dddd, dd MMMM yyyy} at {DateTime.Now.ToString("hh:mm tt")}</li>
+                </ul>
+                <p>Please review and provide any necessary approvals or feedback.</p>
+                <p>Best regards,<br/>Your System Administrator</p>
+              </body>
+            </html>";
+            string recipientEmail = manager.Email;
+            string ccEmail = employee.Email;
+
+            Task.Run(() => _emailService.SendEmail(subject, body, recipientEmail, ccEmail));
         }
     }
 }
