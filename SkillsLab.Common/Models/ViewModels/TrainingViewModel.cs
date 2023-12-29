@@ -13,7 +13,9 @@ namespace SkillsLabProject.Common.Models.ViewModels
         public string Description { get; set; }
         public DateTime Deadline { get; set; }
         public int Capacity { get; set; }
-        public int? DepartmentId { get; set; }
+        public DepartmentModel PriorityDepartment { get; set; }
         public List<string> PreRequisites { get; set;}
+        public bool IsClosed {  get; set; }
+        public int SeatsLeft {  get; set; }
     }
 }

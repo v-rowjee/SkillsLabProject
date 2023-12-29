@@ -12,7 +12,7 @@ namespace SkillsLabProject.BL.BL
 {
     public interface ITrainingBL
     {
-        IEnumerable<TrainingModel> GetAllTrainings();
+        IEnumerable<TrainingViewModel> GetAllTrainings();
         TrainingModel GetTrainingById(int trainingId);
         bool AddTraining(TrainingViewModel model);
         bool UpdateTraining(TrainingViewModel model);
@@ -25,13 +25,15 @@ namespace SkillsLabProject.BL.BL
         private readonly IDepartmentDAL _departmentDAL;
         private readonly IEnrollmentDAL _enrollmentDAL;
         private readonly IEmployeeDAL _employeeDAL;
+        private readonly IPreRequisiteDAL _preRequisiteDAL;
 
-        public TrainingBL(ITrainingDAL trainingDAL, IDepartmentDAL departmentDAL,IEnrollmentDAL enrollmentDAL, IEmployeeDAL employeeDAL)
+        public TrainingBL(ITrainingDAL trainingDAL, IDepartmentDAL departmentDAL,IEnrollmentDAL enrollmentDAL, IEmployeeDAL employeeDAL, IPreRequisiteDAL preRequisiteDAL)
         {
             _trainingDAL = trainingDAL;
             _departmentDAL = departmentDAL;
             _enrollmentDAL = enrollmentDAL;
             _employeeDAL = employeeDAL;
+            _preRequisiteDAL = preRequisiteDAL;
         }
 
         public bool AddTraining(TrainingViewModel training)
@@ -44,7 +46,7 @@ namespace SkillsLabProject.BL.BL
                     Description = training.Description,
                     Deadline = training.Deadline,
                     Capacity = training.Capacity,
-                    PriorityDepartment = _departmentDAL.GetById((int)training.DepartmentId)
+                    PriorityDepartment = _departmentDAL.GetById(training.PriorityDepartment.DepartmentId)
                 };
                 return _trainingDAL.Add(trainingModel);
             }
@@ -61,9 +63,29 @@ namespace SkillsLabProject.BL.BL
         {
             return _trainingDAL.GetById(trainingId);
         }
-        public IEnumerable<TrainingModel> GetAllTrainings()
+        public IEnumerable<TrainingViewModel> GetAllTrainings()
         {
-            return _trainingDAL.GetAll();
+            List<TrainingViewModel> trainingModels = new List<TrainingViewModel>();
+            var trainings = _trainingDAL.GetAll();
+            foreach (var training in trainings)
+            {
+                var employeeEnrolled = _enrollmentDAL.GetAll().Where(e => e.TrainingId == training.TrainingId).Count();
+                var prerequisitesString = _preRequisiteDAL.GetAll().Where(p => p.TrainingId == training.TrainingId).Select(p => p.Detail).ToList();
+                var trainingModel = new TrainingViewModel
+                {
+                    TrainingId = training.TrainingId,
+                    Title = training.Title,
+                    Description = training.Description,
+                    Deadline = training.Deadline,
+                    Capacity = training.Capacity,
+                    PreRequisites = prerequisitesString,
+                    IsClosed = training.IsClosed,
+                    PriorityDepartment = training.PriorityDepartment,
+                    SeatsLeft = training.Capacity - employeeEnrolled,
+                };
+                trainingModels.Add(trainingModel);
+            }
+            return trainingModels;
         }
         public bool UpdateTraining(TrainingViewModel training)
         {
@@ -75,7 +97,7 @@ namespace SkillsLabProject.BL.BL
                     Description = training.Description,
                     Deadline = training.Deadline,
                     Capacity = training.Capacity,
-                    PriorityDepartment = _departmentDAL.GetById((int)training.DepartmentId)
+                    PriorityDepartment = _departmentDAL.GetById(training.PriorityDepartment.DepartmentId)
                 };
                 return _trainingDAL.Update(trainingModel);
             }

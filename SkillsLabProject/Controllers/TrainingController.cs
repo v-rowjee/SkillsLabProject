@@ -29,7 +29,6 @@ namespace SkillsLabProject.Controllers
         [CustomAuthorization("Employee,Manager,Admin")]
         public ActionResult Index()
         {
-            ViewBag.CurrentRole = Session["CurrentRole"];
             var loggeduser = Session["CurrentUser"] as LoginViewModel;
 
             var employee = _employeeBL.GetEmployee(loggeduser);
@@ -41,7 +40,7 @@ namespace SkillsLabProject.Controllers
             Enum.TryParse(Session["CurrentRole"] as string, out Role role);
             employee.Role = role;
             var enrollmentOfEmployee = _enrollmentBL.GetAllEnrollments(employee).ToList();
-            ViewBag.EnrollmentIds = new Dictionary<int, int?>();  // Dictionary to store TrainingId and corresponding EnrollmentId
+            ViewBag.EnrollmentIds = new Dictionary<int, int?>();
             foreach (var training in trainings)
             {
                 var enrollment = enrollmentOfEmployee.FirstOrDefault(e => e.Training.TrainingId == training.TrainingId);

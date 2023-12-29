@@ -127,13 +127,13 @@ namespace SkillsLabProject.DAL.DAL
                 new SqlParameter("@Capacity", training.Capacity),
                 new SqlParameter("@Prerequisites",string.Join(",", training.PreRequisites))
             };
-            if(training.DepartmentId == null)
+            if(training.PriorityDepartment == null)
             {
                 parameters.Add(new SqlParameter("@PriorityDepartmentId", DBNull.Value));
             }
             else
             {
-                parameters.Add(new SqlParameter("@PriorityDepartmentId", training.DepartmentId));
+                parameters.Add(new SqlParameter("@PriorityDepartmentId", training.PriorityDepartment.DepartmentId));
             }
 
             return DBCommand.InsertUpdateData(AddTrainingQuery, parameters);
@@ -199,13 +199,13 @@ namespace SkillsLabProject.DAL.DAL
                 new SqlParameter("@Capacity", training.Capacity),
                 new SqlParameter("@Prerequisites",string.Join(",", training.PreRequisites))
             };
-            if (training.DepartmentId == null)
+            if (training.PriorityDepartment == null)
             {
                 parameters.Add(new SqlParameter("@PriorityDepartmentId", DBNull.Value));
             }
             else
             {
-                parameters.Add(new SqlParameter("@PriorityDepartmentId", training.DepartmentId));
+                parameters.Add(new SqlParameter("@PriorityDepartmentId", training.PriorityDepartment.DepartmentId));
             }
             return DBCommand.InsertUpdateData(UpdateTrainingQuery, parameters);
         }

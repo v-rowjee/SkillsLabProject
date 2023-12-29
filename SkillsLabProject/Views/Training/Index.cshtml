@@ -26,7 +26,8 @@
                         <th class="py-3 p-xl-3 border">Title</th>
                         <th class="py-3 p-xl-3 border">Deadline</th>
                         <th class="text-nowrap py-3 p-xl-3 border">Department Priority</th>
-                        <th class="py-3 p-xl-3 border">Capacity</th>
+                        <th class="py-3 p-xl-3 border">Seats Left</th>
+                        <th class="py-3 p-xl-3 border">Pre-Requisites</th>
                         <th class="rounded-end text-center py-3 p-xl-3 border">Actions</th>
                     </tr>
                 </thead>
@@ -37,11 +38,15 @@
                             <td class="rounded-start py-3 p-xl-3">
                                 @if (Training.IsClosed)
                                 {
-                                    <span class="badge text-bg-danger">Closed</span>
+                                    <span class="badge text-bg-danger w-100">Closed</span>
+                                }
+                                else if (Training.SeatsLeft <= 0)
+                                {
+                                    <span class="badge text-bg-danger w-100">Full</span>
                                 }
                                 else
                                 {
-                                    <span class="badge text-bg-success">Open</span>
+                                    <span class="badge text-bg-success w-100">Open</span>
                                 }
                             </td>
                             <td class="py-3 p-xl-3">@Training.Title</td>
@@ -56,7 +61,8 @@
                                     <p class="opacity-25 m-0">None</p>
                                 }
                             </td>
-                            <td class="py-3 p-xl-3">@Training.Capacity</td>
+                            <td class="py-3 p-xl-3">@Training.SeatsLeft left out of @Training.Capacity</td>
+                            <td class="py-3 p-xl-3">@Training.PreRequisites.Count</td>
                             <td class="rounded-end py-3 p-xl-3">
                                 <div class="d-flex justify-content-end">
                                     @if (ViewBag.CurrentRole == "Admin")
@@ -105,7 +111,11 @@
                                         }
                                         else if (Training.IsClosed)
                                         {
-                                           <button class="btn btn-sm btn-outline-danger w-100" disabled>Closed</button>
+                                            <button class="btn btn-sm btn-outline-danger w-100" disabled>Closed</button>
+                                        }
+                                        else if (Training.SeatsLeft <= 0)
+                                        {
+                                            <button class="btn btn-sm btn-outline-danger w-100" disabled>Full</button>
                                         }
                                         else
                                         {
