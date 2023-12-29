@@ -10,7 +10,7 @@
         <div class="col-6">
             <h1>Trainings</h1>
         </div>
-        @if (ViewBag.CurrentRole == "Admin")
+        @if (Session["CurrentRole"] as string == "Admin")
         {
             <div class="col-6 text-end">
                 @Html.ActionLink("Add Training", "Create", "Training", null, new { @class = "btn btn-primary" })
@@ -65,7 +65,7 @@
                             <td class="py-3 p-xl-3">@Training.PreRequisites.Count</td>
                             <td class="rounded-end py-3 p-xl-3">
                                 <div class="d-flex justify-content-end">
-                                    @if (ViewBag.CurrentRole == "Admin")
+                                    @if (Session["CurrentRole"] as string == "Admin")
                                     {
                                         if (Training.IsClosed)
                                         {
@@ -99,7 +99,7 @@
                                             <input type="hidden" value="@Training.TrainingId" />
                                         }
                                     }
-                                    else if (ViewBag.CurrentRole == "Manager")
+                                    else if (Session["CurrentRole"] as string == "Manager")
                                     {
                                         @Html.ActionLink("View", "View", "Training", new { @id = Training.TrainingId }, new { @class = "btn btn-sm btn-outline-primary w-100" })
                                     }

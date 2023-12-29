@@ -88,9 +88,11 @@
                                 <td class="py-3">@Enrollment.Employee.PhoneNumber</td>
                             }
                             <td class="rounded-end text-center py-3">
-                                <a href="@Url.Action("View", "Enrollment", new { id = Enrollment.EnrollmentId })" class="btn btn-sm btn-outline-primary w-100"  data-bs-toggle="tooltip" data-bs-title="View Enrollment">
-                                    <i class="fa-solid fa-arrow-up-right-from-square"></i>
-                                </a>
+                                <div data-bs-toggle="tooltip" data-bs-title="View Enrollment">
+                                    <a href="@Url.Action("View", "Enrollment", new { id = Enrollment.EnrollmentId })" class="btn btn-sm btn-outline-primary w-100">
+                                        <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                                    </a>
+                                </div>
                             </td>
                         </tr>
                     }
