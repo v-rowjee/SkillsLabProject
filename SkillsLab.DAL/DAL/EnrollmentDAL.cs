@@ -22,7 +22,7 @@ namespace SkillsLabProject.DAL.DAL
         public IEnumerable<EnrollmentModel> GetAll()
         {
             const string GetAllEnrollmentsQuery = @"
-                SELECT EnrollmentId, EmployeeId, TrainingId, StatusId, UpdatedOn
+                SELECT EnrollmentId, EmployeeId, TrainingId, StatusId, UpdatedOn, CreatedOn
                 FROM [dbo].[Enrollment]
             ";
             var dt = DBCommand.GetData(GetAllEnrollmentsQuery);
@@ -36,6 +36,7 @@ namespace SkillsLabProject.DAL.DAL
                 enrollment.TrainingId = int.Parse(row["TrainingId"].ToString());
                 enrollment.Status =  (Status) int.Parse(row["StatusId"].ToString());
                 enrollment.UpdatedOn = DateTime.Parse(row["UpdatedOn"].ToString());
+                enrollment.CreatedOn = DateTime.Parse(row["CreatedOn"].ToString());
                 enrollments.Add(enrollment);
             }
             return enrollments;
@@ -43,7 +44,7 @@ namespace SkillsLabProject.DAL.DAL
         public EnrollmentModel GetById(int EnrollmentId)
         {
             const string GetEnrollmentQuery = @"
-                SELECT EnrollmentId, EmployeeId, TrainingId, StatusId, UpdatedOn
+                SELECT EnrollmentId, EmployeeId, TrainingId, StatusId, UpdatedOn, CreatedOn
                 FROM [dbo].[Enrollment]
                 WHERE [EnrollmentId] = @EnrollmentId
             ";
@@ -60,6 +61,7 @@ namespace SkillsLabProject.DAL.DAL
                 enrollment.TrainingId = int.Parse(row["TrainingId"].ToString());
                 enrollment.Status = (Status) int.Parse(row["StatusId"].ToString());
                 enrollment.UpdatedOn = DateTime.Parse(row["UpdatedOn"].ToString());
+                enrollment.CreatedOn = DateTime.Parse(row["CreatedOn"].ToString());
             }
             return enrollment;
         }

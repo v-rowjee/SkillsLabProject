@@ -12159,7 +12159,6 @@
     <Content Include="Views\Enrollment\Index.cshtml" />
     <Content Include="Views\Training\Edit.cshtml" />
     <Content Include="Views\Training\Create.cshtml" />
-    <Content Include="Views\Enrollment\All.cshtml" />
     <Content Include="tsconfig.json" />
     <Content Include="Views\Dojo\Index.cshtml" />
     <Content Include="StaticViews\LoginWidget.html" />

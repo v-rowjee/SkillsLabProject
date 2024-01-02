@@ -51,13 +51,28 @@ namespace SkillsLabProject.Controllers
             var enrollments = _enrollmentBL.GetAllEnrollments(employee).ToList();
             ViewBag.Enrollments = enrollments;
 
+
+            var trainings = _trainingBL.GetAllTrainings();
+            var departments = new List<DepartmentModel>() { employee.Department };
+
             if (Session["CurrentRole"] as string == "Admin")
             {
                 var departmentsWithEnrollments = enrollments.Select(e => e.Employee.Department.DepartmentId).Distinct();
-                var departments = _departmentBL.GetAllDepartments().Where(d => departmentsWithEnrollments.Contains(d.DepartmentId)).ToList();
-
-                ViewBag.Departments = departments;
+                departments = _departmentBL.GetAllDepartments().Where(d => departmentsWithEnrollments.Contains(d.DepartmentId)).ToList();
             }
+            else
+            {
+                departments = new List<DepartmentModel>() { employee.Department };
+                var trainingEnrollment = (from enrollment in enrollments
+                                         join training in trainings
+                                         on enrollment.Training.TrainingId equals training.TrainingId
+                                         select training);
+                trainings = trainingEnrollment.Distinct().ToList();
+            }
+            ViewBag.Departments = departments;
+            ViewBag.Trainings = trainings;
+
+
             return View();
         }
         // GET: View

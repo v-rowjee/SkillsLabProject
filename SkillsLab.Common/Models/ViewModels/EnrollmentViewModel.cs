@@ -15,5 +15,6 @@ namespace SkillsLabProject.Common.Models.ViewModels
         public TrainingModel Training { get; set; }
         public List<ProofModel> Proofs { get; set; }
         public Status Status { get; set; }
+        public DateTime CreatedOn { get; set; }
     }
 }

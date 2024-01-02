@@ -58,6 +58,7 @@ namespace SkillsLabProject.BL.BL
                 Training = _trainingDAL.GetById(enrollmentModel.TrainingId),
                 Proofs = _proofDAL.GetAll().Where(x => x.EnrollmentId == enrollmentModel.EnrollmentId).ToList(),
                 Status = enrollmentModel.Status,
+                CreatedOn = enrollmentModel.CreatedOn,
             };
             return enrollmentViewModel;
         }
@@ -78,6 +79,7 @@ namespace SkillsLabProject.BL.BL
                     Training = training,
                     Status = enrollment.Status,
                     Proofs = proofs,
+                    CreatedOn= enrollment.CreatedOn,
                 };
                 if (currentEmployee.Role == Role.Employee)
                 {

@@ -1,53 +1,72 @@
 ﻿$(document).ready(function () {
-    // Store the original data
     var originalData = $('#enrollmentTable tbody tr').clone();
 
-    // DataTable initialization
     var enrollmentTable = $('#enrollmentTable').DataTable({
         order: [[1, 'desc']],
         columnDefs: [
-            { orderable: false, targets: [-1] }
+            { orderable: false, targets: [-1] },
         ],
+        pageLength: 7,
         language: {
             paginate: {
                 previous: '<span class="fa fa-chevron-left"></span>',
                 next: '<span class="fa fa-chevron-right"></span>'
             },
             lengthMenu: 'Number of Rows: <select class="form-control input-sm mb-3">' +
-                '<option value="10">10</option>' +
+                '<option value="7">7</option>' +
+                '<option value="15">15</option>' +
                 '<option value="25">25</option>' +
-                '<option value="50">50</option>' +
                 '<option value="-1">All</option>' +
-                '</select>'
+                '</select>',
         },
     });
 
     var currentDepartment = $('#departments');
-    var trainingStatus = $('#trainingStatus');
-    var enrollmentHeading = $('#enrollmentHeading');
-
-    showTableData(originalData, enrollmentTable, currentDepartment.val(), enrollmentHeading.text() === "Closed Enrollments");
+    var enrollmentStatus = $('input[name="enrollmentStatus"]');
+    var trainingStatus = $('input[name="trainingStatus"]');
+    var currentTraining = $('#trainings');
 
     currentDepartment.change(function () {
-        showTableData(originalData, enrollmentTable, $(this).val(), enrollmentHeading.text() === "Closed Enrollments");
+        showTableData();
     });
 
-    trainingStatus.click(function () {
-        enrollmentHeading.text(enrollmentHeading.text() === "Open Enrollments" ? "Closed Enrollments" : "Open Enrollments");
-        trainingStatus.text(trainingStatus.text() == "Open" ? "Closed" : "Open");
-        showTableData(originalData, enrollmentTable, currentDepartment.val(), enrollmentHeading.text() === "Closed Enrollments");
+    enrollmentStatus.change(function () {
+        enrollmentStatus = $('input[name="enrollmentStatus"]:checked');
+        showTableData();
     });
+
+    trainingStatus.change(function () {
+        trainingStatus = $('input[name="trainingStatus"]:checked');
+        showTableData();
+    });
+
+    currentTraining.change(function () {
+        showTableData();
+    });
+
+    currentDepartment.trigger('change');
+    trainingStatus.trigger('change');
+    enrollmentStatus.trigger('change');
+    currentTraining.trigger('change');
+
+    function showTableData() {
+        var selectedDepartmentId = currentDepartment.val();
+        var selectedTrainingStatus = trainingStatus.val();
+        var selectedEnrollmentStatus = enrollmentStatus.val();
+        var selectedTrainingId = currentTraining.val();
+
+        var filteredRows = _.filter(originalData, function (row) {
+            var rowTraining = $(row).data('trainingid');
+            var rowDepartmentId = $(row).data('departmentid');
+            var rowTrainingStatus = $(row).data('trainingstatus');
+            var rowEnrollmentStatus = $(row).data('enrollmentstatus');
+
+            return rowDepartmentId == selectedDepartmentId &&
+                rowTrainingStatus == selectedTrainingStatus &&
+                rowEnrollmentStatus == selectedEnrollmentStatus &&
+                rowTraining == selectedTrainingId;
+        });
+
+        enrollmentTable.clear().rows.add(filteredRows).draw();
+    }
 });
-
-function showTableData(originalData, enrollmentTable, selectedDepartmentId, isClosed) {
-    var filteredRows = _.cloneDeep(originalData);
-
-    filteredRows = _.filter(filteredRows, function (row) {
-        var rowDepartmentId = $(row).data('departmentid');
-        var trainingIsClosed = $(row).data('trainingclosed') === 'closed';
-
-        return rowDepartmentId == selectedDepartmentId && trainingIsClosed == isClosed;
-    });
-
-    enrollmentTable.clear().rows.add(filteredRows).draw();
-}
