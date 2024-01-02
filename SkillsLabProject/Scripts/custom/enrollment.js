@@ -186,6 +186,41 @@ $(function () {
 
     })
 
+
+    $("#export").click(function (e) {
+        e.preventDefault();
+
+        var trainingId = $('#trainings').val()
+
+        console.log(trainingId)
+
+        $.ajax({
+            type: "POST",
+            url: "/Enrollment/Export",
+            data: { trainingId: trainingId },
+            success: (response) => {
+                if (response.success) {
+                    downloadExcelFile(response.fileContent);
+                    Snackbar.show({
+                        text: "Excel file is being downloaded.",
+                        actionTextColor: "#CFE2FF"
+                    });
+                } else {
+                    Snackbar.show({
+                        text: "Unable to download the excel file.",
+                        actionTextColor: "#CFE2FF"
+                    });
+                }
+            },
+            error: () => {
+                Snackbar.show({
+                    text: "Unable to export enrollments to excel file.",
+                    actionTextColor: "#CFE2FF"
+                });
+            }
+        });
+    });
+
 })
 
 // DELETE ENROLLMENT
@@ -227,4 +262,18 @@ function deleteEnrollment(deleteBtn) {
         }
     });
 
+} 
+
+
+
+function downloadExcelFile(fileContent) {
+    var blob = new Blob([fileContent], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
+
+    var link = document.createElement("a");
+    link.href = window.URL.createObjectURL(blob);
+    link.download = "ExportedEnrollments.xlsx";
+
+    link.click();
+
+    window.URL.revokeObjectURL(link.href);
 }

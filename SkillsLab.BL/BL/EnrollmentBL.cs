@@ -1,17 +1,15 @@
-﻿using SkillsLabProject.Common.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using SkillsLabProject.Common.DAL;
+﻿using SkillsLabProject.BL.Services;
+using SkillsLabProject.Common.Enums;
+using SkillsLabProject.Common.Models;
 using SkillsLabProject.Common.Models.ViewModels;
 using SkillsLabProject.DAL.DAL;
+using System;
+using System.Collections.Generic;
 using System.IO;
-using SkillsLabProject.Common.Enums;
+using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
-using SkillsLabProject.BL.Services;
-using System.Reflection;
+using OfficeOpenXml;
 
 namespace SkillsLabProject.BL.BL
 {
@@ -19,10 +17,10 @@ namespace SkillsLabProject.BL.BL
     {
         IEnumerable<EnrollmentViewModel> GetAllEnrollments(EmployeeModel employee);
         EnrollmentViewModel GetEnrollmentById(int enrollmentId);
-        bool UpdateEnrollment(EnrollmentModel model);
         bool ApproveEnrollment(EnrollmentModel model, EmployeeModel manager);
-        bool DeclineEnrollment(EnrollmentModel model);
+        bool DeclineEnrollment(EnrollmentModel model, EmployeeModel manager);
         bool DeleteEnrollment(int enrollmentId);
+        byte[] Export(int trainingId);
         Task<string> Enroll(LoginViewModel loggeduser, int trainingId, List<HttpPostedFileBase> files);
 
     }
@@ -93,18 +91,6 @@ namespace SkillsLabProject.BL.BL
             }
             return enrollmentsViews;
         }
-        public bool UpdateEnrollment(EnrollmentModel model)
-        {
-            var enrollment = _enrollmentDAL.GetById(model.EnrollmentId);
-            enrollment.Status = model.Status;
-
-            if (model.DeclinedReason != null)
-            {
-                enrollment.DeclinedReason = model.DeclinedReason;
-            }
-
-            return _enrollmentDAL.Update(enrollment);
-        }
 
         public bool ApproveEnrollment(EnrollmentModel model, EmployeeModel manager)
         {
@@ -131,10 +117,65 @@ namespace SkillsLabProject.BL.BL
             }
             return isApproved;
         }
-        public bool DeclineEnrollment(EnrollmentModel model)
+        public bool DeclineEnrollment(EnrollmentModel model, EmployeeModel manager)
         {
             model.Status = Status.Declined;
-            return _enrollmentDAL.Update(model);
+            var isDeclined = _enrollmentDAL.Update(model);
+
+            if (isDeclined)
+            {
+                var enrollment = _enrollmentDAL.GetById(model.EnrollmentId);
+                var employee = _employeeDAL.GetEmployeeById(enrollment.EmployeeId);
+                var training = _trainingDAL.GetById(enrollment.TrainingId);
+
+                string subject = "Training Enrollment Declined";
+                string body = $@"<html><body>
+                              <p>Dear {employee.FirstName},</p>
+                              <p>We regret to inform you that your {training.Title} training enrollment has been declined by your manager {manager.FirstName} {manager.LastName}, on {DateTime.Now.ToString("dddd, dd MMMM yyyy")} at {DateTime.Now.ToString("hh:mm tt")}.</p>
+                              <p>Please check the details and make necessary arrangements.</p>
+                              <p>Regards,<br/>{employee.Department.Title}, SkillsLab</p>
+                              </body></html>";
+                string recipientEmail = employee.Email;
+                string ccEmail = manager.Email;
+
+                Task.Run(() => _emailService.SendEmail(subject, body, recipientEmail, ccEmail));
+            }
+            return isDeclined;
+        }
+
+        public byte[] Export(int trainingId)
+        {
+            var enrollments = _enrollmentDAL.GetAll().Where(e => e.TrainingId == trainingId).ToList();
+            var training = _trainingDAL.GetById(trainingId);
+
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+            using (var package = new ExcelPackage())
+            {
+                var worksheet = package.Workbook.Worksheets.Add("Enrollments");
+
+                worksheet.Cells["A1"].Value = "Training";
+                worksheet.Cells["B1"].Value = training.Title;
+
+                worksheet.Cells["A3"].Value = "Employee's Name";
+                worksheet.Cells["B3"].Value = "Phone Number";
+                worksheet.Cells["C3"].Value = "Email";
+                worksheet.Cells["D3"].Value = "Manager's Name";
+                worksheet.Cells["E3"].Value = "Enrollment Date";
+
+                for (int i = 0; i < enrollments.Count; i++)
+                {
+                    var employee = _employeeDAL.GetEmployeeById(enrollments[i].EmployeeId);
+                    var manager = _employeeDAL.GetAllEmployees().Where(e => e.Department.DepartmentId == employee.Department.DepartmentId).FirstOrDefault();
+
+                    worksheet.Cells[i + 4, 1].Value = employee.FirstName + " " + employee.LastName;
+                    worksheet.Cells[i + 4, 2].Value = employee.PhoneNumber;
+                    worksheet.Cells[i + 4, 3].Value = employee.Email;
+                    worksheet.Cells[i + 4, 4].Value = manager.FirstName + " " + manager.LastName;
+                    worksheet.Cells[i + 4, 5].Value = enrollments[i].CreatedOn;
+                }
+
+                return package.GetAsByteArray();
+            }
         }
 
         public async Task<string> Enroll(LoginViewModel loggeduser, int trainingId, List<HttpPostedFileBase> files)
@@ -154,7 +195,7 @@ namespace SkillsLabProject.BL.BL
                 var resultEnrollemnt = _enrollmentDAL.Add(enrollment);
                 if (resultEnrollemnt)
                 {
-                    sendEmailToManager(employee, trainingId);
+                    sendEmailAwaitingReviewToManager(employee, trainingId);
                 }
                 return resultEnrollemnt ? "Success" : "Error";
             }
@@ -196,7 +237,7 @@ namespace SkillsLabProject.BL.BL
 
             if (result)
             {
-                sendEmailToManager(employee,trainingId);
+                sendEmailAwaitingReviewToManager(employee,trainingId);
             }
 
             return result ? "Success" : "Error";
@@ -234,7 +275,7 @@ namespace SkillsLabProject.BL.BL
             return uniqueFileName;
         }
 
-        private void sendEmailToManager(EmployeeModel employee, int trainingId)
+        private void sendEmailAwaitingReviewToManager(EmployeeModel employee, int trainingId)
         {
             var manager = _employeeDAL.GetAllEmployees().Where(e => e.Department.DepartmentId == employee.Department.DepartmentId).FirstOrDefault();
             var training = _trainingDAL.GetById(trainingId);

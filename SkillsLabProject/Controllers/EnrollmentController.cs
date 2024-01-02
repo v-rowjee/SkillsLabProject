@@ -133,8 +133,10 @@ namespace SkillsLabProject.Controllers
         [CustomAuthorization("Manager")]
         public JsonResult Decline(EnrollmentModel model)
         {
-            model.Status = Status.Declined;
-            var result = _enrollmentBL.UpdateEnrollment(model);
+            var loggeduser = Session["CurrentUser"] as LoginViewModel;
+            var manager = _employeeBL.GetEmployee(loggeduser);
+
+            var result = _enrollmentBL.DeclineEnrollment(model, manager);
             if (result)
             {
                 return Json(new { result = "Success" });
@@ -172,5 +174,14 @@ namespace SkillsLabProject.Controllers
             return Json(new { result });
         }
 
+
+        [HttpPost]
+        [CustomAuthorization("Admin")]
+        public JsonResult Export(int trainingId)
+        {
+            var fileContent = _enrollmentBL.Export(trainingId);
+
+            return Json(new { success = true, message = "Export successful", fileContent });
+        }
     }
 }
