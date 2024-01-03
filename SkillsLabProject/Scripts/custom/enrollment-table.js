@@ -12,7 +12,7 @@
                 previous: '<span class="fa fa-chevron-left"></span>',
                 next: '<span class="fa fa-chevron-right"></span>'
             },
-            lengthMenu: 'Number of Rows: <select class="form-control input-sm mb-3">' +
+            lengthMenu: 'Max rows: <select class="form-control input-sm mb-3">' +
                 '<option value="7">7</option>' +
                 '<option value="15">15</option>' +
                 '<option value="25">25</option>' +
