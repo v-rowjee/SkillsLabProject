@@ -177,11 +177,11 @@ namespace SkillsLabProject.Controllers
 
         [HttpPost]
         [CustomAuthorization("Admin")]
-        public JsonResult Export(int trainingId)
+        public ActionResult Export(int trainingId)
         {
             var fileContent = _enrollmentBL.Export(trainingId);
 
-            return Json(new { success = true, message = "Export successful", fileContent });
+            return File(fileContent, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet","ExportedEnrollemnts.xlsx");
         }
     }
 }

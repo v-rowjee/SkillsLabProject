@@ -79,10 +79,14 @@
         <div class="col-md-9 ps-4">
             <div class="d-flex justify-content-between align-items-center">
                 <h3 class="mt-2 ps-1">Enrollments</h3>
-                <div>
+                <div class="d-inline-flex">
                     @if (Session["CurrentRole"] as string == "Admin")
                     {
-                        <a href="#" id="export" class="btn btn-sm btn-dark me-2 px-3">Export</a>
+                        using (Html.BeginForm("Export", "Enrollment", FormMethod.Post))
+                        {
+                            <input type="hidden" id="exportTrainingId" name="trainingId" value="" />
+                            <button id="export" class="btn btn-sm btn-dark me-2 px-3">Export</button>
+                        }
                     }
                     <a href="" class="btn btn-sm btn-dark me-2" data-bs-toggle="tooltip" data-bs-title="Refresh"><i class="fa-solid fa-refresh"></i></a>
                 </div>

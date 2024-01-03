@@ -41,6 +41,7 @@
     });
 
     currentTraining.change(function () {
+        $('#exportTrainingId').prop('value', currentTraining.val())
         showTableData();
     });
 

@@ -1,4 +1,5 @@
-﻿using SkillsLabProject.BL.Services;
+﻿using OfficeOpenXml;
+using SkillsLabProject.BL.Services;
 using SkillsLabProject.Common.Enums;
 using SkillsLabProject.Common.Models;
 using SkillsLabProject.Common.Models.ViewModels;
@@ -9,7 +10,6 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
-using OfficeOpenXml;
 
 namespace SkillsLabProject.BL.BL
 {
@@ -171,8 +171,18 @@ namespace SkillsLabProject.BL.BL
                     worksheet.Cells[i + 4, 2].Value = employee.PhoneNumber;
                     worksheet.Cells[i + 4, 3].Value = employee.Email;
                     worksheet.Cells[i + 4, 4].Value = manager.FirstName + " " + manager.LastName;
-                    worksheet.Cells[i + 4, 5].Value = enrollments[i].CreatedOn;
+                    worksheet.Cells[i + 4, 5].Value = enrollments[i].CreatedOn.ToString("f");
                 }
+
+                worksheet.Cells["A1"].Style.Font.Bold = true;
+                worksheet.Cells["A3:E3"].Style.Font.Bold = true;
+
+                worksheet.Cells["A1:B1"].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                worksheet.Cells["A1:E1"].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightGray);
+                worksheet.Cells["A3:E3"].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                worksheet.Cells["A3:E3"].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightGray);
+
+                worksheet.Cells.AutoFitColumns();
 
                 return package.GetAsByteArray();
             }
