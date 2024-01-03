@@ -1,4 +1,5 @@
-﻿using System.Web;
+﻿using SkillsLabProject.Common.Log;
+using System.Web;
 using System.Web.Mvc;
 
 namespace SkillsLabProject

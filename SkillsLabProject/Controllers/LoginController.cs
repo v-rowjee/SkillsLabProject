@@ -23,6 +23,8 @@ namespace SkillsLabProject.Controllers
             {
                 return RedirectToAction("Role", "Common");
             }
+            var x = 0;
+            x = 0 / x;
             return View();
         }
 
