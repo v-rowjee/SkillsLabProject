@@ -10,71 +10,79 @@
     <div class="row">
         <div class="col-md-3 pe-3">
             <h3 class="mb-4 mt-2">Filters</h3>
-            <div class="card mb-4">
-                <div class="card-header">
-                    Training Status
-                </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-lg-6 p-1">
-                            <input type="radio" class="btn-check" name="trainingStatus" id="trainingOpen" checked value="Open" autocomplete="off">
-                            <label class="btn btn-sm btn-outline-success w-100" for="trainingOpen">Open</label>
-                        </div>
-                        <div class="col-lg-6 p-1">
-                            <input type="radio" class="btn-check" name="trainingStatus" id="trainingClosed" value="Closed" autocomplete="off">
-                            <label class="btn btn-sm btn-outline-danger w-100" for="trainingClosed">Closed</label>
+            @if (Session["CurrentRole"] as string == "Employee")
+            {
+                <div class="card mb-4">
+                    <div class="card-header">
+                        Training Status
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-lg-6 p-1">
+                                <input type="radio" class="btn-check" name="trainingStatus" id="trainingOpen" checked value="Open" autocomplete="off">
+                                <label class="btn btn-sm btn-outline-success w-100" for="trainingOpen">Open</label>
+                            </div>
+                            <div class="col-lg-6 p-1">
+                                <input type="radio" class="btn-check" name="trainingStatus" id="trainingClosed" value="Closed" autocomplete="off">
+                                <label class="btn btn-sm btn-outline-danger w-100" for="trainingClosed">Closed</label>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            }
+            @if (Session["CurrentRole"] as string != "Employee")
+            {
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <div class="float-start">
+                            Training
+                        </div>
+                        <div class="float-end">
+                            <span id="trainingClosedBadge" class="badge text-bg-danger">Closed</span>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <select id="trainings" class="form-select">
+                            @foreach (var Training in ViewBag.Trainings)
+                            {
+                                <option value="@Training.TrainingId">@Training.Title @(Training.IsClosed ? "(Closed)" : "")</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <input type="hidden" id="trainings" value="" />
+            }
+
             <div class="card mb-4">
                 <div class="card-header">
                     Enrollment Status
                 </div>
                 <div class="card-body">
-                    <div class="row">
-                        <div class="col-xxl-4 p-1">
-                            <input type="radio" class="btn-check" name="enrollmentStatus" id="enrollmentPending" value="Pending" checked autocomplete="off">
-                            <label class="btn btn-sm btn-outline-warning w-100 text-warning-emphasis" for="enrollmentPending">Pending</label>
-                        </div>
-                        <div class="col-xxl-4 p-1">
-                            <input type="radio" class="btn-check" name="enrollmentStatus" id="enrollmentDeclined" value="Declined" autocomplete="off">
-                            <label class="btn btn-sm btn-outline-danger w-100" for="enrollmentDeclined">Declined</label>
-                        </div>
-                        <div class="col-xxl-4 p-1">
-                            <input type="radio" class="btn-check" name="enrollmentStatus" id="enrollmentApproved" value="Approved" autocomplete="off">
-                            <label class="btn btn-sm btn-outline-success w-100" for="enrollmentApproved">Approved</label>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="card mb-4">
-                <div class="card-header">
-                    Training
-                </div>
-                <div class="card-body">
-                    <select id="trainings" class="form-select">
-                        @foreach (var Training in ViewBag.Trainings)
-                        {
-                            <option value="@Training.TrainingId">@Training.Title</option>
-                        }
+                    <select id="enrollmentStatus" class="form-select">
+                        <option value="" selected>All</option>
+                        <option value="Pending">Pending</option>
+                        <option value="Approved">Approved</option>
+                        <option value="Denied">Denied</option>
                     </select>
                 </div>
             </div>
 
-                <div class="card mb-4">
-                    <div class="card-header">
-                        Employee Department
-                    </div>
-                    <div class="card-body">
-                        <select id="departments" class="form-select">
-                            @foreach (var Department in ViewBag.Departments)
-                            {
-                                <option value="@Department.DepartmentId">@Department.Title</option>
-                            }
-                        </select>
-                    </div>
+            <div class="card mb-4">
+                <div class="card-header">
+                    Employee Department
                 </div>
+                <div class="card-body">
+                    <select id="departments" class="form-select">
+                        @foreach (var Department in ViewBag.Departments)
+                        {
+                            <option value="@Department.DepartmentId">@Department.Title</option>
+                        }
+                    </select>
+                </div>
+            </div>
         </div>
         <div class="col-md-9 ps-4">
             <div class="d-flex justify-content-between align-items-center">
@@ -96,18 +104,19 @@
                     <table id="enrollmentTable" class="table table-borderless table-hover pb-4">
                         <thead class="bg-light">
                             <tr class="align-middle">
+                                <th class="rounded-start border p-3">Status</th>
                                 @if (Session["CurrentRole"] as string == "Employee")
                                 {
-                                    <th class="rounded-start border p-3">Training</th>
+                                    <th class="border py-3">Training</th>
                                     <th class="py-3 border">Deadline</th>
                                     <th class="text-nowrap py-3 border">Department Priority</th>
                                     <th class="border-end py-3 border">Capacity</th>
                                 }
                                 else
                                 {
-                                    <th class="rounded-start text-nowrap border p-3">Employee Name</th>
+                                    <th class="text-nowrap border py-3">Employee Name</th>
                                     <th class="py-3 border">Email</th>
-                                    <th class="border-end text-nowrap py-3 border">Phone Number</th>
+                                    <th class="text-nowrap py-3 border">Phone Number</th>
                                 }
                                 <th class="py-3 border text-nowrap">Enrolled On</th>
                                 <th class="rounded-end text-center py-3 border">Action</th>
@@ -116,13 +125,21 @@
                         <tbody>
                             @foreach (var Enrollment in ViewBag.Enrollments)
                             {
-                                <tr data-trainingid="@Enrollment.Training.TrainingId" 
-                                    data-departmentid="@Enrollment.Employee.Department.DepartmentId" 
-                                    data-trainingstatus="@(Enrollment.Training.IsClosed ? "Closed" : "Open")" 
+                                <tr data-trainingid="@Enrollment.Training.TrainingId"
+                                    data-departmentid="@Enrollment.Employee.Department.DepartmentId"
+                                    data-trainingstatus="@(Enrollment.Training.IsClosed ? "Closed" : "Open")"
                                     data-enrollmentstatus="@Enrollment.Status.ToString()">
+                                    <td class="rounded-start p-3">
+                                        @if (Enrollment.Status.ToString() == "Approved")
+                                        {<span class="badge text-bg-success w-100">Approved</span>}
+                                        else if (Enrollment.Status.ToString() == "Denied")
+                                        {<span class="badge text-bg-danger w-100">Denied</span>}
+                                        else
+                                        {<span class="badge text-bg-warning w-100">Pending</span>}
+                                    </td>
                                     @if (Session["CurrentRole"] as string == "Employee")
                                     {
-                                        <td class="rounded-start p-3">
+                                        <td class="rounded py-3">
                                             @Enrollment.Training.Title
                                         </td>
                                         <td class="text-nowrap py-3">@Enrollment.Training.Deadline.ToString("dd MMM yyyy")</td>
@@ -136,7 +153,7 @@
                                     }
                                     else
                                     {
-                                        <td class="rounded-start text-truncate p-3" style="max-width: 12rem">@Enrollment.Employee.FirstName @Enrollment.Employee.LastName</td>
+                                        <td class="text-truncate p-3" style="max-width: 12rem">@Enrollment.Employee.FirstName @Enrollment.Employee.LastName</td>
                                         <td class="text-truncate py-3" style="max-width: 12rem">@Enrollment.Employee.Email</td>
                                         <td class="py-3">@Enrollment.Employee.PhoneNumber</td>
                                     }

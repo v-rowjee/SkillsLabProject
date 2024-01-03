@@ -2,7 +2,7 @@
     var originalData = $('#enrollmentTable tbody tr').clone();
 
     var enrollmentTable = $('#enrollmentTable').DataTable({
-        order: [[1, 'desc']],
+        order: [[1, 'asc']],
         columnDefs: [
             { orderable: false, targets: [-1] },
         ],
@@ -22,7 +22,7 @@
     });
 
     var currentDepartment = $('#departments');
-    var enrollmentStatus = $('input[name="enrollmentStatus"]');
+    var enrollmentStatus = $('#enrollmentStatus');
     var trainingStatus = $('input[name="trainingStatus"]');
     var currentTraining = $('#trainings');
 
@@ -31,19 +31,38 @@
     });
 
     enrollmentStatus.change(function () {
-        enrollmentStatus = $('input[name="enrollmentStatus"]:checked');
         showTableData();
     });
 
     trainingStatus.change(function () {
         trainingStatus = $('input[name="trainingStatus"]:checked');
+        if (trainingStatus.val() == "Open") {
+            $('#export').hide()
+        }
+        else {
+            $('#export').show()
+        }
         showTableData();
     });
 
-    currentTraining.change(function () {
-        $('#exportTrainingId').prop('value', currentTraining.val())
-        showTableData();
-    });
+    if (currentTraining.val() !== "") {
+        currentTraining.change(function () {
+            $('#exportTrainingId').prop('value', currentTraining.val());
+
+            var selectedTrainingText = $('#trainings option:selected').text();
+
+            if (selectedTrainingText.indexOf("(Closed)") !== -1) {
+                $('#trainingClosedBadge').show();
+                $('#export').show();
+            } else {
+                $('#trainingClosedBadge').hide();
+                $('#export').hide();
+            }
+
+            showTableData();
+        });
+
+    }
 
     currentDepartment.trigger('change');
     trainingStatus.trigger('change');
@@ -63,9 +82,9 @@
             var rowEnrollmentStatus = $(row).data('enrollmentstatus');
 
             return rowDepartmentId == selectedDepartmentId &&
-                rowTrainingStatus == selectedTrainingStatus &&
-                rowEnrollmentStatus == selectedEnrollmentStatus &&
-                rowTraining == selectedTrainingId;
+                (selectedTrainingId !== "" || rowTrainingStatus == selectedTrainingStatus) &&
+                (selectedEnrollmentStatus === "" || rowEnrollmentStatus == selectedEnrollmentStatus) &&
+                (selectedTrainingId === "" || rowTraining == selectedTrainingId);
         });
 
         enrollmentTable.clear().rows.add(filteredRows).draw();

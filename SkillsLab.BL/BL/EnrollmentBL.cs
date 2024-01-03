@@ -145,8 +145,8 @@ namespace SkillsLabProject.BL.BL
 
         public byte[] Export(int trainingId)
         {
+            var trainingTitle = _trainingDAL.GetById(trainingId).Title;
             var enrollments = _enrollmentDAL.GetAll().Where(e => e.TrainingId == trainingId).ToList();
-            var training = _trainingDAL.GetById(trainingId);
 
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
             using (var package = new ExcelPackage())
@@ -154,7 +154,7 @@ namespace SkillsLabProject.BL.BL
                 var worksheet = package.Workbook.Worksheets.Add("Enrollments");
 
                 worksheet.Cells["A1"].Value = "Training";
-                worksheet.Cells["B1"].Value = training.Title;
+                worksheet.Cells["B1"].Value = trainingTitle;
 
                 worksheet.Cells["A3"].Value = "Employee's Name";
                 worksheet.Cells["B3"].Value = "Phone Number";
@@ -162,8 +162,14 @@ namespace SkillsLabProject.BL.BL
                 worksheet.Cells["D3"].Value = "Manager's Name";
                 worksheet.Cells["E3"].Value = "Enrollment Date";
 
+                int rowsInserted = 0;
                 for (int i = 0; i < enrollments.Count; i++)
                 {
+                    var training = _trainingDAL.GetById(enrollments[i].TrainingId);
+                    if (!training.IsClosed) continue;
+                    if (enrollments[i].Status != Status.Approved) continue;
+
+                    rowsInserted++;
                     var employee = _employeeDAL.GetEmployeeById(enrollments[i].EmployeeId);
                     var manager = _employeeDAL.GetAllEmployees().Where(e => e.Department.DepartmentId == employee.Department.DepartmentId).FirstOrDefault();
 
@@ -173,12 +179,13 @@ namespace SkillsLabProject.BL.BL
                     worksheet.Cells[i + 4, 4].Value = manager.FirstName + " " + manager.LastName;
                     worksheet.Cells[i + 4, 5].Value = enrollments[i].CreatedOn.ToString("f");
                 }
+                if (rowsInserted == 0) return null;
 
                 worksheet.Cells["A1"].Style.Font.Bold = true;
                 worksheet.Cells["A3:E3"].Style.Font.Bold = true;
 
                 worksheet.Cells["A1:B1"].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
-                worksheet.Cells["A1:E1"].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightGray);
+                worksheet.Cells["A1:B1"].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightGray);
                 worksheet.Cells["A3:E3"].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
                 worksheet.Cells["A3:E3"].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightGray);
 
