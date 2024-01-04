@@ -17,7 +17,7 @@
     <!-- Lodash-->
     <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js"></script>
 </head>
-<body>
+<body data-bs-theme="dark">
     <div id="overlay-spinner">
         <span class="spinner-border text-primary"></span>
     </div>
@@ -49,6 +49,9 @@
                             <li>
                                 @Html.ActionLink("Account", "Index", "Account", null, new { @class = "dropdown-item" })
                             </li>
+                            @*<li>
+                                <a href="" id="darkModeToggle" class="dropdown-item">Dark mode</a>
+                            </li>*@
                             <li><hr class="dropdown-divider"></li>
                             <li>
                                 @Html.ActionLink("Log Out", "Logout", "Common", null, new { @class = "dropdown-item" })
@@ -59,7 +62,7 @@
             </div>
         </div>
     </nav>
-    <div class="progress mb-4 bg-light" style="height: 1px;">
+    <div class="progress mb-4 bg-transparent" style="height: 1px;">
         <div class="progress-bar" id="loading" role="progressbar" style="width: 0%;"></div>
     </div>
 

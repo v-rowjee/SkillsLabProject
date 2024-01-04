@@ -8,7 +8,7 @@
 :root {
     --blue: #0099ff
 }
-body{
+body {
     height: 100vh;
 }
 body > main {

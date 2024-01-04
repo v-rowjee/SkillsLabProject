@@ -215,7 +215,7 @@ namespace SkillsLabProject.BL.BL
                 var resultEnrollemnt = await _enrollmentDAL.AddAsync(enrollment);
                 if (resultEnrollemnt)
                 {
-                    SendEmailAwaitingReviewToManager(employee, trainingId);
+                    await SendEmailAwaitingReviewToManager(employee, trainingId);
                 }
                 return resultEnrollemnt ? "Success" : "Error";
             }
@@ -257,7 +257,7 @@ namespace SkillsLabProject.BL.BL
 
             if (result)
             {
-                SendEmailAwaitingReviewToManager(employee, trainingId);
+                await SendEmailAwaitingReviewToManager(employee, trainingId);
             }
 
             return result ? "Success" : "Error";
@@ -295,38 +295,36 @@ namespace SkillsLabProject.BL.BL
             return uniqueFileName;
         }
 
-        private void SendEmailAwaitingReviewToManager(EmployeeModel employee, int trainingId)
+        private async Task SendEmailAwaitingReviewToManager(EmployeeModel employee, int trainingId)
         {
-            _ = Task.Run(async () => {
-                var managers = await _employeeDAL.GetAllEmployeesAsync();
-                var training = await _trainingDAL.GetByIdAsync(trainingId);
+            var managers = await _employeeDAL.GetAllEmployeesAsync();
+            var training = await _trainingDAL.GetByIdAsync(trainingId);
 
-                var manager = managers.FirstOrDefault(e => e.Department.DepartmentId == employee.Department.DepartmentId);
+            var manager = managers.FirstOrDefault(e => e.Department.DepartmentId == employee.Department.DepartmentId);
 
-                if (manager != null)
-                {
-                    string subject = "Waiting For Approval";
-                    string body = $@"
-                        <html>
-                            <body>
-                            <p>Dear {manager.FirstName},</p>
-                            <p>This is to inform you that {employee.FirstName} {employee.LastName} has enrolled in the {training.Title} training program.</p>
-                            <p>Enrollment Details:</p>
-                            <ul>
-                                <li><strong>Employee:</strong> {employee.FirstName} {employee.LastName}</li>
-                                <li><strong>Training Program:</strong> {training.Title}</li>
-                                <li><strong>Enrollment Date:</strong> {DateTime.Now:dddd, dd MMMM yyyy} at {DateTime.Now:hh:mm tt}</li>
-                            </ul>
-                            <p>Please review and provide any necessary approvals or feedback.</p>
-                            <p>Best regards,<br/>Your System Administrator</p>
-                            </body>
-                        </html>";
-                    string recipientEmail = manager.Email;
-                    string ccEmail = employee.Email;
+            if (manager != null)
+            {
+                string subject = "Waiting For Approval";
+                string body = $@"
+                    <html>
+                        <body>
+                        <p>Dear {manager.FirstName},</p>
+                        <p>This is to inform you that {employee.FirstName} {employee.LastName} has enrolled in the {training.Title} training program.</p>
+                        <p>Enrollment Details:</p>
+                        <ul>
+                            <li><strong>Employee:</strong> {employee.FirstName} {employee.LastName}</li>
+                            <li><strong>Training Program:</strong> {training.Title}</li>
+                            <li><strong>Enrollment Date:</strong> {DateTime.Now:dddd, dd MMMM yyyy} at {DateTime.Now:hh:mm tt}</li>
+                        </ul>
+                        <p>Please review and provide any necessary approvals or feedback.</p>
+                        <p>Best regards,<br/>Your System Administrator</p>
+                        </body>
+                    </html>";
+                string recipientEmail = manager.Email;
+                string ccEmail = employee.Email;
 
-                    _emailService.SendEmail(subject, body, recipientEmail, ccEmail);
-                }
-            });
+                _emailService.SendEmail(subject, body, recipientEmail, ccEmail);
+            }
         }
     }
 }

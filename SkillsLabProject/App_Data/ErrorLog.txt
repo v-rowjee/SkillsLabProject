@@ -222,3 +222,143 @@ Stack Trace:    at System.Net.Mail.SendMailAsyncResult.End(IAsyncResult result)
    at System.Runtime.CompilerServices.ConfiguredTaskAwaitable.ConfiguredTaskAwaiter.GetResult()
    at SkillsLabProject.Common.Email.SmtpEmailClient.<SendEmailAsync>d__5.MoveNext() in C:\Users\P12AC8C\source\repos\SkillsLabProject\SkillsLab.Common\Email\SmtpEmailClient.cs:line 44
 --------------------------------------------------------
+
+--------------------------------------------------------
+Timestamp: 1/4/2024 8:53:59 PM
+Exception Type: System.Net.Mail.SmtpException
+Message Type: The SMTP server requires a secure connection or the client was not authenticated. The server response was: 5.7.57 Client not authenticated to send mail. Error: 535 5.7.139 Authentication unsuccessful, account locked. Contact your administrator. [JNXP275CA0043.ZAFP275.PROD.OUTLOOK.COM 2024-01-04T16:54:00.666Z 08DC0CA66C7B94C0]
+Inner Exception: The SMTP server requires a secure connection or the client was not authenticated. The server response was: 5.7.57 Client not authenticated to send mail. Error: 535 5.7.139 Authentication unsuccessful, account locked. Contact your administrator. [JNXP275CA0043.ZAFP275.PROD.OUTLOOK.COM 2024-01-04T16:54:00.666Z 08DC0CA66C7B94C0]
+Stack Trace:    at System.Net.Mail.SendMailAsyncResult.End(IAsyncResult result)
+   at System.Net.Mail.SmtpClient.SendMailCallback(IAsyncResult result)
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.ConfiguredTaskAwaitable.ConfiguredTaskAwaiter.GetResult()
+   at SkillsLabProject.Common.Email.SmtpEmailClient.<SendEmailAsync>d__5.MoveNext() in C:\Users\P12AC8C\source\repos\SkillsLabProject\SkillsLab.Common\Email\SmtpEmailClient.cs:line 44
+--------------------------------------------------------
+
+--------------------------------------------------------
+Timestamp: 1/4/2024 8:54:28 PM
+Exception Type: System.Net.Mail.SmtpException
+Message Type: The SMTP server requires a secure connection or the client was not authenticated. The server response was: 5.7.57 Client not authenticated to send mail. Error: 535 5.7.139 Authentication unsuccessful, account locked. Contact your administrator. [JNXP275CA0027.ZAFP275.PROD.OUTLOOK.COM 2024-01-04T16:54:28.922Z 08DC0CECF79DE698]
+Inner Exception: The SMTP server requires a secure connection or the client was not authenticated. The server response was: 5.7.57 Client not authenticated to send mail. Error: 535 5.7.139 Authentication unsuccessful, account locked. Contact your administrator. [JNXP275CA0027.ZAFP275.PROD.OUTLOOK.COM 2024-01-04T16:54:28.922Z 08DC0CECF79DE698]
+Stack Trace:    at System.Net.Mail.SendMailAsyncResult.End(IAsyncResult result)
+   at System.Net.Mail.SmtpClient.SendMailCallback(IAsyncResult result)
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.ConfiguredTaskAwaitable.ConfiguredTaskAwaiter.GetResult()
+   at SkillsLabProject.Common.Email.SmtpEmailClient.<SendEmailAsync>d__5.MoveNext() in C:\Users\P12AC8C\source\repos\SkillsLabProject\SkillsLab.Common\Email\SmtpEmailClient.cs:line 44
+--------------------------------------------------------
+
+--------------------------------------------------------
+Timestamp: 1/4/2024 8:54:55 PM
+Exception Type: System.Net.Mail.SmtpException
+Message Type: The SMTP server requires a secure connection or the client was not authenticated. The server response was: 5.7.57 Client not authenticated to send mail. Error: 535 5.7.139 Authentication unsuccessful, account locked. Contact your administrator. [JNXP275CA0037.ZAFP275.PROD.OUTLOOK.COM 2024-01-04T16:54:55.922Z 08DC0CB91A13A27D]
+Inner Exception: The SMTP server requires a secure connection or the client was not authenticated. The server response was: 5.7.57 Client not authenticated to send mail. Error: 535 5.7.139 Authentication unsuccessful, account locked. Contact your administrator. [JNXP275CA0037.ZAFP275.PROD.OUTLOOK.COM 2024-01-04T16:54:55.922Z 08DC0CB91A13A27D]
+Stack Trace:    at System.Net.Mail.SendMailAsyncResult.End(IAsyncResult result)
+   at System.Net.Mail.SmtpClient.SendMailCallback(IAsyncResult result)
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.ConfiguredTaskAwaitable.ConfiguredTaskAwaiter.GetResult()
+   at SkillsLabProject.Common.Email.SmtpEmailClient.<SendEmailAsync>d__5.MoveNext() in C:\Users\P12AC8C\source\repos\SkillsLabProject\SkillsLab.Common\Email\SmtpEmailClient.cs:line 44
+--------------------------------------------------------
+
+--------------------------------------------------------
+Timestamp: 1/4/2024 8:55:06 PM
+Exception Type: System.Net.Mail.SmtpException
+Message Type: The SMTP server requires a secure connection or the client was not authenticated. The server response was: 5.7.57 Client not authenticated to send mail. Error: 535 5.7.139 Authentication unsuccessful, account locked. Contact your administrator. [JNXP275CA0034.ZAFP275.PROD.OUTLOOK.COM 2024-01-04T16:55:07.177Z 08DC0C94F3E0C848]
+Inner Exception: The SMTP server requires a secure connection or the client was not authenticated. The server response was: 5.7.57 Client not authenticated to send mail. Error: 535 5.7.139 Authentication unsuccessful, account locked. Contact your administrator. [JNXP275CA0034.ZAFP275.PROD.OUTLOOK.COM 2024-01-04T16:55:07.177Z 08DC0C94F3E0C848]
+Stack Trace:    at System.Net.Mail.SendMailAsyncResult.End(IAsyncResult result)
+   at System.Net.Mail.SmtpClient.SendMailCallback(IAsyncResult result)
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.ConfiguredTaskAwaitable.ConfiguredTaskAwaiter.GetResult()
+   at SkillsLabProject.Common.Email.SmtpEmailClient.<SendEmailAsync>d__5.MoveNext() in C:\Users\P12AC8C\source\repos\SkillsLabProject\SkillsLab.Common\Email\SmtpEmailClient.cs:line 44
+--------------------------------------------------------
+
+--------------------------------------------------------
+Timestamp: 1/4/2024 8:55:12 PM
+Exception Type: System.Net.Mail.SmtpException
+Message Type: The SMTP server requires a secure connection or the client was not authenticated. The server response was: 5.7.57 Client not authenticated to send mail. Error: 535 5.7.139 Authentication unsuccessful, account locked. Contact your administrator. [JNXP275CA0028.ZAFP275.PROD.OUTLOOK.COM 2024-01-04T16:55:12.683Z 08DC0CCDC491B442]
+Inner Exception: The SMTP server requires a secure connection or the client was not authenticated. The server response was: 5.7.57 Client not authenticated to send mail. Error: 535 5.7.139 Authentication unsuccessful, account locked. Contact your administrator. [JNXP275CA0028.ZAFP275.PROD.OUTLOOK.COM 2024-01-04T16:55:12.683Z 08DC0CCDC491B442]
+Stack Trace:    at System.Net.Mail.SendMailAsyncResult.End(IAsyncResult result)
+   at System.Net.Mail.SmtpClient.SendMailCallback(IAsyncResult result)
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.ConfiguredTaskAwaitable.ConfiguredTaskAwaiter.GetResult()
+   at SkillsLabProject.Common.Email.SmtpEmailClient.<SendEmailAsync>d__5.MoveNext() in C:\Users\P12AC8C\source\repos\SkillsLabProject\SkillsLab.Common\Email\SmtpEmailClient.cs:line 44
+--------------------------------------------------------
+
+--------------------------------------------------------
+Timestamp: 1/4/2024 8:55:36 PM
+Exception Type: System.Net.Mail.SmtpException
+Message Type: The SMTP server requires a secure connection or the client was not authenticated. The server response was: 5.7.57 Client not authenticated to send mail. Error: 535 5.7.139 Authentication unsuccessful, account locked. Contact your administrator. [JNXP275CA0038.ZAFP275.PROD.OUTLOOK.COM 2024-01-04T16:55:37.098Z 08DC0CE8DB38D40A]
+Inner Exception: The SMTP server requires a secure connection or the client was not authenticated. The server response was: 5.7.57 Client not authenticated to send mail. Error: 535 5.7.139 Authentication unsuccessful, account locked. Contact your administrator. [JNXP275CA0038.ZAFP275.PROD.OUTLOOK.COM 2024-01-04T16:55:37.098Z 08DC0CE8DB38D40A]
+Stack Trace:    at System.Net.Mail.SendMailAsyncResult.End(IAsyncResult result)
+   at System.Net.Mail.SmtpClient.SendMailCallback(IAsyncResult result)
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.ConfiguredTaskAwaitable.ConfiguredTaskAwaiter.GetResult()
+   at SkillsLabProject.Common.Email.SmtpEmailClient.<SendEmailAsync>d__5.MoveNext() in C:\Users\P12AC8C\source\repos\SkillsLabProject\SkillsLab.Common\Email\SmtpEmailClient.cs:line 44
+--------------------------------------------------------
+
+--------------------------------------------------------
+Timestamp: 1/4/2024 9:00:05 PM
+Exception Type: System.Net.Mail.SmtpException
+Message Type: The SMTP server requires a secure connection or the client was not authenticated. The server response was: 5.7.57 Client not authenticated to send mail. Error: 535 5.7.139 Authentication unsuccessful, account locked. Contact your administrator. [JNAP275CA0045.ZAFP275.PROD.OUTLOOK.COM 2024-01-04T17:00:06.239Z 08DC0CD2E60A080F]
+Inner Exception: The SMTP server requires a secure connection or the client was not authenticated. The server response was: 5.7.57 Client not authenticated to send mail. Error: 535 5.7.139 Authentication unsuccessful, account locked. Contact your administrator. [JNAP275CA0045.ZAFP275.PROD.OUTLOOK.COM 2024-01-04T17:00:06.239Z 08DC0CD2E60A080F]
+Stack Trace:    at System.Net.Mail.SendMailAsyncResult.End(IAsyncResult result)
+   at System.Net.Mail.SmtpClient.SendMailCallback(IAsyncResult result)
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.ConfiguredTaskAwaitable.ConfiguredTaskAwaiter.GetResult()
+   at SkillsLabProject.Common.Email.SmtpEmailClient.<SendEmailAsync>d__5.MoveNext() in C:\Users\P12AC8C\source\repos\SkillsLabProject\SkillsLab.Common\Email\SmtpEmailClient.cs:line 44
+--------------------------------------------------------
+
+--------------------------------------------------------
+Timestamp: 1/4/2024 9:00:28 PM
+Exception Type: System.Net.Mail.SmtpException
+Message Type: The SMTP server requires a secure connection or the client was not authenticated. The server response was: 5.7.57 Client not authenticated to send mail. Error: 535 5.7.139 Authentication unsuccessful, account locked. Contact your administrator. [JNAP275CA0038.ZAFP275.PROD.OUTLOOK.COM 2024-01-04T17:00:29.657Z 08DC0C8BF694F8C9]
+Inner Exception: The SMTP server requires a secure connection or the client was not authenticated. The server response was: 5.7.57 Client not authenticated to send mail. Error: 535 5.7.139 Authentication unsuccessful, account locked. Contact your administrator. [JNAP275CA0038.ZAFP275.PROD.OUTLOOK.COM 2024-01-04T17:00:29.657Z 08DC0C8BF694F8C9]
+Stack Trace:    at System.Net.Mail.SendMailAsyncResult.End(IAsyncResult result)
+   at System.Net.Mail.SmtpClient.SendMailCallback(IAsyncResult result)
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.ConfiguredTaskAwaitable.ConfiguredTaskAwaiter.GetResult()
+   at SkillsLabProject.Common.Email.SmtpEmailClient.<SendEmailAsync>d__5.MoveNext() in C:\Users\P12AC8C\source\repos\SkillsLabProject\SkillsLab.Common\Email\SmtpEmailClient.cs:line 44
+--------------------------------------------------------
+
+--------------------------------------------------------
+Timestamp: 1/4/2024 9:00:49 PM
+Exception Type: System.Net.Mail.SmtpException
+Message Type: The SMTP server requires a secure connection or the client was not authenticated. The server response was: 5.7.57 Client not authenticated to send mail. Error: 535 5.7.139 Authentication unsuccessful, account locked. Contact your administrator. [JNAP275CA0049.ZAFP275.PROD.OUTLOOK.COM 2024-01-04T17:00:35.604Z 08DC0CE6C735727A]
+Inner Exception: The SMTP server requires a secure connection or the client was not authenticated. The server response was: 5.7.57 Client not authenticated to send mail. Error: 535 5.7.139 Authentication unsuccessful, account locked. Contact your administrator. [JNAP275CA0049.ZAFP275.PROD.OUTLOOK.COM 2024-01-04T17:00:35.604Z 08DC0CE6C735727A]
+Stack Trace:    at System.Net.Mail.SendMailAsyncResult.End(IAsyncResult result)
+   at System.Net.Mail.SmtpClient.SendMailCallback(IAsyncResult result)
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.ConfiguredTaskAwaitable.ConfiguredTaskAwaiter.GetResult()
+   at SkillsLabProject.Common.Email.SmtpEmailClient.<SendEmailAsync>d__5.MoveNext() in C:\Users\P12AC8C\source\repos\SkillsLabProject\SkillsLab.Common\Email\SmtpEmailClient.cs:line 44
+--------------------------------------------------------
+
+--------------------------------------------------------
+Timestamp: 1/4/2024 9:02:11 PM
+Exception Type: System.Net.Mail.SmtpException
+Message Type: The SMTP server requires a secure connection or the client was not authenticated. The server response was: 5.7.57 Client not authenticated to send mail. Error: 535 5.7.139 Authentication unsuccessful, account locked. Contact your administrator. [JNAP275CA0030.ZAFP275.PROD.OUTLOOK.COM 2024-01-04T17:02:12.667Z 08DC0CB0E01FAA51]
+Inner Exception: The SMTP server requires a secure connection or the client was not authenticated. The server response was: 5.7.57 Client not authenticated to send mail. Error: 535 5.7.139 Authentication unsuccessful, account locked. Contact your administrator. [JNAP275CA0030.ZAFP275.PROD.OUTLOOK.COM 2024-01-04T17:02:12.667Z 08DC0CB0E01FAA51]
+Stack Trace:    at System.Net.Mail.SendMailAsyncResult.End(IAsyncResult result)
+   at System.Net.Mail.SmtpClient.SendMailCallback(IAsyncResult result)
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.ConfiguredTaskAwaitable.ConfiguredTaskAwaiter.GetResult()
+   at SkillsLabProject.Common.Email.SmtpEmailClient.<SendEmailAsync>d__5.MoveNext() in C:\Users\P12AC8C\source\repos\SkillsLabProject\SkillsLab.Common\Email\SmtpEmailClient.cs:line 44
+--------------------------------------------------------

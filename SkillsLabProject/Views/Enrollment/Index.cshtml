@@ -99,78 +99,74 @@
                     <a href="" class="btn btn-sm btn-dark me-2" data-bs-toggle="tooltip" data-bs-title="Refresh"><i class="fa-solid fa-refresh"></i></a>
                 </div>
             </div>
-            <form id="enrollmentForm">
-                <div class="table-responsive p-2">
-                    <table id="enrollmentTable" class="table table-borderless table-hover pb-4">
-                        <thead class="bg-light">
-                            <tr class="align-middle">
-                                <th class="rounded-start border p-3">Status</th>
+            <div class="table-responsive p-2">
+                <table id="enrollmentTable" class="table table-borderless table-hover pb-4">
+                    <thead class="bg-light">
+                        <tr class="align-middle">
+                            <th class="rounded-start border p-3">Status</th>
+                            @if (Session["CurrentRole"] as string == "Employee")
+                            {
+                                <th class="border py-3">Training</th>
+                                <th class="py-3 border">Deadline</th>
+                                <th class="text-nowrap py-3 border">Department Priority</th>
+                                <th class="border-end py-3 border">Capacity</th>
+                            }
+                            else
+                            {
+                                <th class="text-nowrap border py-3">Employee Name</th>
+                                <th class="py-3 border">Email</th>
+                                <th class="text-nowrap py-3 border">Phone Number</th>
+                            }
+                            <th class="py-3 border text-nowrap">Enrolled On</th>
+                            <th class="rounded-end text-center py-3 border">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var Enrollment in ViewBag.Enrollments)
+                        {
+                            <tr data-trainingid="@Enrollment.Training.TrainingId"
+                                data-departmentid="@Enrollment.Employee.Department.DepartmentId"
+                                data-trainingstatus="@(Enrollment.Training.IsClosed ? "Closed" : "Open")"
+                                data-enrollmentstatus="@Enrollment.Status.ToString()">
+                                <td class="rounded-start p-3">
+                                    @if (Enrollment.Status.ToString() == "Approved")
+                                    {<span class="badge text-bg-success w-100">Approved</span>}
+                                    else if (Enrollment.Status.ToString() == "Declined")
+                                    {<span class="badge text-bg-danger w-100">Declined</span>}
+                                    else
+                                    {<span class="badge text-bg-warning w-100">Pending</span>}
+                                </td>
                                 @if (Session["CurrentRole"] as string == "Employee")
                                 {
-                                    <th class="border py-3">Training</th>
-                                    <th class="py-3 border">Deadline</th>
-                                    <th class="text-nowrap py-3 border">Department Priority</th>
-                                    <th class="border-end py-3 border">Capacity</th>
+                                    <td class="rounded py-3">
+                                        @Enrollment.Training.Title
+                                    </td>
+                                    <td class="text-nowrap py-3">@Enrollment.Training.Deadline.ToString("dd MMM yyyy")</td>
+                                    <td class="py-3">
+                                        @if (Enrollment.Training.PriorityDepartment != null)
+                                        {@Enrollment.Training.PriorityDepartment.Title}
+                                    else
+                                    { <p class="opacity-25 m-0">None</p>}
+                                    </td>
+                                    <td class="py-3">@Enrollment.Training.Capacity</td>
                                 }
                                 else
                                 {
-                                    <th class="text-nowrap border py-3">Employee Name</th>
-                                    <th class="py-3 border">Email</th>
-                                    <th class="text-nowrap py-3 border">Phone Number</th>
+                                    <td class="text-truncate p-3" style="max-width: 12rem">@Enrollment.Employee.FirstName @Enrollment.Employee.LastName</td>
+                                    <td class="text-truncate py-3" style="max-width: 12rem">@Enrollment.Employee.Email</td>
+                                    <td class="py-3">@Enrollment.Employee.PhoneNumber</td>
                                 }
-                                <th class="py-3 border text-nowrap">Enrolled On</th>
-                                <th class="rounded-end text-center py-3 border">Action</th>
+                                <td class="py-3 text-nowrap">@Enrollment.CreatedOn.ToString("dd MMM yyyy hh:mm tt")</td>
+                                <td class="rounded-end text-center py-3">
+                                    <a href="@Url.Action("View", "Enrollment", new { id = Enrollment.EnrollmentId })" class="btn btn-sm btn-outline-primary w-100"  data-bs-toggle="tooltip" data-bs-title="View Enrollment">
+                                        <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                                    </a>
+                                </td>
                             </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var Enrollment in ViewBag.Enrollments)
-                            {
-                                <tr data-trainingid="@Enrollment.Training.TrainingId"
-                                    data-departmentid="@Enrollment.Employee.Department.DepartmentId"
-                                    data-trainingstatus="@(Enrollment.Training.IsClosed ? "Closed" : "Open")"
-                                    data-enrollmentstatus="@Enrollment.Status.ToString()">
-                                    <td class="rounded-start p-3">
-                                        @if (Enrollment.Status.ToString() == "Approved")
-                                        {<span class="badge text-bg-success w-100">Approved</span>}
-                                        else if (Enrollment.Status.ToString() == "Denied")
-                                        {<span class="badge text-bg-danger w-100">Denied</span>}
-                                        else
-                                        {<span class="badge text-bg-warning w-100">Pending</span>}
-                                    </td>
-                                    @if (Session["CurrentRole"] as string == "Employee")
-                                    {
-                                        <td class="rounded py-3">
-                                            @Enrollment.Training.Title
-                                        </td>
-                                        <td class="text-nowrap py-3">@Enrollment.Training.Deadline.ToString("dd MMM yyyy")</td>
-                                        <td class="py-3">
-                                            @if (Enrollment.Training.PriorityDepartment != null)
-                                            {@Enrollment.Training.PriorityDepartment.Title}
-                                        else
-                                        { <p class="opacity-25 m-0">None</p>}
-                                        </td>
-                                        <td class="py-3">@Enrollment.Training.Capacity</td>
-                                    }
-                                    else
-                                    {
-                                        <td class="text-truncate p-3" style="max-width: 12rem">@Enrollment.Employee.FirstName @Enrollment.Employee.LastName</td>
-                                        <td class="text-truncate py-3" style="max-width: 12rem">@Enrollment.Employee.Email</td>
-                                        <td class="py-3">@Enrollment.Employee.PhoneNumber</td>
-                                    }
-                                    <td class="py-3 text-nowrap">@Enrollment.CreatedOn.ToString("dd MMM yyyy hh:mm tt")</td>
-                                    <td class="rounded-end text-center py-3">
-                                        <div data-bs-toggle="tooltip" data-bs-title="View Enrollment">
-                                            <a href="@Url.Action("View", "Enrollment", new { id = Enrollment.EnrollmentId })" class="btn btn-sm btn-outline-primary w-100">
-                                                <i class="fa-solid fa-arrow-up-right-from-square"></i>
-                                            </a>
-                                        </div>
-                                    </td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-                </div>
-            </form>
+                        }
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </main>

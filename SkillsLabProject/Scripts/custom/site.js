@@ -45,3 +45,31 @@ function setLoading(flag) {
         $('#overlay-spinner').hide()
     }
 }
+
+// Dark Mode
+var currentTheme = localStorage.getItem("theme") || getDefaultTheme();
+updateTheme(currentTheme);
+
+$(document).ready(function () {
+    $("#darkModeToggle").click(function () {
+        currentTheme = toggleTheme(currentTheme);
+        localStorage.setItem("theme", currentTheme);
+        updateTheme(currentTheme);
+    });
+});
+
+function getDefaultTheme() {
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+}
+
+function toggleTheme(theme) {
+    return theme === "dark" ? "light" : "dark";
+}
+
+function updateTheme(theme) {
+    $("body").attr("data-bs-theme", theme)
+    var classBefore = theme === "dark" ? "bg-light btn-light" : "bg-dark-subtle btn-dark";
+    var classAfter = theme === "dark" ? "bg-dark-subtle btn-dark" : "bg-light btn-light";
+
+    $(".bg-light, .btn-light").removeClass(classBefore).addClass(classAfter);
+}
