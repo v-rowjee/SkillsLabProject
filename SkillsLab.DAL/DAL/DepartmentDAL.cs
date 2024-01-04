@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Data;
 using SkillsLabProject.Common.Models;
+using System.Threading.Tasks;
 
 namespace SkillsLabProject.DAL.DAL
 {
@@ -12,7 +13,7 @@ namespace SkillsLabProject.DAL.DAL
     }
     public class DepartmentDAL : IDepartmentDAL
     {
-        public bool Add(DepartmentModel model)
+        public async Task<bool> AddAsync(DepartmentModel model)
         {
             const string AddDepartmentQuery = @"
                 INSERT [dbo].[Department] (DepartmentId, Title) VALUES (@DepartmentId, @Title);
@@ -22,68 +23,85 @@ namespace SkillsLabProject.DAL.DAL
                 new SqlParameter("@DepartmentId", model.DepartmentId),
                 new SqlParameter("@Title", model.Title)
             };
-            return DBCommand.InsertUpdateData(AddDepartmentQuery, parameters);
+            return await DBCommand.InsertDataAsync(AddDepartmentQuery, parameters).ConfigureAwait(false);
         }
-        public bool Delete(int DepartmentId)
+        public async Task<bool> DeleteAsync(int DepartmentId)
         {
             const string DeleteDepartmentQuery = @"
                 DELETE FROM [dbo].[Department] WHERE DepartmentId=@DepartmentId
             ";
             var parameter = new SqlParameter("@DepartmentId", DepartmentId);
-            return DBCommand.DeleteData(DeleteDepartmentQuery, parameter);
+            return await DBCommand.DeleteDataAsync(DeleteDepartmentQuery, parameter).ConfigureAwait(false);
         }
-        public IEnumerable<DepartmentModel> GetAll()
+        public async Task<IEnumerable<DepartmentModel>> GetAllAsync()
         {
             const string GetAllDepartmentsQuery = @"
                 SELECT DepartmentId, Title
                 FROM [dbo].[Department]
             ";
-            var dt = DBCommand.GetData(GetAllDepartmentsQuery);
-            var Departments = new List<DepartmentModel>();
-            DepartmentModel Department;
-            foreach (DataRow row in dt.Rows)
-            {
-                Department = new DepartmentModel();
-                Department.DepartmentId = int.Parse(row["DepartmentId"].ToString());
-                Department.Title = row["Title"].ToString();
 
-                Departments.Add(Department);
+            var Departments = new List<DepartmentModel>();
+
+            using (SqlDataReader dataReader = await DBCommand.GetDataAsync(GetAllDepartmentsQuery).ConfigureAwait(false))
+            {
+                while (await dataReader.ReadAsync().ConfigureAwait(false))
+                {
+                    DepartmentModel Department = new DepartmentModel
+                    {
+                        DepartmentId = dataReader.GetInt32(dataReader.GetOrdinal("DepartmentId")),
+                        Title = dataReader["Title"].ToString()
+                    };
+
+                    Departments.Add(Department);
+                }
             }
+
             return Departments;
         }
-        public DepartmentModel GetById(int DepartmentId)
+
+        public async Task<DepartmentModel> GetByIdAsync(int departmentId)
         {
             const string GetDepartmentQuery = @"
                 SELECT DepartmentId, Title
                 FROM [dbo].[Department]
                 WHERE [DepartmentId] = @DepartmentId
             ";
+
             var parameters = new List<SqlParameter>
             {
-                new SqlParameter("@DepartmentId", DepartmentId)
+                new SqlParameter("@DepartmentId", departmentId)
             };
-            var dt = DBCommand.GetDataWithCondition(GetDepartmentQuery, parameters);
-            var Department = new DepartmentModel();
-            foreach (DataRow row in dt.Rows)
+
+            var department = new DepartmentModel();
+
+            using (SqlDataReader dataReader = await DBCommand.GetDataWithConditionAsync(GetDepartmentQuery, parameters).ConfigureAwait(false))
             {
-                Department.DepartmentId = int.Parse(row["DepartmentId"].ToString());
-                Department.Title = row["Title"].ToString();
+                while (await dataReader.ReadAsync().ConfigureAwait(false))
+                {
+                    department.DepartmentId = dataReader.GetInt32(dataReader.GetOrdinal("DepartmentId"));
+                    department.Title = dataReader["Title"].ToString();
+                }
             }
-            return Department;
+
+            return department;
         }
-        public bool Update(DepartmentModel model)
+
+        public async Task<bool> UpdateAsync(DepartmentModel model)
         {
             const string UpdateDepartmentQuery = @"
                 UPDATE [dbo].[Department]
-                SET DepartmentId=@DepartmentId, Title=@Title
+                SET Title=@Title
                 WHERE DepartmentId=@DepartmentId;
             ";
+
             var parameters = new List<SqlParameter>
             {
                 new SqlParameter("@DepartmentId", model.DepartmentId),
                 new SqlParameter("@Title", model.Title)
             };
-            return DBCommand.InsertUpdateData(UpdateDepartmentQuery, parameters);
+
+            return await DBCommand.UpdateDataAsync(UpdateDepartmentQuery, parameters).ConfigureAwait(false);
         }
+
     }
 }

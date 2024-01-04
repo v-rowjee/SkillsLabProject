@@ -1,6 +1,7 @@
 ﻿using SkillsLabProject.BL.BL;
 using SkillsLabProject.Common.Models.ViewModels;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 
 namespace SkillsLabProject.Controllers
@@ -18,26 +19,23 @@ namespace SkillsLabProject.Controllers
 
 
         // GET: Register/
-        public ActionResult Index()
+        public async Task<ActionResult> Index()
         {
             var loggeduser = Session["CurrentUser"] as LoginViewModel;
             if (loggeduser != null)
             {
                 return RedirectToAction("Index","Common");
             }
-
-            var departments = DepartmentBL.GetAllDepartments().ToList();
+            var departments = (await DepartmentBL.GetAllDepartmentsAsync()).ToList();
             ViewBag.Departments = departments;
             return View();
         }
 
         // POST: Register/Register
         [HttpPost]
-        public JsonResult Register(RegisterViewModel model)
+        public async Task<JsonResult> Register(RegisterViewModel model)
         {
-            var results = AppUserBL.RegisterUser(model);
-
-
+            var results = await AppUserBL.RegisterUserAsync(model);
             if (results.Contains("Success"))
             {
                 return Json(new { result = "Success", url = Url.Action("Index", "Login") });
@@ -47,8 +45,5 @@ namespace SkillsLabProject.Controllers
                 return Json(new { result = results.ToArray(), url = Url.Action("Index", "Login") });
             }
         }
-
-
-
     }
 }

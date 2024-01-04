@@ -1,9 +1,8 @@
-﻿using SkillsLabProject.Common.Enums;
-using SkillsLabProject.Common.DAL;
+﻿using SkillsLabProject.Common.DAL;
+using SkillsLabProject.Common.Models;
 using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.Data;
-using SkillsLabProject.Common.Models;
+using System.Threading.Tasks;
 
 namespace SkillsLabProject.DAL.DAL
 {
@@ -12,68 +11,94 @@ namespace SkillsLabProject.DAL.DAL
     }
     public class DeclinedEnrollmentDAL : IDeclinedEnrollmentDAL
     {
-        public bool Add(DeclinedEnrollmentModel model)
+        public async Task<bool> AddAsync(DeclinedEnrollmentModel model)
         {
-            var parameters = new List<SqlParameter>();
-            parameters.Add(new SqlParameter("@EnrollmentId", model.EnrollmentId));
-            parameters.Add(new SqlParameter("@Reason", model.Reason));
+            var parameters = new List<SqlParameter>
+            {
+                new SqlParameter("@EnrollmentId", model.EnrollmentId),
+                new SqlParameter("@Reason", model.Reason)
+            };
             const string AddDeclinedEnrollmentQuery = @"
                 INSERT [dbo].[DeclinedEnrollment] (EnrollmentId, Reason) VALUES (@EnrollmentId, @Reason);
             ";
-            return DBCommand.InsertUpdateData(AddDeclinedEnrollmentQuery, parameters);
+            return await DBCommand.InsertDataAsync(AddDeclinedEnrollmentQuery, parameters);
         }
-        public bool Delete(int declinedEnrollmentId)
+        public async Task<bool> DeleteAsync(int declinedEnrollmentId)
         {
             const string DeleteDeclinedEnrollmentQuery = @"
                 DELETE FROM [dbo].[DeclinedEnrollment] 
                 WHERE DeclinedEnrollmentId=@DeclinedEnrollmentId
             ";
             var parameter = new SqlParameter("@DeclinedEnrollmentId", declinedEnrollmentId);
-            return DBCommand.DeleteData(DeleteDeclinedEnrollmentQuery, parameter);
+            return await DBCommand.DeleteDataAsync(DeleteDeclinedEnrollmentQuery, parameter);
         }
-        public IEnumerable<DeclinedEnrollmentModel> GetAll()
+        public async Task<IEnumerable<DeclinedEnrollmentModel>> GetAllAsync()
         {
             const string GetAllDeclinedEnrollmentsQuery = @"
                 SELECT DeclinedEnrollmentId, EnrollmentId, Reason
                 FROM [dbo].[DeclinedEnrollment]
             ";
-            var dt = DBCommand.GetData(GetAllDeclinedEnrollmentsQuery);
+
             var DeclinedEnrollments = new List<DeclinedEnrollmentModel>();
-            DeclinedEnrollmentModel DeclinedEnrollment;
-            foreach (DataRow row in dt.Rows)
+
+            try
             {
-                DeclinedEnrollment = new DeclinedEnrollmentModel
+                using (SqlDataReader dataReader = await DBCommand.GetDataAsync(GetAllDeclinedEnrollmentsQuery))
                 {
-                    DeclinedEnrollmentId = int.Parse(row["DeclinedEnrollmentId"].ToString()),
-                    EnrollmentId = int.Parse(row["EnrollmentId"].ToString()),
-                    Reason = row["Reason"].ToString()
-                };
-                DeclinedEnrollments.Add(DeclinedEnrollment);
+                    while (await dataReader.ReadAsync())
+                    {
+                        DeclinedEnrollmentModel DeclinedEnrollment = new DeclinedEnrollmentModel
+                        {
+                            DeclinedEnrollmentId = dataReader.GetInt32(dataReader.GetOrdinal("DeclinedEnrollmentId")),
+                            EnrollmentId = dataReader.GetInt32(dataReader.GetOrdinal("EnrollmentId")),
+                            Reason = dataReader["Reason"].ToString()
+                        };
+                        DeclinedEnrollments.Add(DeclinedEnrollment);
+                    }
+                }
             }
+            catch
+            {
+                throw;
+            }
+
             return DeclinedEnrollments;
         }
-        public DeclinedEnrollmentModel GetById(int declinedEnrollmentId)
+        public async Task<DeclinedEnrollmentModel> GetByIdAsync(int declinedEnrollmentId)
         {
             const string GetDeclinedEnrollmentQuery = @"
                 SELECT DeclinedEnrollmentId, EnrollmentId, Reason
                 FROM [dbo].[DeclinedEnrollment]
                 WHERE [DeclinedEnrollmentId] = @DeclinedEnrollmentId
             ";
+
             var parameters = new List<SqlParameter>
             {
                 new SqlParameter("@DeclinedEnrollmentId", declinedEnrollmentId)
             };
-            var dt = DBCommand.GetDataWithCondition(GetDeclinedEnrollmentQuery, parameters);
+
             var DeclinedEnrollment = new DeclinedEnrollmentModel();
-            foreach (DataRow row in dt.Rows)
+
+            try
             {
-                DeclinedEnrollment.DeclinedEnrollmentId = int.Parse(row["DeclinedEnrollmentId"].ToString());
-                DeclinedEnrollment.EnrollmentId = int.Parse(row["EnrollmentId"].ToString());
-                DeclinedEnrollment.Reason = row["Reason"].ToString();
+                using (SqlDataReader dataReader = await DBCommand.GetDataWithConditionAsync(GetDeclinedEnrollmentQuery, parameters))
+                {
+                    while (await dataReader.ReadAsync().ConfigureAwait(false))
+                    {
+                        DeclinedEnrollment.DeclinedEnrollmentId = dataReader.GetInt32(dataReader.GetOrdinal("DeclinedEnrollmentId"));
+                        DeclinedEnrollment.EnrollmentId = dataReader.GetInt32(dataReader.GetOrdinal("EnrollmentId"));
+                        DeclinedEnrollment.Reason = dataReader["Reason"].ToString();
+                    }
+                }
             }
+            catch
+            {
+                throw;
+            }
+
             return DeclinedEnrollment;
         }
-        public bool Update(DeclinedEnrollmentModel model)
+        public async Task<bool> UpdateAsync(DeclinedEnrollmentModel model)
         {
             const string UpdateDeclinedEnrollmentQuery = @"
                 UPDATE [dbo].[DeclinedEnrollment]
@@ -86,7 +111,7 @@ namespace SkillsLabProject.DAL.DAL
                 new SqlParameter("@EnrollmentId", model.EnrollmentId),
                 new SqlParameter("@Reason", model.Reason)
             };
-            return DBCommand.InsertUpdateData(UpdateDeclinedEnrollmentQuery, parameters);
+            return await DBCommand.UpdateDataAsync(UpdateDeclinedEnrollmentQuery, parameters);
         }
     }
 }

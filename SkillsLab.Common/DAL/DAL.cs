@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
+﻿using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Web;
+using System.Threading.Tasks;
 
 namespace SkillsLabProject.Common.DAL
 {
@@ -18,10 +15,9 @@ namespace SkillsLabProject.Common.DAL
         {
             _connectionString = ConfigurationManager.AppSettings["ConnectionString"].ToString();
             Connection = new SqlConnection(_connectionString);
-            OpenConnection();
         }
 
-        public void OpenConnection()
+        public async Task OpenConnectionAsync()
         {
             try
             {
@@ -30,7 +26,7 @@ namespace SkillsLabProject.Common.DAL
                     Connection.Close();
                 }
 
-                Connection.Open();
+                await Connection.OpenAsync();
             }
             catch (SqlException)
             {
@@ -38,7 +34,7 @@ namespace SkillsLabProject.Common.DAL
             }
         }
 
-        public void OpenConnection(string connectionString)
+        public async Task OpenConnectionAsync(string connectionString)
         {
             try
             {
@@ -48,7 +44,7 @@ namespace SkillsLabProject.Common.DAL
                     Connection.Close();
                 }
 
-                Connection.Open();
+                await Connection.OpenAsync();
             }
             catch (SqlException)
             {
@@ -64,6 +60,6 @@ namespace SkillsLabProject.Common.DAL
                 Connection.Dispose();
             }
         }
-
     }
+
 }

@@ -1,6 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using CryptoHelper;
 using SkillsLabProject.Common.Models.ViewModels;
 using SkillsLabProject.DAL.DAL;
@@ -9,38 +9,43 @@ namespace SkillsLabProject.BL.BL
 {
     public interface IAppUserBL
     {
-        bool AuthenticateUser(LoginViewModel model);
-        List<string> RegisterUser(RegisterViewModel model);
+        Task<bool> AuthenticateUserAsync(LoginViewModel model);
+        Task<List<string>> RegisterUserAsync(RegisterViewModel model);
     }
+
     public class AppUserBL : IAppUserBL
     {
         private readonly IAppUserDAL _appUserDAL;
         private readonly IEmployeeDAL _employeeDAL;
-        public AppUserBL(IAppUserDAL appUserBL, IEmployeeDAL employeeDAL)
+
+        public AppUserBL(IAppUserDAL appUserDAL, IEmployeeDAL employeeDAL)
         {
-            _appUserDAL = appUserBL;
+            _appUserDAL = appUserDAL;
             _employeeDAL = employeeDAL;
         }
-        public bool AuthenticateUser(LoginViewModel model)
+
+        public async Task<bool> AuthenticateUserAsync(LoginViewModel model)
         {
-            var hashedPassword = _appUserDAL.GetHashedPassword(model);
+            var hashedPassword = await _appUserDAL.GetHashedPasswordAsync(model);
             return hashedPassword != null && VerifyPassword(hashedPassword, model.Password);
         }
-        public List<string> RegisterUser(RegisterViewModel model)
+
+        public async Task<List<string>> RegisterUserAsync(RegisterViewModel model)
         {
-            var validations = ValidateUser(model);
+            var validations = await ValidateUserAsync(model);
 
             if (validations.All(validation => validation == "Success"))
             {
                 model.Password = HashPassword(model.Password);
-                return _appUserDAL.RegisterUser(model) ? new List<string> { "Success" } : new List<string> { "Error" };
+                return await _appUserDAL.RegisterUserAsync(model) ? new List<string> { "Success" } : new List<string> { "Error" };
             }
+
             return validations;
         }
 
-        private List<string> ValidateUser(RegisterViewModel model)
+        private async Task<List<string>> ValidateUserAsync(RegisterViewModel model)
         {
-            var employees = _employeeDAL.GetAllEmployees().ToList();
+            var employees = (await _employeeDAL.GetAllEmployeesAsync()).ToList();
 
             var validationErrors = new List<string>();
 
@@ -66,6 +71,7 @@ namespace SkillsLabProject.BL.BL
         {
             return Crypto.HashPassword(password);
         }
+
         private bool VerifyPassword(string hash, string password)
         {
             return Crypto.VerifyHashedPassword(hash, password);

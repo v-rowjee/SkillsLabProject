@@ -6,7 +6,6 @@ using SkillsLabProject.Common.Models.ViewModels;
 using SkillsLabProject.Custom;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
@@ -17,14 +16,14 @@ namespace SkillsLabProject.Controllers
     [UserSession]
     public class EnrollmentController : Controller
     {
-        private IEmployeeBL _employeeBL;
-        private IEnrollmentBL _enrollmentBL;
-        private ITrainingBL _trainingBL;
-        private IPreRequisiteBL _preRequisiteBL;
-        private IProofBL _proofBL;
-        private IDeclinedEnrollmentBL _declinedEnrollmentBL;
-        private IEmailService _emailService;
-        private IDepartmentBL _departmentBL;
+        private readonly IEmployeeBL _employeeBL;
+        private readonly IEnrollmentBL _enrollmentBL;
+        private readonly ITrainingBL _trainingBL;
+        private readonly IPreRequisiteBL _preRequisiteBL;
+        private readonly IProofBL _proofBL;
+        private readonly IDeclinedEnrollmentBL _declinedEnrollmentBL;
+        private readonly IEmailService _emailService;
+        private readonly IDepartmentBL _departmentBL;
         public EnrollmentController(IEmployeeBL employeeBL,IEnrollmentBL enrollmentBL, ITrainingBL trainingBL, IPreRequisiteBL preRequisiteBL, IProofBL proofBL, IDeclinedEnrollmentBL declinedEnrollmentBL,IDepartmentBL departmentBL, IEmailService emailService)
         {
             _employeeBL = employeeBL;
@@ -38,27 +37,27 @@ namespace SkillsLabProject.Controllers
         }
         // GET: Enrollment
         [CustomAuthorization("Employee,Manager,Admin")]
-        public ActionResult Index()
+        public async Task<ActionResult> Index()
         {
             var loggeduser = Session["CurrentUser"] as LoginViewModel;
             if (loggeduser == null) return RedirectToAction("Index", "Login");
             
-            var employee = _employeeBL.GetEmployee(loggeduser);
+            var employee = await _employeeBL.GetEmployeeAsync(loggeduser);
             ViewBag.Employee = employee;
 
             Enum.TryParse(Session["CurrentRole"] as string, out Role role);
             employee.Role = role;
-            var enrollments = _enrollmentBL.GetAllEnrollments(employee).ToList();
+            var enrollments = (await _enrollmentBL.GetAllEnrollmentsAsync(employee)).ToList();
             ViewBag.Enrollments = enrollments;
 
 
-            var trainings = _trainingBL.GetAllTrainings();
+            var trainings = await _trainingBL.GetAllTrainingsAsync();
             var departments = new List<DepartmentModel>() { employee.Department };
 
             if (Session["CurrentRole"] as string == "Admin")
             {
                 var departmentsWithEnrollments = enrollments.Select(e => e.Employee.Department.DepartmentId).Distinct();
-                departments = _departmentBL.GetAllDepartments().Where(d => departmentsWithEnrollments.Contains(d.DepartmentId)).ToList();
+                departments = (await _departmentBL.GetAllDepartmentsAsync()).Where(d => departmentsWithEnrollments.Contains(d.DepartmentId)).ToList();
             }
             else
             {
@@ -78,15 +77,15 @@ namespace SkillsLabProject.Controllers
         // GET: View
         [HttpGet]
         [CustomAuthorization("Employee,Manager,Admin")]
-        public ActionResult View(int? id)
+        public async Task<ActionResult> View(int? id)
         {
             if (id == null) return RedirectToAction("Index");
 
-            var enrollment = _enrollmentBL.GetEnrollmentById((int)id);
+            var enrollment = await _enrollmentBL.GetEnrollmentByIdAsync((int)id);
             if (enrollment == null) return RedirectToAction("Index");
 
             var loggeduser = Session["CurrentUser"] as LoginViewModel;
-            var employee = _employeeBL.GetEmployee(loggeduser);
+            var employee = await _employeeBL.GetEmployeeAsync(loggeduser);
             ViewBag.Employee = employee;
 
             if (Session["CurrentRole"] as string == "Employee" && enrollment.Employee.EmployeeId != employee.EmployeeId)
@@ -95,13 +94,13 @@ namespace SkillsLabProject.Controllers
             }
             ViewBag.Enrollment = enrollment;
 
-            var declineReason = _declinedEnrollmentBL.GetAllDeclinedEnrollments().Where(d => d.EnrollmentId == id).Select(d => d.Reason).FirstOrDefault();
+            var declineReason = (await _declinedEnrollmentBL.GetAllDeclinedEnrollmentsAsync()).Where(d => d.EnrollmentId == id).Select(d => d.Reason).FirstOrDefault();
             ViewBag.DeclineReason = declineReason;
 
-            var proofs = _proofBL.GetAllProofs().Where(p => p.EnrollmentId == enrollment.EnrollmentId).ToList();
+            var proofs = (await _proofBL.GetAllProofsAsync()).Where(p => p.EnrollmentId == enrollment.EnrollmentId).ToList();
             ViewBag.Proofs = proofs;
 
-            var preRequisites = _preRequisiteBL.GetAllPreRequisites().Where(p => p.TrainingId == enrollment.Training.TrainingId).ToList();
+            var preRequisites = (await _preRequisiteBL.GetAllPreRequisitesAsync()).Where(p => p.TrainingId == enrollment.Training.TrainingId).ToList();
             ViewBag.Prerequisites = preRequisites;
 
 
@@ -112,12 +111,12 @@ namespace SkillsLabProject.Controllers
         // Post: Approve
         [HttpPost]
         [CustomAuthorization("Manager")]
-        public JsonResult Approve(EnrollmentModel model) {
+        public async Task<JsonResult> Approve(EnrollmentModel model) {
 
             var loggeduser = Session["CurrentUser"] as LoginViewModel;
-            var manager = _employeeBL.GetEmployee(loggeduser);
+            var manager = await _employeeBL.GetEmployeeAsync(loggeduser);
 
-            var result = _enrollmentBL.ApproveEnrollment(model, manager);
+            var result = await _enrollmentBL.ApproveEnrollmentAsync(model, manager);
             if (result)
             {
                 return Json(new { result = "Success" });
@@ -131,12 +130,12 @@ namespace SkillsLabProject.Controllers
         // Post: Decline
         [HttpPost]
         [CustomAuthorization("Manager")]
-        public JsonResult Decline(EnrollmentModel model)
+        public async Task<JsonResult> Decline(EnrollmentModel model)
         {
             var loggeduser = Session["CurrentUser"] as LoginViewModel;
-            var manager = _employeeBL.GetEmployee(loggeduser);
+            var manager = await _employeeBL.GetEmployeeAsync(loggeduser);
 
-            var result = _enrollmentBL.DeclineEnrollment(model, manager);
+            var result = await _enrollmentBL.DeclineEnrollmentAsync(model, manager);
             if (result)
             {
                 return Json(new { result = "Success" });
@@ -150,9 +149,9 @@ namespace SkillsLabProject.Controllers
         // Post: Delete
         [HttpPost]
         [CustomAuthorization("Employee,Admin")]
-        public JsonResult Delete(int id)
+        public async Task<JsonResult> Delete(int id)
         {
-            var result = _enrollmentBL.DeleteEnrollment(id);
+            var result = await _enrollmentBL.DeleteEnrollmentAsync(id);
             if (result)
             {
                 return Json(new { result = "Success", url = Url.Action("Index", "Enrollment") });
@@ -169,7 +168,7 @@ namespace SkillsLabProject.Controllers
         public async Task<JsonResult> Enroll(List<HttpPostedFileBase> files, int trainingId)
         {
             var loggeduser = Session["CurrentUser"] as LoginViewModel;
-            var result = await _enrollmentBL.Enroll(loggeduser, trainingId, files);
+            var result = await _enrollmentBL.EnrollAsync(loggeduser, trainingId, files);
 
             return Json(new { result });
         }
@@ -177,9 +176,9 @@ namespace SkillsLabProject.Controllers
 
         [HttpPost]
         [CustomAuthorization("Admin")]
-        public ActionResult Export(int trainingId)
+        public async Task<ActionResult> Export(int trainingId)
         {
-            var fileContent = _enrollmentBL.Export(trainingId);
+            var fileContent = await _enrollmentBL.ExportAsync(trainingId);
 
             return File(fileContent, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet","ExportedEnrollemnts.xlsx");
         }

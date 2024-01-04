@@ -15,14 +15,13 @@ namespace SkillsLabProject.BL.BL
 {
     public interface IEnrollmentBL
     {
-        IEnumerable<EnrollmentViewModel> GetAllEnrollments(EmployeeModel employee);
-        EnrollmentViewModel GetEnrollmentById(int enrollmentId);
-        bool ApproveEnrollment(EnrollmentModel model, EmployeeModel manager);
-        bool DeclineEnrollment(EnrollmentModel model, EmployeeModel manager);
-        bool DeleteEnrollment(int enrollmentId);
-        byte[] Export(int trainingId);
-        Task<string> Enroll(LoginViewModel loggeduser, int trainingId, List<HttpPostedFileBase> files);
-
+        Task<IEnumerable<EnrollmentViewModel>> GetAllEnrollmentsAsync(EmployeeModel employee);
+        Task<EnrollmentViewModel> GetEnrollmentByIdAsync(int enrollmentId);
+        Task<bool> ApproveEnrollmentAsync(EnrollmentModel model, EmployeeModel manager);
+        Task<bool> DeclineEnrollmentAsync(EnrollmentModel model, EmployeeModel manager);
+        Task<bool> DeleteEnrollmentAsync(int enrollmentId);
+        Task<byte[]> ExportAsync(int trainingId);
+        Task<string> EnrollAsync(LoginViewModel loggeduser, int trainingId, List<HttpPostedFileBase> files);
     }
     public class EnrollmentBL : IEnrollmentBL
     {
@@ -42,33 +41,35 @@ namespace SkillsLabProject.BL.BL
             _preRequisiteDAL = preRequisiteDAL;
             _emailService = emailService;
         }
-        public bool DeleteEnrollment(int enrollmentId)
+        public async Task<bool> DeleteEnrollmentAsync(int enrollmentId)
         {
-            return _enrollmentDAL.Delete(enrollmentId);
+            return await _enrollmentDAL.DeleteAsync(enrollmentId);
         }
-        public EnrollmentViewModel GetEnrollmentById(int enrollmentId)
+
+        public async Task<EnrollmentViewModel> GetEnrollmentByIdAsync(int enrollmentId)
         {
-            var enrollmentModel = _enrollmentDAL.GetById(enrollmentId);
+            var enrollmentModel = await _enrollmentDAL.GetByIdAsync(enrollmentId);
             var enrollmentViewModel = new EnrollmentViewModel()
             {
                 EnrollmentId = enrollmentId,
-                Employee = _employeeDAL.GetEmployeeById(enrollmentModel.EmployeeId),
-                Training = _trainingDAL.GetById(enrollmentModel.TrainingId),
-                Proofs = _proofDAL.GetAll().Where(x => x.EnrollmentId == enrollmentModel.EnrollmentId).ToList(),
+                Employee = await _employeeDAL.GetEmployeeByIdAsync(enrollmentModel.EmployeeId),
+                Training = await _trainingDAL.GetByIdAsync(enrollmentModel.TrainingId),
+                Proofs = (await _proofDAL.GetAllAsync()).Where(x => x.EnrollmentId == enrollmentModel.EnrollmentId).ToList(),
                 Status = enrollmentModel.Status,
                 CreatedOn = enrollmentModel.CreatedOn,
             };
             return enrollmentViewModel;
         }
-        public IEnumerable<EnrollmentViewModel> GetAllEnrollments(EmployeeModel currentEmployee)
+
+        public async Task<IEnumerable<EnrollmentViewModel>> GetAllEnrollmentsAsync(EmployeeModel currentEmployee)
         {
-            var enrollments = _enrollmentDAL.GetAll().ToList();
+            var enrollments = (await _enrollmentDAL.GetAllAsync()).ToList();
             var enrollmentsViews = new List<EnrollmentViewModel>();
             foreach (var enrollment in enrollments)
             {
-                var employee = _employeeDAL.GetEmployeeById(enrollment.EmployeeId);
-                var training = _trainingDAL.GetById(enrollment.TrainingId);
-                var proofs = _proofDAL.GetAll().Where(p => p.EnrollmentId == enrollment.EnrollmentId).ToList();
+                var employee = await _employeeDAL.GetEmployeeByIdAsync(enrollment.EmployeeId);
+                var training = await _trainingDAL.GetByIdAsync(enrollment.TrainingId);
+                var proofs = (await _proofDAL.GetAllAsync()).Where(p => p.EnrollmentId == enrollment.EnrollmentId).ToList();
 
                 var enrollmentView = new EnrollmentViewModel()
                 {
@@ -77,7 +78,7 @@ namespace SkillsLabProject.BL.BL
                     Training = training,
                     Status = enrollment.Status,
                     Proofs = proofs,
-                    CreatedOn= enrollment.CreatedOn,
+                    CreatedOn = enrollment.CreatedOn,
                 };
                 if (currentEmployee.Role == Role.Employee)
                 {
@@ -92,16 +93,16 @@ namespace SkillsLabProject.BL.BL
             return enrollmentsViews;
         }
 
-        public bool ApproveEnrollment(EnrollmentModel model, EmployeeModel manager)
+        public async Task<bool> ApproveEnrollmentAsync(EnrollmentModel model, EmployeeModel manager)
         {
             model.Status = Status.Approved;
-            var isApproved = _enrollmentDAL.Update(model);
+            var isApproved = await _enrollmentDAL.UpdateAsync(model);
 
             if (isApproved)
             {
-                var enrollment = _enrollmentDAL.GetById(model.EnrollmentId);
-                var employee = _employeeDAL.GetEmployeeById(enrollment.EmployeeId);
-                var training = _trainingDAL.GetById(enrollment.TrainingId);
+                var enrollment = await _enrollmentDAL.GetByIdAsync(model.EnrollmentId);
+                var employee = await _employeeDAL.GetEmployeeByIdAsync(enrollment.EmployeeId);
+                var training = await _trainingDAL.GetByIdAsync(enrollment.TrainingId);
 
                 string subject = "Training Enrollment Approved";
                 string body = $@"<html><body>
@@ -113,20 +114,21 @@ namespace SkillsLabProject.BL.BL
                 string recipientEmail = employee.Email;
                 string ccEmail = manager.Email;
 
-                Task.Run(() => _emailService.SendEmail(subject, body, recipientEmail, ccEmail));
+                await Task.Run(() => _emailService.SendEmail(subject, body, recipientEmail, ccEmail));
             }
             return isApproved;
         }
-        public bool DeclineEnrollment(EnrollmentModel model, EmployeeModel manager)
+
+        public async Task<bool> DeclineEnrollmentAsync(EnrollmentModel model, EmployeeModel manager)
         {
             model.Status = Status.Declined;
-            var isDeclined = _enrollmentDAL.Update(model);
+            var isDeclined = await _enrollmentDAL.UpdateAsync(model);
 
             if (isDeclined)
             {
-                var enrollment = _enrollmentDAL.GetById(model.EnrollmentId);
-                var employee = _employeeDAL.GetEmployeeById(enrollment.EmployeeId);
-                var training = _trainingDAL.GetById(enrollment.TrainingId);
+                var enrollment = await _enrollmentDAL.GetByIdAsync(model.EnrollmentId);
+                var employee = await _employeeDAL.GetEmployeeByIdAsync(enrollment.EmployeeId);
+                var training = await _trainingDAL.GetByIdAsync(enrollment.TrainingId);
 
                 string subject = "Training Enrollment Declined";
                 string body = $@"<html><body>
@@ -138,15 +140,15 @@ namespace SkillsLabProject.BL.BL
                 string recipientEmail = employee.Email;
                 string ccEmail = manager.Email;
 
-                Task.Run(() => _emailService.SendEmail(subject, body, recipientEmail, ccEmail));
+                await Task.Run(() => _emailService.SendEmail(subject, body, recipientEmail, ccEmail));
             }
             return isDeclined;
         }
 
-        public byte[] Export(int trainingId)
+        public async Task<byte[]> ExportAsync(int trainingId)
         {
-            var trainingTitle = _trainingDAL.GetById(trainingId).Title;
-            var enrollments = _enrollmentDAL.GetAll().Where(e => e.TrainingId == trainingId).ToList();
+            var trainingTitle = (await _trainingDAL.GetByIdAsync(trainingId)).Title;
+            var enrollments = (await _enrollmentDAL.GetAllAsync()).Where(e => e.TrainingId == trainingId).ToList();
 
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
             using (var package = new ExcelPackage())
@@ -165,13 +167,13 @@ namespace SkillsLabProject.BL.BL
                 int rowsInserted = 0;
                 for (int i = 0; i < enrollments.Count; i++)
                 {
-                    var training = _trainingDAL.GetById(enrollments[i].TrainingId);
+                    var training = await _trainingDAL.GetByIdAsync(enrollments[i].TrainingId);
                     if (!training.IsClosed) continue;
                     if (enrollments[i].Status != Status.Approved) continue;
 
                     rowsInserted++;
-                    var employee = _employeeDAL.GetEmployeeById(enrollments[i].EmployeeId);
-                    var manager = _employeeDAL.GetAllEmployees().Where(e => e.Department.DepartmentId == employee.Department.DepartmentId).FirstOrDefault();
+                    var employee = await _employeeDAL.GetEmployeeByIdAsync(enrollments[i].EmployeeId);
+                    var manager = (await _employeeDAL.GetAllEmployeesAsync()).FirstOrDefault(e => e.Department.DepartmentId == employee.Department.DepartmentId);
 
                     worksheet.Cells[i + 4, 1].Value = employee.FirstName + " " + employee.LastName;
                     worksheet.Cells[i + 4, 2].Value = employee.PhoneNumber;
@@ -195,24 +197,24 @@ namespace SkillsLabProject.BL.BL
             }
         }
 
-        public async Task<string> Enroll(LoginViewModel loggeduser, int trainingId, List<HttpPostedFileBase> files)
+        public async Task<string> EnrollAsync(LoginViewModel loggeduser, int trainingId, List<HttpPostedFileBase> files)
         {
-            var employee = _employeeDAL.GetEmployee(loggeduser);
+            var employee = await _employeeDAL.GetEmployeeAsync(loggeduser);
 
-            var prerequisites = _preRequisiteDAL.GetAll().Where(p => p.TrainingId == trainingId).ToList();
+            var prerequisites = (await _preRequisiteDAL.GetAllAsync()).Where(p => p.TrainingId == trainingId).ToList();
 
             if (prerequisites.Count == 0)
             {
                 var enrollment = new EnrollmentModel
                 {
-                    EmployeeId = _employeeDAL.GetEmployee(loggeduser).EmployeeId,
+                    EmployeeId = (await _employeeDAL.GetEmployeeAsync(loggeduser)).EmployeeId,
                     TrainingId = trainingId,
                     Status = Status.Pending
                 };
-                var resultEnrollemnt = _enrollmentDAL.Add(enrollment);
+                var resultEnrollemnt = await _enrollmentDAL.AddAsync(enrollment);
                 if (resultEnrollemnt)
                 {
-                    sendEmailAwaitingReviewToManager(employee, trainingId);
+                    SendEmailAwaitingReviewToManager(employee, trainingId);
                 }
                 return resultEnrollemnt ? "Success" : "Error";
             }
@@ -250,11 +252,11 @@ namespace SkillsLabProject.BL.BL
                 }
             }
 
-            var result = _enrollmentDAL.Add(enrollmentWithProofs);
+            var result = await _enrollmentDAL.AddAsync(enrollmentWithProofs);
 
             if (result)
             {
-                sendEmailAwaitingReviewToManager(employee,trainingId);
+                SendEmailAwaitingReviewToManager(employee, trainingId);
             }
 
             return result ? "Success" : "Error";
@@ -292,31 +294,38 @@ namespace SkillsLabProject.BL.BL
             return uniqueFileName;
         }
 
-        private void sendEmailAwaitingReviewToManager(EmployeeModel employee, int trainingId)
+        private void SendEmailAwaitingReviewToManager(EmployeeModel employee, int trainingId)
         {
-            var manager = _employeeDAL.GetAllEmployees().Where(e => e.Department.DepartmentId == employee.Department.DepartmentId).FirstOrDefault();
-            var training = _trainingDAL.GetById(trainingId);
+            _ = Task.Run(async () => {
+                var managers = await _employeeDAL.GetAllEmployeesAsync();
+                var training = await _trainingDAL.GetByIdAsync(trainingId);
 
-            string subject = "Waiting For Approval";
-            string body = $@"
-            <html>
-              <body>
-                <p>Dear {manager.FirstName},</p>
-                <p>This is to inform you that {employee.FirstName} {employee.LastName} has enrolled in the {training.Title} training program.</p>
-                <p>Enrollment Details:</p>
-                <ul>
-                  <li><strong>Employee:</strong> {employee.FirstName} {employee.LastName}</li>
-                  <li><strong>Training Program:</strong> {training.Title}</li>
-                  <li><strong>Enrollment Date:</strong> {DateTime.Now:dddd, dd MMMM yyyy} at {DateTime.Now.ToString("hh:mm tt")}</li>
-                </ul>
-                <p>Please review and provide any necessary approvals or feedback.</p>
-                <p>Best regards,<br/>Your System Administrator</p>
-              </body>
-            </html>";
-            string recipientEmail = manager.Email;
-            string ccEmail = employee.Email;
+                var manager = managers.FirstOrDefault(e => e.Department.DepartmentId == employee.Department.DepartmentId);
 
-            Task.Run(() => _emailService.SendEmail(subject, body, recipientEmail, ccEmail));
+                if (manager != null)
+                {
+                    string subject = "Waiting For Approval";
+                    string body = $@"
+                        <html>
+                            <body>
+                            <p>Dear {manager.FirstName},</p>
+                            <p>This is to inform you that {employee.FirstName} {employee.LastName} has enrolled in the {training.Title} training program.</p>
+                            <p>Enrollment Details:</p>
+                            <ul>
+                                <li><strong>Employee:</strong> {employee.FirstName} {employee.LastName}</li>
+                                <li><strong>Training Program:</strong> {training.Title}</li>
+                                <li><strong>Enrollment Date:</strong> {DateTime.Now:dddd, dd MMMM yyyy} at {DateTime.Now:hh:mm tt}</li>
+                            </ul>
+                            <p>Please review and provide any necessary approvals or feedback.</p>
+                            <p>Best regards,<br/>Your System Administrator</p>
+                            </body>
+                        </html>";
+                    string recipientEmail = manager.Email;
+                    string ccEmail = employee.Email;
+
+                    await _emailService.SendEmail(subject, body, recipientEmail, ccEmail);
+                }
+            });
         }
     }
 }

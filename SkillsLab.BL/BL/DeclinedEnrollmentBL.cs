@@ -1,21 +1,19 @@
-﻿using SkillsLabProject.DAL.DAL;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using SkillsLabProject.Common.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+using SkillsLabProject.DAL.DAL;
 
 namespace SkillsLabProject.BL.BL
 {
     public interface IDeclinedEnrollmentBL
     {
-        IEnumerable<DeclinedEnrollmentModel> GetAllDeclinedEnrollments();
-        DeclinedEnrollmentModel GetDeclinedEnrollmentById(int declinedEnrollmentId);
-        bool AddDeclinedEnrollment(DeclinedEnrollmentModel model);
-        bool UpdateDeclinedEnrollment(DeclinedEnrollmentModel model);
-        bool DeleteDeclinedEnrollment(int declinedEnrollmentId);
-
+        Task<IEnumerable<DeclinedEnrollmentModel>> GetAllDeclinedEnrollmentsAsync();
+        Task<DeclinedEnrollmentModel> GetDeclinedEnrollmentByIdAsync(int declinedEnrollmentId);
+        Task<bool> AddDeclinedEnrollmentAsync(DeclinedEnrollmentModel model);
+        Task<bool> UpdateDeclinedEnrollmentAsync(DeclinedEnrollmentModel model);
+        Task<bool> DeleteDeclinedEnrollmentAsync(int declinedEnrollmentId);
     }
+
     public class DeclinedEnrollmentBL : IDeclinedEnrollmentBL
     {
         private readonly IDeclinedEnrollmentDAL _declinedEnrollmentDAL;
@@ -25,25 +23,29 @@ namespace SkillsLabProject.BL.BL
             _declinedEnrollmentDAL = declinedEnrollmentDAL;
         }
 
-        public bool AddDeclinedEnrollment(DeclinedEnrollmentModel declinedEnrollment)
+        public async Task<bool> AddDeclinedEnrollmentAsync(DeclinedEnrollmentModel declinedEnrollment)
         {
-            return _declinedEnrollmentDAL.Add(declinedEnrollment);
+            return await _declinedEnrollmentDAL.AddAsync(declinedEnrollment);
         }
-        public bool DeleteDeclinedEnrollment(int declinedEnrollmentId)
+
+        public async Task<bool> DeleteDeclinedEnrollmentAsync(int declinedEnrollmentId)
         {
-            return _declinedEnrollmentDAL.Delete(declinedEnrollmentId);
+            return await _declinedEnrollmentDAL.DeleteAsync(declinedEnrollmentId);
         }
-        public DeclinedEnrollmentModel GetDeclinedEnrollmentById(int declinedEnrollmentId)
+
+        public async Task<DeclinedEnrollmentModel> GetDeclinedEnrollmentByIdAsync(int declinedEnrollmentId)
         {
-            return _declinedEnrollmentDAL.GetById(declinedEnrollmentId);
+            return await _declinedEnrollmentDAL.GetByIdAsync(declinedEnrollmentId);
         }
-        public IEnumerable<DeclinedEnrollmentModel> GetAllDeclinedEnrollments()
+
+        public async Task<IEnumerable<DeclinedEnrollmentModel>> GetAllDeclinedEnrollmentsAsync()
         {
-            return _declinedEnrollmentDAL.GetAll();
+            return await _declinedEnrollmentDAL.GetAllAsync();
         }
-        public bool UpdateDeclinedEnrollment(DeclinedEnrollmentModel declinedEnrollment)
+
+        public async Task<bool> UpdateDeclinedEnrollmentAsync(DeclinedEnrollmentModel declinedEnrollment)
         {
-            return _declinedEnrollmentDAL.Update(declinedEnrollment);
+            return await _declinedEnrollmentDAL.UpdateAsync(declinedEnrollment);
         }
     }
 }

@@ -52,6 +52,12 @@ $(function () {
                             actionTextColor: "#CFE2FF"
                         });
                     }
+                },
+                error: () => {
+                    Snackbar.show({
+                        text: "An error occurred while authenticating",
+                        actionTextColor: "#CFE2FF"
+                    });
                 }
             })
         }

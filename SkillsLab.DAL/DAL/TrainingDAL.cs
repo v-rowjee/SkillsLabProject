@@ -1,23 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.SqlClient;
-using SkillsLabProject.Common.Models.ViewModels;
-using SkillsLabProject.Common.DAL;
+﻿using SkillsLabProject.Common.DAL;
 using SkillsLabProject.Common.Models;
-using Newtonsoft.Json.Linq;
+using SkillsLabProject.Common.Models.ViewModels;
+using System;
+using System.Collections.Generic;
+using System.Data.SqlClient;
+using System.Threading.Tasks;
 
 namespace SkillsLabProject.DAL.DAL
 {
     public interface ITrainingDAL : IDAL<TrainingModel>
     {
-        bool Add(TrainingViewModel training);
-        bool Update(TrainingViewModel training);
-        bool Close(int trainingId);
+        Task<bool> AddAsync(TrainingViewModel training);
+        Task<bool> UpdateAsync(TrainingViewModel training);
+        Task<bool> CloseAsync(int trainingId);
     }
     public class TrainingDAL : ITrainingDAL
     {
-        public IEnumerable<TrainingModel> GetAll()
+        public async Task<IEnumerable<TrainingModel>> GetAllAsync()
         {
             const string GetAllTrainingsQuery = @"
                 SELECT t.TrainingId, t.Title, t.Description, t.Deadline, t.Capacity, t.PriorityDepartmentId, d.Title as DepartmentTitle, t.IsClosed
@@ -26,37 +25,44 @@ namespace SkillsLabProject.DAL.DAL
                 ON t.PriorityDepartmentId = d.DepartmentId
                 WHERE t.IsActive = 1
             ";
-            var dt = DBCommand.GetData(GetAllTrainingsQuery);
-            TrainingModel training;
+
             var trainings = new List<TrainingModel>();
-            foreach (DataRow row in dt.Rows)
+
+            using (SqlDataReader dataReader = await DBCommand.GetDataAsync(GetAllTrainingsQuery).ConfigureAwait(false))
             {
-                training = new TrainingModel
+                while (await dataReader.ReadAsync())
                 {
-                    TrainingId = (int)row["TrainingId"],
-                    Title = row["Title"].ToString(),
-                    Description = row["Description"].ToString(),
-                    Deadline = DateTime.Parse(row["Deadline"].ToString()),
-                    Capacity = (int)row["Capacity"],
-                    IsClosed = (bool)row["IsClosed"]
-                };
-                if (row["PriorityDepartmentId"] is DBNull)
-                {
-                    training.PriorityDepartment = null;
-                }
-                else 
-                {
-                    training.PriorityDepartment = new DepartmentModel
+                    var training = new TrainingModel
                     {
-                        DepartmentId = (int) row["PriorityDepartmentId"],
-                        Title = row["DepartmentTitle"].ToString(),
+                        TrainingId = dataReader.GetInt32(dataReader.GetOrdinal("TrainingId")),
+                        Title = dataReader.GetString(dataReader.GetOrdinal("Title")),
+                        Description = dataReader.GetString(dataReader.GetOrdinal("Description")),
+                        Deadline = dataReader.GetDateTime(dataReader.GetOrdinal("Deadline")),
+                        Capacity = dataReader.GetInt32(dataReader.GetOrdinal("Capacity")),
+                        IsClosed = dataReader.GetBoolean(dataReader.GetOrdinal("IsClosed"))
                     };
+
+                    if (!dataReader.IsDBNull(dataReader.GetOrdinal("PriorityDepartmentId")))
+                    {
+                        training.PriorityDepartment = new DepartmentModel
+                        {
+                            DepartmentId = dataReader.GetInt32(dataReader.GetOrdinal("PriorityDepartmentId")),
+                            Title = dataReader.GetString(dataReader.GetOrdinal("DepartmentTitle"))
+                        };
+                    }
+                    else
+                    {
+                        training.PriorityDepartment = null;
+                    }
+
+                    trainings.Add(training);
                 }
-                trainings.Add(training);
             }
+
             return trainings;
         }
-        public TrainingModel GetById(int trainingId)
+
+        public async Task<TrainingModel> GetByIdAsync(int trainingId)
         {
             const string GetTrainingQuery = @"
                 SELECT t.TrainingId, t.Title, t.Description, t.Deadline, t.Capacity, t.PriorityDepartmentId, d.Title as DepartmentTitle, t.IsClosed
@@ -70,37 +76,44 @@ namespace SkillsLabProject.DAL.DAL
             {
                 new SqlParameter("@TrainingId", trainingId)
             };
-            var dt = DBCommand.GetDataWithCondition(GetTrainingQuery, parameters);
-            var training = new TrainingModel();
-            foreach (DataRow row in dt.Rows)
+
+            using (SqlDataReader dataReader = await DBCommand.GetDataWithConditionAsync(GetTrainingQuery, parameters).ConfigureAwait(false))
             {
-                training.TrainingId = int.Parse(row["TrainingId"].ToString());
-                training.Title = row["Title"].ToString();
-                training.Description = row["Description"].ToString();
-                training.Deadline = DateTime.Parse(row["Deadline"].ToString());
-                training.Capacity = int.Parse(row["Capacity"].ToString());
-                training.IsClosed = (bool)row["IsClosed"];
-                if (row["PriorityDepartmentId"] is DBNull)
+                var training = new TrainingModel();
+
+                if (await dataReader.ReadAsync())
                 {
-                    training.PriorityDepartment = null;
-                }
-                else
-                {
-                    training.PriorityDepartment = new DepartmentModel
+                    training.TrainingId = dataReader.GetInt32(dataReader.GetOrdinal("TrainingId"));
+                    training.Title = dataReader.GetString(dataReader.GetOrdinal("Title"));
+                    training.Description = dataReader.GetString(dataReader.GetOrdinal("Description"));
+                    training.Deadline = dataReader.GetDateTime(dataReader.GetOrdinal("Deadline"));
+                    training.Capacity = dataReader.GetInt32(dataReader.GetOrdinal("Capacity"));
+                    training.IsClosed = dataReader.GetBoolean(dataReader.GetOrdinal("IsClosed"));
+
+                    if (!dataReader.IsDBNull(dataReader.GetOrdinal("PriorityDepartmentId")))
                     {
-                        DepartmentId = (int)row["PriorityDepartmentId"],
-                        Title = row["DepartmentTitle"].ToString(),
-                    };
+                        training.PriorityDepartment = new DepartmentModel
+                        {
+                            DepartmentId = dataReader.GetInt32(dataReader.GetOrdinal("PriorityDepartmentId")),
+                            Title = dataReader.GetString(dataReader.GetOrdinal("DepartmentTitle"))
+                        };
+                    }
+                    else
+                    {
+                        training.PriorityDepartment = null;
+                    }
                 }
+
+                return training;
             }
-            return training;
         }
-        public bool Add(TrainingViewModel training)
+
+        public async Task<bool> AddAsync(TrainingViewModel training)
         {
             const string AddTrainingQuery = @"
                 BEGIN TRANSACTION
-                    INSERT [dbo].[Training] (Title,Description, Deadline, Capacity, PriorityDepartmentId) 
-                    VALUES (@Title,@Description, @Deadline, @Capacity, @PriorityDepartmentId);
+                    INSERT [dbo].[Training] (Title, Description, Deadline, Capacity, PriorityDepartmentId) 
+                    VALUES (@Title, @Description, @Deadline, @Capacity, @PriorityDepartmentId);
 
                     DECLARE @TrainingId INT = @@IDENTITY
 
@@ -118,32 +131,6 @@ namespace SkillsLabProject.DAL.DAL
                     FROM PreRequisite p
                     JOIN @Details d ON p.Detail = d.Detail
                 COMMIT
-                ";
-            var parameters = new List<SqlParameter>
-            {
-                new SqlParameter("@Title", training.Title),
-                new SqlParameter("@Description", training.Description),
-                new SqlParameter("@Deadline", training.Deadline),
-                new SqlParameter("@Capacity", training.Capacity),
-                new SqlParameter("@Prerequisites",string.Join(",", training.PreRequisites))
-            };
-            if(training.PriorityDepartment == null)
-            {
-                parameters.Add(new SqlParameter("@PriorityDepartmentId", DBNull.Value));
-            }
-            else
-            {
-                parameters.Add(new SqlParameter("@PriorityDepartmentId", training.PriorityDepartment.DepartmentId));
-            }
-
-            return DBCommand.InsertUpdateData(AddTrainingQuery, parameters);
-        }
-
-        public bool Add(TrainingModel training)
-        {
-            const string AddTrainingQuery = @"
-                INSERT [dbo].[Training] (Title,Description, Deadline, Capacity, PriorityDepartmentId) 
-                VALUES (@Title,@Description, @Deadline, @Capacity, @PriorityDepartmentId);
             ";
             var parameters = new List<SqlParameter>
             {
@@ -151,7 +138,9 @@ namespace SkillsLabProject.DAL.DAL
                 new SqlParameter("@Description", training.Description),
                 new SqlParameter("@Deadline", training.Deadline),
                 new SqlParameter("@Capacity", training.Capacity),
+                new SqlParameter("@Prerequisites", string.Join(",", training.PreRequisites))
             };
+
             if (training.PriorityDepartment == null)
             {
                 parameters.Add(new SqlParameter("@PriorityDepartmentId", DBNull.Value));
@@ -160,10 +149,40 @@ namespace SkillsLabProject.DAL.DAL
             {
                 parameters.Add(new SqlParameter("@PriorityDepartmentId", training.PriorityDepartment.DepartmentId));
             }
-            return DBCommand.InsertUpdateData(AddTrainingQuery, parameters);
+
+            return await DBCommand.InsertDataAsync(AddTrainingQuery, parameters).ConfigureAwait(false);
         }
 
-        public bool Update(TrainingViewModel training)
+
+        public async Task<bool> AddAsync(TrainingModel training)
+        {
+            const string AddTrainingQuery = @"
+                INSERT [dbo].[Training] (Title,Description, Deadline, Capacity, PriorityDepartmentId) 
+                VALUES (@Title,@Description, @Deadline, @Capacity, @PriorityDepartmentId);
+            ";
+
+            var parameters = new List<SqlParameter>
+            {
+                new SqlParameter("@Title", training.Title),
+                new SqlParameter("@Description", training.Description),
+                new SqlParameter("@Deadline", training.Deadline),
+                new SqlParameter("@Capacity", training.Capacity),
+            };
+
+            if (training.PriorityDepartment == null)
+            {
+                parameters.Add(new SqlParameter("@PriorityDepartmentId", DBNull.Value));
+            }
+            else
+            {
+                parameters.Add(new SqlParameter("@PriorityDepartmentId", training.PriorityDepartment.DepartmentId));
+            }
+
+            return await DBCommand.InsertDataAsync(AddTrainingQuery, parameters).ConfigureAwait(false);
+        }
+
+
+        public async Task<bool> UpdateAsync(TrainingViewModel training)
         {
             const string UpdateTrainingQuery = @"
                 BEGIN TRANSACTION
@@ -190,15 +209,17 @@ namespace SkillsLabProject.DAL.DAL
                     DELETE FROM Enrollment WHERE TrainingId = @TrainingId
                 COMMIT
             ";
+
             var parameters = new List<SqlParameter>
             {
                 new SqlParameter("@TrainingId", training.TrainingId),
                 new SqlParameter("@Title", training.Title),
-                new SqlParameter("@Description",training.Description),
+                new SqlParameter("@Description", training.Description),
                 new SqlParameter("@Deadline", training.Deadline),
                 new SqlParameter("@Capacity", training.Capacity),
-                new SqlParameter("@Prerequisites",string.Join(",", training.PreRequisites))
+                new SqlParameter("@Prerequisites", string.Join(",", training.PreRequisites))
             };
+
             if (training.PriorityDepartment == null)
             {
                 parameters.Add(new SqlParameter("@PriorityDepartmentId", DBNull.Value));
@@ -207,24 +228,28 @@ namespace SkillsLabProject.DAL.DAL
             {
                 parameters.Add(new SqlParameter("@PriorityDepartmentId", training.PriorityDepartment.DepartmentId));
             }
-            return DBCommand.InsertUpdateData(UpdateTrainingQuery, parameters);
+
+            return await DBCommand.UpdateDataAsync(UpdateTrainingQuery, parameters).ConfigureAwait(false);
         }
-        public bool Update(TrainingModel training)
+
+        public async Task<bool> UpdateAsync(TrainingModel training)
         {
             const string UpdateTrainingQuery = @"
                 UPDATE [dbo].[Training]
                 SET Title=@Title, Description=@Description, Deadline=@Deadline, Capacity=@Capacity, PriorityDepartmentId=@PriorityDepartmentId, IsClosed=@IsClosed
                 WHERE TrainingId=@TrainingId;
             ";
+
             var parameters = new List<SqlParameter>
             {
                 new SqlParameter("@TrainingId", training.TrainingId),
                 new SqlParameter("@Title", training.Title),
-                new SqlParameter("@Description",training.Description),
+                new SqlParameter("@Description", training.Description),
                 new SqlParameter("@Deadline", training.Deadline),
                 new SqlParameter("@Capacity", training.Capacity),
                 new SqlParameter("@IsClosed", training.IsClosed ? 1 : 0),
             };
+
             if (training.PriorityDepartment == null)
             {
                 parameters.Add(new SqlParameter("@PriorityDepartmentId", DBNull.Value));
@@ -232,29 +257,32 @@ namespace SkillsLabProject.DAL.DAL
             else
             {
                 parameters.Add(new SqlParameter("@PriorityDepartmentId", training.PriorityDepartment.DepartmentId));
-
             }
-            return DBCommand.InsertUpdateData(UpdateTrainingQuery, parameters);
+
+            return await DBCommand.UpdateDataAsync(UpdateTrainingQuery, parameters).ConfigureAwait(false);
         }
-        public bool Delete(int trainingId)
+
+        public async Task<bool> DeleteAsync(int trainingId)
         {
             const string DeleteTrainingQuery = @"
                 UPDATE Training
                 SET IsActive=0
                 WHERE TrainingId=@TrainingId
             ";
+
             var parameter = new SqlParameter("@TrainingId", trainingId);
-            return DBCommand.DeleteData(DeleteTrainingQuery, parameter);
+            return await DBCommand.DeleteDataAsync(DeleteTrainingQuery, parameter).ConfigureAwait(false);
         }
 
-        public bool Close(int trainingId)
+
+        public async Task<bool> CloseAsync(int trainingId)
         {
             List<SqlParameter> parameters = new List<SqlParameter>
             {
                 new SqlParameter("@TrainingId", trainingId),
             };
 
-            return DBCommand.ExecuteStoredProcedure("dbo.ProcessEnrollments", parameters);
+            return await DBCommand.ExecuteStoredProcedureAsync("dbo.ProcessEnrollments", parameters).ConfigureAwait(false);
         }
     }
 }

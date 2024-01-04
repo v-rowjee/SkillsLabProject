@@ -5,6 +5,7 @@ using SkillsLabProject.Custom;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 
 namespace SkillsLabProject.Controllers
@@ -27,19 +28,19 @@ namespace SkillsLabProject.Controllers
         }
         [HttpGet]
         [CustomAuthorization("Employee,Manager,Admin")]
-        public ActionResult Index()
+        public async Task<ActionResult> Index()
         {
             var loggeduser = Session["CurrentUser"] as LoginViewModel;
 
-            var employee = _employeeBL.GetEmployee(loggeduser);
+            var employee = await _employeeBL.GetEmployeeAsync(loggeduser);
             ViewBag.Employee = employee;
 
-            var trainings = _trainingBL.GetAllTrainings().Where(t => t.Deadline >= DateTime.Now).ToList();
+            var trainings = (await _trainingBL.GetAllTrainingsAsync()).Where(t => t.Deadline >= DateTime.Now).ToList();
             ViewBag.Trainings = trainings;
 
             Enum.TryParse(Session["CurrentRole"] as string, out Role role);
             employee.Role = role;
-            var enrollmentOfEmployee = _enrollmentBL.GetAllEnrollments(employee).ToList();
+            var enrollmentOfEmployee = (await _enrollmentBL.GetAllEnrollmentsAsync(employee)).ToList();
             ViewBag.EnrollmentIds = new Dictionary<int, int?>();
             foreach (var training in trainings)
             {
@@ -51,26 +52,26 @@ namespace SkillsLabProject.Controllers
 
         [HttpGet]
         [CustomAuthorization("Employee,Manager,Admin")]
-        public ActionResult View(int? id)
+        public async Task<ActionResult> View(int? id)
         {
             if (id == null) return RedirectToAction("Index");
-            var training = _trainingBL.GetTrainingById((int)id);
+            var training = await _trainingBL.GetTrainingByIdAsync((int)id);
             if (training == null) return RedirectToAction("Index");
             ViewBag.Training = training;
 
             var loggeduser = Session["CurrentUser"] as LoginViewModel;
-            var employee = _employeeBL.GetEmployee(loggeduser);
+            var employee = await _employeeBL.GetEmployeeAsync(loggeduser);
             ViewBag.Employee = employee;
 
-            var preRequisites = _preRequisiteBL.GetAllPreRequisites().Where(p => p.TrainingId == training.TrainingId).ToList();
+            var preRequisites = (await _preRequisiteBL.GetAllPreRequisitesAsync()).Where(p => p.TrainingId == training.TrainingId).ToList();
             ViewBag.Prerequisites = preRequisites.Any() ? preRequisites : null;
 
             Enum.TryParse(Session["CurrentRole"] as string, out Role role);
             employee.Role = role;
-            var enrolledStatus = _enrollmentBL.GetAllEnrollments(employee).Where(e => e.Training.TrainingId == training.TrainingId).Select(e => e.Status).FirstOrDefault().ToString();
+            var enrolledStatus = (await _enrollmentBL.GetAllEnrollmentsAsync(employee)).Where(e => e.Training.TrainingId == training.TrainingId).Select(e => e.Status).FirstOrDefault().ToString();
             ViewBag.EnrolledStatus = enrolledStatus;
 
-            var enrollmentId = _enrollmentBL.GetAllEnrollments(employee).Where(e => e.Training.TrainingId == training.TrainingId).Select(e => e.EnrollmentId).FirstOrDefault();
+            var enrollmentId = (await _enrollmentBL.GetAllEnrollmentsAsync(employee)).Where(e => e.Training.TrainingId == training.TrainingId).Select(e => e.EnrollmentId).FirstOrDefault();
             ViewBag.EnrollmentId = enrollmentId;
 
             ViewBag.IsEnrolled = enrolledStatus != "0";
@@ -80,26 +81,26 @@ namespace SkillsLabProject.Controllers
         }
         [HttpGet]
         [CustomAuthorization("Admin")]
-        public ActionResult Create()
+        public async Task<ActionResult> Create()
         {
             var loggeduser = Session["CurrentUser"] as LoginViewModel;
-            ViewBag.Employee = _employeeBL.GetEmployee(loggeduser);
+            ViewBag.Employee = await _employeeBL.GetEmployeeAsync(loggeduser);
 
-            var departments = _departmentBL.GetAllDepartments();
+            var departments = await _departmentBL.GetAllDepartmentsAsync();
             ViewBag.Departments = departments;
 
-            var prerequisiteDetails = _preRequisiteBL.GetAllPreRequisites().Select(p => p.Detail).Distinct().ToList();
+            var prerequisiteDetails = (await _preRequisiteBL.GetAllPreRequisitesAsync()).Select(p => p.Detail).Distinct().ToList();
             ViewBag.PreRequisiteDetails = prerequisiteDetails;
             return View();
         }
         [HttpPost]
         [CustomAuthorization("Admin")]
-        public JsonResult Create(TrainingViewModel training)
+        public async Task<JsonResult> Create(TrainingViewModel training)
         {
             var loggeduser = Session["CurrentUser"] as LoginViewModel;
-            ViewBag.Employee = _employeeBL.GetEmployee(loggeduser);
+            ViewBag.Employee = _employeeBL.GetEmployeeAsync(loggeduser);
 
-            var result = _trainingBL.AddTraining(training);
+            var result = await _trainingBL.AddTrainingAsync(training);
 
             if (result)
             {
@@ -112,33 +113,33 @@ namespace SkillsLabProject.Controllers
         }
         [HttpGet]
         [CustomAuthorization("Admin")]
-        public ActionResult Edit(int? id)
+        public async Task<ActionResult> Edit(int? id)
         {
             if (id == null) return RedirectToAction("Index");
 
             var loggeduser = Session["CurrentUser"] as LoginViewModel;
-            ViewBag.Employee = _employeeBL.GetEmployee(loggeduser);
+            ViewBag.Employee = _employeeBL.GetEmployeeAsync(loggeduser);
 
-            var departments = _departmentBL.GetAllDepartments();
+            var departments = await _departmentBL.GetAllDepartmentsAsync();
             ViewBag.Departments = departments;
 
-            var training = _trainingBL.GetTrainingById((int)id);
+            var training = await _trainingBL.GetTrainingByIdAsync((int)id);
             if (training == null) return RedirectToAction("Index");
             ViewBag.Training = training;
 
-            var preRequisites = _preRequisiteBL.GetAllPreRequisites().Where(p => p.TrainingId == training.TrainingId).ToList();
+            var preRequisites = (await _preRequisiteBL.GetAllPreRequisitesAsync()).Where(p => p.TrainingId == training.TrainingId).ToList();
             ViewBag.Prerequisites = preRequisites.Any() ? preRequisites : null;
 
-            var prerequisiteDetails = _preRequisiteBL.GetAllPreRequisites().Select(p => p.Detail).Distinct().ToList();
+            var prerequisiteDetails = (await _preRequisiteBL.GetAllPreRequisitesAsync()).Select(p => p.Detail).Distinct().ToList();
             ViewBag.PreRequisiteDetails = prerequisiteDetails;
 
             return View();
         }
         [HttpPost]
         [CustomAuthorization("Admin")]
-        public JsonResult Edit(TrainingViewModel training)
+        public async Task<JsonResult> Edit(TrainingViewModel training)
         {
-            var result = _trainingBL.UpdateTraining(training);
+            var result = await _trainingBL.AddTrainingAsync(training);
             if (result)
             {
                 return Json(new { result = "Success", url = Url.Action("View", "Training",training.TrainingId) });
@@ -150,9 +151,9 @@ namespace SkillsLabProject.Controllers
         }
         [HttpPost]
         [CustomAuthorization("Admin")]
-        public JsonResult Delete(int id)
+        public async Task<JsonResult> Delete(int id)
         {
-            var result = _trainingBL.DeleteTraining(id);
+            var result = await _trainingBL.DeleteTrainingAsync(id);
             if (result)
             {
                 return Json(new { result = "Success", url = Url.Action("Index", "Training") });
@@ -165,9 +166,9 @@ namespace SkillsLabProject.Controllers
 
         [HttpPost]
         [CustomAuthorization("Admin")]
-        public JsonResult Close(int id)
+        public async Task<JsonResult> Close(int id)
         {
-            var result = _trainingBL.CloseTraining(id);
+            var result = await _trainingBL.CloseTrainingAsync(id);
             if (result)
             {
                 return Json(new { result = "Success", url = Url.Action("Index", "Training") });

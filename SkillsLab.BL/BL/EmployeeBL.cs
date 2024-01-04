@@ -1,10 +1,7 @@
-﻿using SkillsLabProject.Common.Models;
-using SkillsLabProject.DAL.DAL;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using SkillsLabProject.Common.Models;
+using SkillsLabProject.DAL.DAL;
 using SkillsLabProject.Common.Models.ViewModels;
 using SkillsLabProject.Common.Enums;
 
@@ -12,13 +9,14 @@ namespace SkillsLabProject.BL.BL
 {
     public interface IEmployeeBL
     {
-        IEnumerable<EmployeeModel> GetAllEmployees();
-        EmployeeModel GetEmployee(LoginViewModel model);
-        EmployeeModel GetEmployeeById(int employeeId);
-        bool UpdateEmployee(EmployeeModel employee);
-        bool DeleteEmployee(int employeeId);
-        List<Role> GetUserRoles(int employeeId);
+        Task<IEnumerable<EmployeeModel>> GetAllEmployeesAsync();
+        Task<EmployeeModel> GetEmployeeAsync(LoginViewModel model);
+        Task<EmployeeModel> GetEmployeeByIdAsync(int employeeId);
+        Task<bool> UpdateEmployeeAsync(EmployeeModel employee);
+        Task<bool> DeleteEmployeeAsync(int employeeId);
+        Task<List<Role>> GetUserRolesAsync(int employeeId);
     }
+
     public class EmployeeBL : IEmployeeBL
     {
         private readonly IEmployeeDAL _employeeDAL;
@@ -27,29 +25,35 @@ namespace SkillsLabProject.BL.BL
         {
             _employeeDAL = employeeDAL;
         }
-        public EmployeeModel GetEmployee(LoginViewModel model)
-        { 
-            return _employeeDAL.GetEmployee(model);
-        }
-        public EmployeeModel GetEmployeeById(int employeeId)
+
+        public async Task<EmployeeModel> GetEmployeeAsync(LoginViewModel model)
         {
-            return _employeeDAL.GetEmployeeById(employeeId);
+            return await _employeeDAL.GetEmployeeAsync(model);
         }
-        public IEnumerable<EmployeeModel> GetAllEmployees() 
-        { 
-            return _employeeDAL.GetAllEmployees();
-        }
-        public bool UpdateEmployee(EmployeeModel employee) 
-        { 
-            return _employeeDAL.UpdateEmployee(employee); 
-        }
-        public bool DeleteEmployee(int employeeId) 
-        { 
-            return _employeeDAL.DeleteEmployee(employeeId);
-        }
-        public List<Role> GetUserRoles(int employeeId)
+
+        public async Task<EmployeeModel> GetEmployeeByIdAsync(int employeeId)
         {
-            return _employeeDAL.GetUserRoles(employeeId);
+            return await _employeeDAL.GetEmployeeByIdAsync(employeeId);
+        }
+
+        public async Task<IEnumerable<EmployeeModel>> GetAllEmployeesAsync()
+        {
+            return await _employeeDAL.GetAllEmployeesAsync();
+        }
+
+        public async Task<bool> UpdateEmployeeAsync(EmployeeModel employee)
+        {
+            return await _employeeDAL.UpdateEmployeeAsync(employee);
+        }
+
+        public async Task<bool> DeleteEmployeeAsync(int employeeId)
+        {
+            return await _employeeDAL.DeleteEmployeeAsync(employeeId);
+        }
+
+        public async Task<List<Role>> GetUserRolesAsync(int employeeId)
+        {
+            return await _employeeDAL.GetUserRolesAsync(employeeId);
         }
     }
 }

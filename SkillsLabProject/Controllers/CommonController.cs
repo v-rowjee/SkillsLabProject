@@ -3,6 +3,7 @@ using SkillsLabProject.Common.Enums;
 using SkillsLabProject.Common.Models.ViewModels;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 
 namespace SkillsLabProject.Controllers
@@ -30,16 +31,16 @@ namespace SkillsLabProject.Controllers
 
         //GET: Role
         [HttpGet]
-        public ActionResult Role()
+        public async Task<ActionResult> Role()
         {
             var role = Session["CurrentRole"] as string;
             if (role != null) return RedirectToAction("Index", "Common");
             var loggeduser = Session["CurrentUser"] as LoginViewModel;
             if (loggeduser == null) return RedirectToAction("Index", "Login");
-            var employee = _employeeBL.GetEmployee(loggeduser);
+            var employee = await _employeeBL.GetEmployeeAsync(loggeduser);
             ViewBag.Employee = employee;
 
-            var roles = _employeeBL.GetUserRoles(employee.EmployeeId).ToList();
+            var roles = (await _employeeBL.GetUserRolesAsync(employee.EmployeeId)).ToList();
             ViewBag.Roles = roles;
 
             return View();

@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Data.SqlClient;
-using System.Data;
+﻿using SkillsLabProject.Common.DAL;
 using SkillsLabProject.Common.Models;
-using SkillsLabProject.Common.DAL;
+using System.Collections.Generic;
+using System.Data.SqlClient;
+using System.Threading.Tasks;
 
 namespace SkillsLabProject.DAL.DAL
 {
@@ -11,7 +11,7 @@ namespace SkillsLabProject.DAL.DAL
     }
     public class ProofDAL : IProofDAL
     {
-        public bool Add(ProofModel model)
+        public async Task<bool> AddAsync(ProofModel model)
         {
             const string AddProofQuery = @"
                 INSERT [dbo].[Proof] (EnrollmentId, Attachment) VALUES (@EnrollmentId, @Attachment);
@@ -21,71 +21,92 @@ namespace SkillsLabProject.DAL.DAL
                 new SqlParameter("@EnrollmentId", model.EnrollmentId),
                 new SqlParameter("@Attachment", model.Attachment)
             };
-            return DBCommand.InsertUpdateData(AddProofQuery, parameters);
+
+            return await DBCommand.InsertDataAsync(AddProofQuery, parameters).ConfigureAwait(false);
         }
-        public bool Delete(int ProofId)
+
+        public async Task<bool> DeleteAsync(int proofId)
         {
             const string DeleteProofQuery = @"
                 DELETE FROM [dbo].[Proof] WHERE ProofId=@ProofId
             ";
-            var parameter = new SqlParameter("@ProofId", ProofId);
-            return DBCommand.DeleteData(DeleteProofQuery, parameter);
+            var parameter = new SqlParameter("@ProofId", proofId);
+
+            return await DBCommand.DeleteDataAsync(DeleteProofQuery, parameter).ConfigureAwait(false);
         }
-        public IEnumerable<ProofModel> GetAll()
+
+        public async Task<IEnumerable<ProofModel>> GetAllAsync()
         {
             const string GetAllProofsQuery = @"
                 SELECT ProofId, EnrollmentId, Attachment
                 FROM [dbo].[Proof]
             ";
-            var dt = DBCommand.GetData(GetAllProofsQuery);
-            var Proofs = new List<ProofModel>();
-            ProofModel Proof;
-            foreach (DataRow row in dt.Rows)
-            {
-                Proof = new ProofModel();
-                Proof.ProofId = int.Parse(row["ProofId"].ToString());
-                Proof.EnrollmentId = int.Parse(row["EnrollmentId"].ToString());
-                Proof.Attachment = row["Attachment"].ToString();
 
-                Proofs.Add(Proof);
+            var proofs = new List<ProofModel>();
+
+            using (SqlDataReader dataReader = await DBCommand.GetDataAsync(GetAllProofsQuery))
+            {
+                while (await dataReader.ReadAsync())
+                {
+                    var proof = new ProofModel
+                    {
+                        ProofId = dataReader.GetInt32(dataReader.GetOrdinal("ProofId")),
+                        EnrollmentId = dataReader.GetInt32(dataReader.GetOrdinal("EnrollmentId")),
+                        Attachment = dataReader.GetString(dataReader.GetOrdinal("Attachment"))
+                    };
+
+                    proofs.Add(proof);
+                }
             }
-            return Proofs;
+
+            return proofs;
         }
-        public ProofModel GetById(int ProofId)
+
+        public async Task<ProofModel> GetByIdAsync(int proofId)
         {
             const string GetProofQuery = @"
                 SELECT ProofId, EnrollmentId, Attachment
                 FROM [dbo].[Proof]
                 WHERE [ProofId] = @ProofId
             ";
+
             var parameters = new List<SqlParameter>
             {
-                new SqlParameter("@ProofId", ProofId)
+                new SqlParameter("@ProofId", proofId)
             };
-            var dt = DBCommand.GetDataWithCondition(GetProofQuery, parameters);
-            var Proof = new ProofModel();
-            foreach (DataRow row in dt.Rows)
+
+            var proof = new ProofModel();
+
+            using (SqlDataReader dataReader = await DBCommand.GetDataWithConditionAsync(GetProofQuery, parameters))
             {
-                Proof.ProofId = int.Parse(row["ProofId"].ToString());
-                Proof.EnrollmentId = int.Parse(row["EnrollmentId"].ToString());
-                Proof.Attachment = row["Attachment"].ToString();
+                while (await dataReader.ReadAsync())
+                {
+                    proof.ProofId = dataReader.GetInt32(dataReader.GetOrdinal("ProofId"));
+                    proof.EnrollmentId = dataReader.GetInt32(dataReader.GetOrdinal("EnrollmentId"));
+                    proof.Attachment = dataReader.GetString(dataReader.GetOrdinal("Attachment"));
+                }
             }
-            return Proof;
+
+            return proof;
         }
-        public bool Update(ProofModel model)
+
+        public async Task<bool> UpdateAsync(ProofModel model)
         {
             const string UpdateProofQuery = @"
                 UPDATE [dbo].[Proof]
                 SET EnrollmentId=@EnrollmentId, Attachment=@Attachment
                 WHERE ProofId=@ProofId;
             ";
+
             var parameters = new List<SqlParameter>
             {
                 new SqlParameter("@ProofId", model.ProofId),
                 new SqlParameter("@EnrollmentId", model.EnrollmentId),
                 new SqlParameter("@Attachment", model.Attachment)
             };
-            return DBCommand.InsertUpdateData(UpdateProofQuery, parameters);
+
+            return await DBCommand.UpdateDataAsync(UpdateProofQuery, parameters).ConfigureAwait(false);
         }
+
     }
 }

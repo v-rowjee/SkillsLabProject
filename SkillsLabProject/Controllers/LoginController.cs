@@ -1,6 +1,7 @@
 ﻿using SkillsLabProject.Common.Models.ViewModels;
 using System.Web.Mvc;
 using SkillsLabProject.BL.BL;
+using System.Threading.Tasks;
 
 namespace SkillsLabProject.Controllers
 {
@@ -26,9 +27,9 @@ namespace SkillsLabProject.Controllers
 
         // POST: Login/Authenticate
         [HttpPost]
-        public JsonResult Authenticate(LoginViewModel model)
+        public async Task<JsonResult> Authenticate(LoginViewModel model)
         {
-            var IsUserValid = _appUserBL.AuthenticateUser(model);
+            var IsUserValid = await _appUserBL.AuthenticateUserAsync(model);
             if (IsUserValid)
             {
                 Session["CurrentUser"] = model;

@@ -4,6 +4,8 @@ using SkillsLabProject.Common.Models;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Threading.Tasks;
+
 namespace SkillsLabProject.DAL.DAL
 {
     public interface IPreRequisiteDAL : IDAL<PreRequisiteModel>
@@ -11,7 +13,7 @@ namespace SkillsLabProject.DAL.DAL
     }
     public class PreRequisiteDAL : IPreRequisiteDAL
     {
-        public bool Add(PreRequisiteModel model)
+        public async Task<bool> AddAsync(PreRequisiteModel model)
         {
             const string AddPreRequisiteQuery = @"
                 INSERT [dbo].[PreRequisite] (Detail) VALUES (@Detail);
@@ -20,18 +22,22 @@ namespace SkillsLabProject.DAL.DAL
             {
                 new SqlParameter("@Detail", model.Detail)
             };
-            return DBCommand.InsertUpdateData(AddPreRequisiteQuery, parameters);
+
+            return await DBCommand.InsertDataAsync(AddPreRequisiteQuery, parameters).ConfigureAwait(false);
         }
-        public bool Delete(int PreRequisiteId)
+
+        public async Task<bool> DeleteAsync(int preRequisiteId)
         {
             const string DeletePreRequisiteQuery = @"
                 DELETE FROM [dbo].[TrainingPreRequisite] WHERE PreRequisiteId=@PreRequisiteId;
                 DELETE FROM [dbo].[PreRequisite] WHERE PreRequisiteId=@PreRequisiteId
             ";
-            var parameter = new SqlParameter("@PreRequisiteId", PreRequisiteId);
-            return DBCommand.DeleteData(DeletePreRequisiteQuery, parameter);
+            var parameter = new SqlParameter("@PreRequisiteId", preRequisiteId);
+
+            return await DBCommand.DeleteDataAsync(DeletePreRequisiteQuery, parameter).ConfigureAwait(false);
         }
-        public IEnumerable<PreRequisiteModel> GetAll()
+
+        public async Task<IEnumerable<PreRequisiteModel>> GetAllAsync()
         {
             const string GetAllPreRequisitesQuery = @"
                 SELECT p.PreRequisiteId, p.Detail, t.TrainingId
@@ -39,23 +45,28 @@ namespace SkillsLabProject.DAL.DAL
                 INNER JOIN [dbo].[TrainingPreRequisite] t
                 ON p.PreRequisiteId = t.PreRequisiteId
             ";
-            var dt = DBCommand.GetData(GetAllPreRequisitesQuery);
-            var PreRequisites = new List<PreRequisiteModel>();
-            PreRequisiteModel PreRequisite;
-            foreach (DataRow row in dt.Rows)
-            {
-                PreRequisite = new PreRequisiteModel
-                {
-                    PreRequisiteId = int.Parse(row["PreRequisiteId"].ToString()),
-                    Detail = row["Detail"].ToString(),
-                    TrainingId = (int)row["TrainingId"]
-                };
 
-                PreRequisites.Add(PreRequisite);
+            var preRequisites = new List<PreRequisiteModel>();
+
+            using (SqlDataReader dataReader = await DBCommand.GetDataAsync(GetAllPreRequisitesQuery))
+            {
+                while (await dataReader.ReadAsync())
+                {
+                    var preRequisite = new PreRequisiteModel
+                    {
+                        PreRequisiteId = dataReader.GetInt32(dataReader.GetOrdinal("PreRequisiteId")),
+                        Detail = dataReader.GetString(dataReader.GetOrdinal("Detail")),
+                        TrainingId = dataReader.GetInt32(dataReader.GetOrdinal("TrainingId"))
+                    };
+
+                    preRequisites.Add(preRequisite);
+                }
             }
-            return PreRequisites;
+
+            return preRequisites;
         }
-        public PreRequisiteModel GetById(int PreRequisiteId)
+
+        public async Task<PreRequisiteModel> GetByIdAsync(int preRequisiteId)
         {
             const string GetPreRequisiteQuery = @"
                 SELECT p.PreRequisiteId, p.Detail, t.TrainingId
@@ -64,33 +75,43 @@ namespace SkillsLabProject.DAL.DAL
                 ON p.PreRequisiteId = t.PreRequisiteId
                 WHERE [PreRequisiteId] = @PreRequisiteId
             ";
+
             var parameters = new List<SqlParameter>
             {
-                new SqlParameter("@PreRequisiteId", PreRequisiteId)
+                new SqlParameter("@PreRequisiteId", preRequisiteId)
             };
-            var dt = DBCommand.GetDataWithCondition(GetPreRequisiteQuery, parameters);
-            var PreRequisite = new PreRequisiteModel();
-            foreach (DataRow row in dt.Rows)
+
+            var preRequisite = new PreRequisiteModel();
+
+            using (SqlDataReader dataReader = await DBCommand.GetDataWithConditionAsync(GetPreRequisiteQuery, parameters))
             {
-                PreRequisite.PreRequisiteId = int.Parse(row["PreRequisiteId"].ToString());
-                PreRequisite.Detail = row["Title"].ToString();
-                PreRequisite.TrainingId = (int)row["TrainingId"];
+                while (await dataReader.ReadAsync())
+                {
+                    preRequisite.PreRequisiteId = dataReader.GetInt32(dataReader.GetOrdinal("PreRequisiteId"));
+                    preRequisite.Detail = dataReader.GetString(dataReader.GetOrdinal("Detail"));
+                    preRequisite.TrainingId = dataReader.GetInt32(dataReader.GetOrdinal("TrainingId"));
+                }
             }
-            return PreRequisite;
+
+            return preRequisite;
         }
-        public bool Update(PreRequisiteModel model)
+
+        public async Task<bool> UpdateAsync(PreRequisiteModel model)
         {
             const string UpdatePreRequisiteQuery = @"
                 UPDATE [dbo].[PreRequisite]
                 SET Detail=@Detail
                 WHERE PreRequisiteId=@PreRequisiteId;
             ";
+
             var parameters = new List<SqlParameter>
             {
                 new SqlParameter("@PreRequisiteId", model.PreRequisiteId),
                 new SqlParameter("@Detail", model.Detail)
             };
-            return DBCommand.InsertUpdateData(UpdatePreRequisiteQuery, parameters);
+
+            return await DBCommand.UpdateDataAsync(UpdatePreRequisiteQuery, parameters).ConfigureAwait(false);
         }
+
     }
 }

@@ -1,24 +1,22 @@
-﻿using SkillsLabProject.DAL.DAL;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using SkillsLabProject.Common.Models;
 using SkillsLabProject.Common.Models.ViewModels;
-using SkillsLabProject.Common.Enums;
+using SkillsLabProject.Common.Models;
+using SkillsLabProject.DAL.DAL;
 
 namespace SkillsLabProject.BL.BL
 {
     public interface ITrainingBL
     {
-        IEnumerable<TrainingViewModel> GetAllTrainings();
-        TrainingModel GetTrainingById(int trainingId);
-        bool AddTraining(TrainingViewModel model);
-        bool UpdateTraining(TrainingViewModel model);
-        bool DeleteTraining(int trainingId);
-        bool CloseTraining(int trainingId);
+        Task<IEnumerable<TrainingViewModel>> GetAllTrainingsAsync();
+        Task<TrainingModel> GetTrainingByIdAsync(int trainingId);
+        Task<bool> AddTrainingAsync(TrainingViewModel model);
+        Task<bool> UpdateTrainingAsync(TrainingViewModel model);
+        Task<bool> DeleteTrainingAsync(int trainingId);
+        Task<bool> CloseTrainingAsync(int trainingId);
     }
+
     public class TrainingBL : ITrainingBL
     {
         private readonly ITrainingDAL _trainingDAL;
@@ -27,7 +25,7 @@ namespace SkillsLabProject.BL.BL
         private readonly IEmployeeDAL _employeeDAL;
         private readonly IPreRequisiteDAL _preRequisiteDAL;
 
-        public TrainingBL(ITrainingDAL trainingDAL, IDepartmentDAL departmentDAL,IEnrollmentDAL enrollmentDAL, IEmployeeDAL employeeDAL, IPreRequisiteDAL preRequisiteDAL)
+        public TrainingBL(ITrainingDAL trainingDAL, IDepartmentDAL departmentDAL, IEnrollmentDAL enrollmentDAL, IEmployeeDAL employeeDAL, IPreRequisiteDAL preRequisiteDAL)
         {
             _trainingDAL = trainingDAL;
             _departmentDAL = departmentDAL;
@@ -36,9 +34,9 @@ namespace SkillsLabProject.BL.BL
             _preRequisiteDAL = preRequisiteDAL;
         }
 
-        public bool AddTraining(TrainingViewModel training)
+        public async Task<bool> AddTrainingAsync(TrainingViewModel training)
         {
-            if(training.PreRequisites == null)
+            if (training.PreRequisites == null)
             {
                 var trainingModel = new TrainingModel
                 {
@@ -46,31 +44,34 @@ namespace SkillsLabProject.BL.BL
                     Description = training.Description,
                     Deadline = training.Deadline,
                     Capacity = training.Capacity,
-                    PriorityDepartment = _departmentDAL.GetById(training.PriorityDepartment.DepartmentId)
+                    PriorityDepartment = await _departmentDAL.GetByIdAsync(training.PriorityDepartment.DepartmentId)
                 };
-                return _trainingDAL.Add(trainingModel);
+                return await _trainingDAL.AddAsync(trainingModel);
             }
             else
             {
-                return _trainingDAL.Add(training);
+                return await _trainingDAL.AddAsync(training);
             }
         }
-        public bool DeleteTraining(int trainingId)
+
+        public async Task<bool> DeleteTrainingAsync(int trainingId)
         {
-            return _trainingDAL.Delete(trainingId);
+            return await _trainingDAL.DeleteAsync(trainingId);
         }
-        public TrainingModel GetTrainingById(int trainingId)
+
+        public async Task<TrainingModel> GetTrainingByIdAsync(int trainingId)
         {
-            return _trainingDAL.GetById(trainingId);
+            return await _trainingDAL.GetByIdAsync(trainingId);
         }
-        public IEnumerable<TrainingViewModel> GetAllTrainings()
+
+        public async Task<IEnumerable<TrainingViewModel>> GetAllTrainingsAsync()
         {
             List<TrainingViewModel> trainingModels = new List<TrainingViewModel>();
-            var trainings = _trainingDAL.GetAll();
+            var trainings = await _trainingDAL.GetAllAsync();
             foreach (var training in trainings)
             {
-                var employeeEnrolled = _enrollmentDAL.GetAll().Where(e => e.TrainingId == training.TrainingId).Count();
-                var prerequisitesString = _preRequisiteDAL.GetAll().Where(p => p.TrainingId == training.TrainingId).Select(p => p.Detail).ToList();
+                var employeeEnrolled = (await _enrollmentDAL.GetAllAsync()).Count(e => e.TrainingId == training.TrainingId);
+                var prerequisitesString = (await _preRequisiteDAL.GetAllAsync()).Where(p => p.TrainingId == training.TrainingId).Select(p => p.Detail).ToList();
                 var trainingModel = new TrainingViewModel
                 {
                     TrainingId = training.TrainingId,
@@ -87,7 +88,8 @@ namespace SkillsLabProject.BL.BL
             }
             return trainingModels;
         }
-        public bool UpdateTraining(TrainingViewModel training)
+
+        public async Task<bool> UpdateTrainingAsync(TrainingViewModel training)
         {
             if (training.PreRequisites == null)
             {
@@ -97,20 +99,19 @@ namespace SkillsLabProject.BL.BL
                     Description = training.Description,
                     Deadline = training.Deadline,
                     Capacity = training.Capacity,
-                    PriorityDepartment = _departmentDAL.GetById(training.PriorityDepartment.DepartmentId)
+                    PriorityDepartment = await _departmentDAL.GetByIdAsync(training.PriorityDepartment.DepartmentId)
                 };
-                return _trainingDAL.Update(trainingModel);
+                return await _trainingDAL.UpdateAsync(trainingModel);
             }
             else
             {
-                return _trainingDAL.Update(training);
+                return await _trainingDAL.UpdateAsync(training);
             }
         }
 
-        public bool CloseTraining(int trainingId)
+        public async Task<bool> CloseTrainingAsync(int trainingId)
         {
-            return _trainingDAL.Close(trainingId);
+            return await _trainingDAL.CloseAsync(trainingId);
         }
-
     }
 }

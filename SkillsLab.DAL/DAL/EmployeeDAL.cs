@@ -1,26 +1,25 @@
-﻿using SkillsLabProject.Common.Enums;
+﻿using SkillsLabProject.Common.DAL;
+using SkillsLabProject.Common.Enums;
+using SkillsLabProject.Common.Models;
 using SkillsLabProject.Common.Models.ViewModels;
 using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.Data;
-using SkillsLabProject.Common.DAL;
-using SkillsLabProject.Common.Models;
-using System.Web.UI.WebControls;
+using System.Threading.Tasks;
 
 namespace SkillsLabProject.DAL.DAL
 {
     public interface IEmployeeDAL
     {
-        bool DeleteEmployee(int employeeId);
-        IEnumerable<EmployeeModel> GetAllEmployees();
-        EmployeeModel GetEmployee(LoginViewModel model);
-        EmployeeModel GetEmployeeById(int employeeId);
-        bool UpdateEmployee(EmployeeModel employee);
-        List<Role> GetUserRoles(int employeeId);
+        Task<bool> DeleteEmployeeAsync(int employeeId);
+        Task<IEnumerable<EmployeeModel>> GetAllEmployeesAsync();
+        Task<EmployeeModel> GetEmployeeAsync(LoginViewModel model);
+        Task<EmployeeModel> GetEmployeeByIdAsync(int employeeId);
+        Task<bool> UpdateEmployeeAsync(EmployeeModel employee);
+        Task<List<Role>> GetUserRolesAsync(int employeeId);
     }
     public class EmployeeDAL : IEmployeeDAL
     {
-        public bool DeleteEmployee(int employeeId)
+        public async Task<bool> DeleteEmployeeAsync(int employeeId)
         {
             const string DeleteEmployeeQuery = @"
                 DELETE FROM AppUser WHERE EmployeeId=@EmployeeId;
@@ -28,9 +27,9 @@ namespace SkillsLabProject.DAL.DAL
                 DELETE FROM Employee WHERE EmployeeId=@EmployeeId
             ";
             var parameter = new SqlParameter("@EmployeeId", employeeId);
-            return DBCommand.DeleteData(DeleteEmployeeQuery, parameter);
+            return await DBCommand.DeleteDataAsync(DeleteEmployeeQuery, parameter);
         }
-        public IEnumerable<EmployeeModel> GetAllEmployees()
+        public async Task<IEnumerable<EmployeeModel>> GetAllEmployeesAsync()
         {
             const string GetAllEmployeesQuery = @"
                 SELECT e.EmployeeId, FirstName, LastName, NIC, PhoneNumber, e.DepartmentId, a.Email, d.Title
@@ -38,30 +37,35 @@ namespace SkillsLabProject.DAL.DAL
                 INNER JOIN [dbo].[AppUser] as a ON e.EmployeeId = a.EmployeeId
                 INNER JOIN [dbo].[Department] as d ON e.DepartmentId = d.DepartmentId
             ";
-            var dt = DBCommand.GetData(GetAllEmployeesQuery);
+
             var employees = new List<EmployeeModel>();
-            EmployeeModel employee;
-            foreach (DataRow row in dt.Rows)
+
+            using (SqlDataReader dataReader = await DBCommand.GetDataAsync(GetAllEmployeesQuery))
             {
-                employee = new EmployeeModel
+                while (await dataReader.ReadAsync())
                 {
-                    EmployeeId = int.Parse(row["EmployeeId"].ToString()),
-                    FirstName = row["FirstName"].ToString(),
-                    LastName = row["LastName"].ToString(),
-                    NIC = row["NIC"].ToString(),
-                    PhoneNumber = row["PhoneNumber"].ToString(),
-                    Email = row["Email"].ToString(),
-                    Department = new DepartmentModel
+                    var employee = new EmployeeModel
                     {
-                        DepartmentId = int.Parse(row["DepartmentId"].ToString()),
-                        Title = row["Title"].ToString()
-                    },
-                };
-                employees.Add(employee);
+                        EmployeeId = dataReader.GetInt32(dataReader.GetOrdinal("EmployeeId")),
+                        FirstName = dataReader["FirstName"].ToString(),
+                        LastName = dataReader["LastName"].ToString(),
+                        NIC = dataReader["NIC"].ToString(),
+                        PhoneNumber = dataReader["PhoneNumber"].ToString(),
+                        Email = dataReader["Email"].ToString(),
+                        Department = new DepartmentModel
+                        {
+                            DepartmentId = dataReader.GetInt32(dataReader.GetOrdinal("DepartmentId")),
+                            Title = dataReader["Title"].ToString()
+                        },
+                    };
+                    employees.Add(employee);
+                }
             }
+
             return employees;
         }
-        public EmployeeModel GetEmployee(LoginViewModel login)
+
+        public async Task<EmployeeModel> GetEmployeeAsync(LoginViewModel login)
         {
             const string GetEmployeeQuery = @"
                 SELECT e.EmployeeId, e.FirstName, e.LastName, e.NIC, e.PhoneNumber, e.DepartmentId, a.Email, d.Title
@@ -70,30 +74,36 @@ namespace SkillsLabProject.DAL.DAL
                 INNER JOIN [dbo].[Department] as d ON e.DepartmentId = d.DepartmentId
                 WHERE a.[Email] = @Email
             ";
+
             var parameters = new List<SqlParameter>
             {
                 new SqlParameter("@Email", login.Email)
             };
-            var dt = DBCommand.GetDataWithCondition(GetEmployeeQuery, parameters);
+
             var employee = new EmployeeModel();
-            foreach (DataRow row in dt.Rows)
+
+            using (SqlDataReader dataReader = await DBCommand.GetDataWithConditionAsync(GetEmployeeQuery, parameters))
             {
-                employee.EmployeeId = int.Parse(row["EmployeeId"].ToString());
-                employee.FirstName = row["FirstName"].ToString();
-                employee.LastName = row["LastName"].ToString();
-                employee.NIC = row["NIC"].ToString();
-                employee.PhoneNumber = row["PhoneNumber"].ToString();
-                employee.Email = row["Email"].ToString();
-                employee.Department = new DepartmentModel
+                while (await dataReader.ReadAsync())
                 {
-                    DepartmentId = int.Parse(row["DepartmentId"].ToString()),
-                    Title = row["Title"].ToString()
-                };
+                    employee.EmployeeId = dataReader.GetInt32(dataReader.GetOrdinal("EmployeeId"));
+                    employee.FirstName = dataReader["FirstName"].ToString();
+                    employee.LastName = dataReader["LastName"].ToString();
+                    employee.NIC = dataReader["NIC"].ToString();
+                    employee.PhoneNumber = dataReader["PhoneNumber"].ToString();
+                    employee.Email = dataReader["Email"].ToString();
+                    employee.Department = new DepartmentModel
+                    {
+                        DepartmentId = dataReader.GetInt32(dataReader.GetOrdinal("DepartmentId")),
+                        Title = dataReader["Title"].ToString()
+                    };
+                }
             }
             return employee;
         }
 
-        public EmployeeModel GetEmployeeById(int employeeId)
+
+        public async Task<EmployeeModel> GetEmployeeByIdAsync(int employeeId)
         {
             const string GetEmployeeQuery = @"
                 SELECT e.EmployeeId, e.FirstName, e.LastName, e.NIC, e.PhoneNumber, e.DepartmentId, a.Email, d.Title
@@ -102,30 +112,36 @@ namespace SkillsLabProject.DAL.DAL
                 INNER JOIN [dbo].[Department] as d ON e.DepartmentId = d.DepartmentId
                 WHERE e.[EmployeeId] = @EmployeeId
             ";
+
             var parameters = new List<SqlParameter>
             {
                 new SqlParameter("@EmployeeId", employeeId)
             };
-            var dt = DBCommand.GetDataWithCondition(GetEmployeeQuery, parameters);
+
             var employee = new EmployeeModel();
-            foreach (DataRow row in dt.Rows)
+
+            using (SqlDataReader dataReader = await DBCommand.GetDataWithConditionAsync(GetEmployeeQuery, parameters))
             {
-                employee.EmployeeId = int.Parse(row["EmployeeId"].ToString());
-                employee.FirstName = row["FirstName"].ToString();
-                employee.LastName = row["LastName"].ToString();
-                employee.NIC = row["NIC"].ToString();
-                employee.PhoneNumber = row["PhoneNumber"].ToString();
-                employee.Email = row["Email"].ToString();
-                employee.Department = new DepartmentModel
+                while (await dataReader.ReadAsync())
                 {
-                    DepartmentId = int.Parse(row["DepartmentId"].ToString()),
-                    Title = row["Title"].ToString()
-                };
+                    employee.EmployeeId = dataReader.GetInt32(dataReader.GetOrdinal("EmployeeId"));
+                    employee.FirstName = dataReader["FirstName"].ToString();
+                    employee.LastName = dataReader["LastName"].ToString();
+                    employee.NIC = dataReader["NIC"].ToString();
+                    employee.PhoneNumber = dataReader["PhoneNumber"].ToString();
+                    employee.Email = dataReader["Email"].ToString();
+                    employee.Department = new DepartmentModel
+                    {
+                        DepartmentId = dataReader.GetInt32(dataReader.GetOrdinal("DepartmentId")),
+                        Title = dataReader["Title"].ToString()
+                    };
+                }
             }
             return employee;
         }
 
-        public bool UpdateEmployee(EmployeeModel employee)
+
+        public async Task<bool> UpdateEmployeeAsync(EmployeeModel employee)
         {
             const string UpdateEmployeeQuery = @"
                 UPDATE [dbo].[Employee] e
@@ -134,6 +150,7 @@ namespace SkillsLabProject.DAL.DAL
                 SET FirstName=@FirstName, LastName=@LastName, NIC=@NIC, PhoneNumber=@PhoneNumber, e.DepartmentId=@DepartmentId, a.Email=@Email, d.Title=@Title
                 WHERE EmployeeId=@EmployeeId;
             ";
+
             var parameters = new List<SqlParameter>
             {
                 new SqlParameter("@EmployeeId", employee.EmployeeId),
@@ -145,10 +162,12 @@ namespace SkillsLabProject.DAL.DAL
                 new SqlParameter("@DepartmentId", employee.Department.DepartmentId),
                 new SqlParameter("@Title", employee.Department.Title),
             };
-            return DBCommand.InsertUpdateData(UpdateEmployeeQuery, parameters);
+
+            return await DBCommand.UpdateDataAsync(UpdateEmployeeQuery, parameters);
         }
 
-        public List<Role> GetUserRoles(int employeeId)
+
+        public async Task<List<Role>> GetUserRolesAsync(int employeeId)
         {
             const string GetRolesQuery = @"
                 SELECT u.RoleId
@@ -156,17 +175,23 @@ namespace SkillsLabProject.DAL.DAL
                 INNER JOIN [dbo].[AppUser] a ON u.AppUserId = a.AppUserId
                 WHERE a.EmployeeId = @EmployeeId
             ";
+
             var parameters = new List<SqlParameter>
             {
                 new SqlParameter("@EmployeeId", employeeId)
             };
-            var dt = DBCommand.GetDataWithCondition(GetRolesQuery, parameters);
+
             var roles = new List<Role>();
-            foreach (DataRow row in dt.Rows)
+
+            using (SqlDataReader dataReader = await DBCommand.GetDataWithConditionAsync(GetRolesQuery, parameters))
             {
-                Role role = (Role)int.Parse(row["RoleId"].ToString());
-                roles.Add(role);
+                while (await dataReader.ReadAsync())
+                {
+                    Role role = (Role)dataReader.GetInt32(dataReader.GetOrdinal("RoleId"));
+                    roles.Add(role);
+                }
             }
+
             return roles;
         }
     }

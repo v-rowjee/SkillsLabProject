@@ -1,21 +1,19 @@
 ﻿using SkillsLabProject.Common.Models;
 using SkillsLabProject.DAL.DAL;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+using System.Threading.Tasks;
 
 namespace SkillsLabProject.BL.BL
 {
     public interface IProofBL
     {
-        IEnumerable<ProofModel> GetAllProofs();
-        ProofModel GetProofById(int proofId);
-        bool AddProof(ProofModel model);
-        bool UpdateProof(ProofModel model);
-        bool DeleteProof(int proofId);
-
+        Task<IEnumerable<ProofModel>> GetAllProofsAsync();
+        Task<ProofModel> GetProofByIdAsync(int proofId);
+        Task<bool> AddProofAsync(ProofModel model);
+        Task<bool> UpdateProofAsync(ProofModel model);
+        Task<bool> DeleteProofAsync(int proofId);
     }
+
     public class ProofBL : IProofBL
     {
         private readonly IProofDAL _proofDAL;
@@ -25,25 +23,29 @@ namespace SkillsLabProject.BL.BL
             _proofDAL = proofDAL;
         }
 
-        public bool AddProof(ProofModel proof)
+        public async Task<bool> AddProofAsync(ProofModel proof)
         {
-            return _proofDAL.Add(proof);
+            return await _proofDAL.AddAsync(proof);
         }
-        public bool DeleteProof(int proofId)
+
+        public async Task<bool> DeleteProofAsync(int proofId)
         {
-            return _proofDAL.Delete(proofId);
+            return await _proofDAL.DeleteAsync(proofId);
         }
-        public ProofModel GetProofById(int proofId)
+
+        public async Task<ProofModel> GetProofByIdAsync(int proofId)
         {
-            return _proofDAL.GetById(proofId);
+            return await _proofDAL.GetByIdAsync(proofId);
         }
-        public IEnumerable<ProofModel> GetAllProofs()
+
+        public async Task<IEnumerable<ProofModel>> GetAllProofsAsync()
         {
-            return _proofDAL.GetAll();
+            return await _proofDAL.GetAllAsync();
         }
-        public bool UpdateProof(ProofModel proof)
+
+        public async Task<bool> UpdateProofAsync(ProofModel proof)
         {
-            return _proofDAL.Update(proof);
+            return await _proofDAL.UpdateAsync(proof);
         }
     }
 }

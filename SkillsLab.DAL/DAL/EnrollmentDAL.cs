@@ -14,71 +14,89 @@ namespace SkillsLabProject.DAL.DAL
 {
     public interface IEnrollmentDAL : IDAL<EnrollmentModel>
     {
-        bool Add(EnrollmentViewModel model);
+        Task<bool> AddAsync(EnrollmentViewModel model);
         Task<string> UploadAndGetDownloadUrlAsync(FileStream stream, string fileName);
     }
     public class EnrollmentDAL : IEnrollmentDAL
     {
-        public IEnumerable<EnrollmentModel> GetAll()
+        public async Task<IEnumerable<EnrollmentModel>> GetAllAsync()
         {
             const string GetAllEnrollmentsQuery = @"
-                SELECT EnrollmentId, EmployeeId, TrainingId, StatusId, UpdatedOn, CreatedOn
-                FROM [dbo].[Enrollment]
-            ";
-            var dt = DBCommand.GetData(GetAllEnrollmentsQuery);
+        SELECT EnrollmentId, EmployeeId, TrainingId, StatusId, UpdatedOn, CreatedOn
+        FROM [dbo].[Enrollment]
+    ";
+
             var enrollments = new List<EnrollmentModel>();
-            EnrollmentModel enrollment;
-            foreach (DataRow row in dt.Rows)
+
+            using (SqlDataReader dataReader = await DBCommand.GetDataAsync(GetAllEnrollmentsQuery))
             {
-                enrollment = new EnrollmentModel();
-                enrollment.EnrollmentId = int.Parse(row["EnrollmentId"].ToString());
-                enrollment.EmployeeId = int.Parse(row["EmployeeId"].ToString());
-                enrollment.TrainingId = int.Parse(row["TrainingId"].ToString());
-                enrollment.Status =  (Status) int.Parse(row["StatusId"].ToString());
-                enrollment.UpdatedOn = DateTime.Parse(row["UpdatedOn"].ToString());
-                enrollment.CreatedOn = DateTime.Parse(row["CreatedOn"].ToString());
-                enrollments.Add(enrollment);
+                while (await dataReader.ReadAsync())
+                {
+                    var enrollment = new EnrollmentModel
+                    {
+                        EnrollmentId = dataReader.GetInt32(dataReader.GetOrdinal("EnrollmentId")),
+                        EmployeeId = dataReader.GetInt32(dataReader.GetOrdinal("EmployeeId")),
+                        TrainingId = dataReader.GetInt32(dataReader.GetOrdinal("TrainingId")),
+                        Status = (Status)dataReader.GetInt32(dataReader.GetOrdinal("StatusId")),
+                        UpdatedOn = dataReader.GetDateTime(dataReader.GetOrdinal("UpdatedOn")),
+                        CreatedOn = dataReader.GetDateTime(dataReader.GetOrdinal("CreatedOn"))
+                    };
+
+                    enrollments.Add(enrollment);
+                }
             }
+
             return enrollments;
         }
-        public EnrollmentModel GetById(int EnrollmentId)
+
+        public async Task<EnrollmentModel> GetByIdAsync(int enrollmentId)
         {
             const string GetEnrollmentQuery = @"
                 SELECT EnrollmentId, EmployeeId, TrainingId, StatusId, UpdatedOn, CreatedOn
                 FROM [dbo].[Enrollment]
                 WHERE [EnrollmentId] = @EnrollmentId
             ";
+
             var parameters = new List<SqlParameter>
             {
-                new SqlParameter("@EnrollmentId", EnrollmentId)
+                new SqlParameter("@EnrollmentId", enrollmentId)
             };
-            var dt = DBCommand.GetDataWithCondition(GetEnrollmentQuery, parameters);
+
             var enrollment = new EnrollmentModel();
-            foreach (DataRow row in dt.Rows)
+
+            using (SqlDataReader dataReader = await DBCommand.GetDataWithConditionAsync(GetEnrollmentQuery, parameters))
             {
-                enrollment.EnrollmentId = int.Parse(row["EnrollmentId"].ToString());
-                enrollment.EmployeeId = int.Parse(row["EmployeeId"].ToString());
-                enrollment.TrainingId = int.Parse(row["TrainingId"].ToString());
-                enrollment.Status = (Status) int.Parse(row["StatusId"].ToString());
-                enrollment.UpdatedOn = DateTime.Parse(row["UpdatedOn"].ToString());
-                enrollment.CreatedOn = DateTime.Parse(row["CreatedOn"].ToString());
+                while (await dataReader.ReadAsync())
+                {
+                    enrollment.EnrollmentId = dataReader.GetInt32(dataReader.GetOrdinal("EnrollmentId"));
+                    enrollment.EmployeeId = dataReader.GetInt32(dataReader.GetOrdinal("EmployeeId"));
+                    enrollment.TrainingId = dataReader.GetInt32(dataReader.GetOrdinal("TrainingId"));
+                    enrollment.Status = (Status)dataReader.GetInt32(dataReader.GetOrdinal("StatusId"));
+                    enrollment.UpdatedOn = dataReader.GetDateTime(dataReader.GetOrdinal("UpdatedOn"));
+                    enrollment.CreatedOn = dataReader.GetDateTime(dataReader.GetOrdinal("CreatedOn"));
+                }
             }
+
             return enrollment;
         }
-        public bool Add(EnrollmentModel model)
+
+        public async Task<bool> AddAsync(EnrollmentModel model)
         {
             const string AddEnrollmentQuery = @"
                 INSERT [dbo].[Enrollment] (EmployeeId, TrainingId, StatusId) VALUES (@EmployeeId, @TrainingId, @StatusId);
             ";
+
             var parameters = new List<SqlParameter>
             {
                 new SqlParameter("@EmployeeId", model.EmployeeId),
                 new SqlParameter("@TrainingId", model.TrainingId),
                 new SqlParameter("@StatusId", model.Status)
             };
-            return DBCommand.InsertUpdateData(AddEnrollmentQuery, parameters);
+
+            return await DBCommand.InsertDataAsync(AddEnrollmentQuery, parameters).ConfigureAwait(false);
         }
-        public bool Add(EnrollmentViewModel model)
+
+        public async Task<bool> AddAsync(EnrollmentViewModel model)
         {
             const string AddEnrollmentQuery = @"
                 BEGIN TRANSACTION
@@ -90,16 +108,19 @@ namespace SkillsLabProject.DAL.DAL
                     FROM STRING_SPLIT(@Proofs, ',');
                 COMMIT
             ";
+
             var parameters = new List<SqlParameter>
             {
                 new SqlParameter("@EmployeeId", model.Employee.EmployeeId),
                 new SqlParameter("@TrainingId", model.Training.TrainingId),
                 new SqlParameter("@StatusId", model.Status),
-                new SqlParameter("@Proofs", string.Join(",",model.Proofs.Select(p => p.Attachment)))
+                new SqlParameter("@Proofs", string.Join(",", model.Proofs.Select(p => p.Attachment)))
             };
-            return DBCommand.InsertUpdateData(AddEnrollmentQuery, parameters);
+
+            return await DBCommand.InsertDataAsync(AddEnrollmentQuery, parameters).ConfigureAwait(false);
         }
-        public bool Update(EnrollmentModel model)
+
+        public async Task<bool> UpdateAsync(EnrollmentModel model)
         {
             const string UpdateEnrollmentQuery = @"
                 BEGIN TRANSACTION
@@ -129,11 +150,13 @@ namespace SkillsLabProject.DAL.DAL
                     END
                 COMMIT
             ";
+
             var parameters = new List<SqlParameter>
             {
                 new SqlParameter("@EnrollmentId", model.EnrollmentId),
-                new SqlParameter("@StatusId", (int) model.Status)
+                new SqlParameter("@StatusId", (int)model.Status)
             };
+
             if (model.DeclinedReason != null)
             {
                 parameters.Add(new SqlParameter("@Reason", model.DeclinedReason));
@@ -142,9 +165,11 @@ namespace SkillsLabProject.DAL.DAL
             {
                 parameters.Add(new SqlParameter("@Reason", DBNull.Value));
             }
-            return DBCommand.InsertUpdateData(UpdateEnrollmentQuery, parameters);
+
+            return await DBCommand.UpdateDataAsync(UpdateEnrollmentQuery, parameters).ConfigureAwait(false);
         }
-        public bool Delete(int EnrollmentId)
+
+        public async Task<bool> DeleteAsync(int enrollmentId)
         {
             const string DeleteEnrollmentQuery = @"
                 BEGIN TRANSACTION
@@ -153,9 +178,12 @@ namespace SkillsLabProject.DAL.DAL
                     DELETE FROM [dbo].[Enrollment] WHERE EnrollmentId=@EnrollmentId
                 COMMIT
             ";
-            var parameter = new SqlParameter("@EnrollmentId", EnrollmentId);
-            return DBCommand.DeleteData(DeleteEnrollmentQuery, parameter);
+
+            var parameter = new SqlParameter("@EnrollmentId", enrollmentId);
+
+            return await DBCommand.DeleteDataAsync(DeleteEnrollmentQuery, parameter).ConfigureAwait(false);
         }
+
         public async Task<string> UploadAndGetDownloadUrlAsync(FileStream stream, string fileName)
         {
             Firebase firebase = new Firebase();

@@ -1,20 +1,19 @@
 ﻿using SkillsLabProject.Common.Models;
 using SkillsLabProject.DAL.DAL;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+using System.Threading.Tasks;
 
 namespace SkillsLabProject.BL.BL
 {
     public interface IPreRequisiteBL
     {
-        IEnumerable<PreRequisiteModel> GetAllPreRequisites();
-        PreRequisiteModel GetPreRequisiteById(int preRequisiteId);
-        bool AddPreRequisite(PreRequisiteModel model);
-        bool UpdatePreRequisite(PreRequisiteModel model);
-        bool DeletePreRequisite(int preRequisiteId);
+        Task<IEnumerable<PreRequisiteModel>> GetAllPreRequisitesAsync();
+        Task<PreRequisiteModel> GetPreRequisiteByIdAsync(int preRequisiteId);
+        Task<bool> AddPreRequisiteAsync(PreRequisiteModel model);
+        Task<bool> UpdatePreRequisiteAsync(PreRequisiteModel model);
+        Task<bool> DeletePreRequisiteAsync(int preRequisiteId);
     }
+
     public class PreRequisiteBL : IPreRequisiteBL
     {
         private readonly IPreRequisiteDAL _preRequisiteDAL;
@@ -24,25 +23,29 @@ namespace SkillsLabProject.BL.BL
             _preRequisiteDAL = preRequisiteDAL;
         }
 
-        public bool AddPreRequisite(PreRequisiteModel preRequisite)
+        public async Task<bool> AddPreRequisiteAsync(PreRequisiteModel preRequisite)
         {
-            return _preRequisiteDAL.Add(preRequisite);
+            return await _preRequisiteDAL.AddAsync(preRequisite);
         }
-        public bool DeletePreRequisite(int preRequisiteId)
+
+        public async Task<bool> DeletePreRequisiteAsync(int preRequisiteId)
         {
-            return _preRequisiteDAL.Delete(preRequisiteId);
+            return await _preRequisiteDAL.DeleteAsync(preRequisiteId);
         }
-        public PreRequisiteModel GetPreRequisiteById(int preRequisiteId)
+
+        public async Task<PreRequisiteModel> GetPreRequisiteByIdAsync(int preRequisiteId)
         {
-            return _preRequisiteDAL.GetById(preRequisiteId);
+            return await _preRequisiteDAL.GetByIdAsync(preRequisiteId);
         }
-        public IEnumerable<PreRequisiteModel> GetAllPreRequisites()
+
+        public async Task<IEnumerable<PreRequisiteModel>> GetAllPreRequisitesAsync()
         {
-            return _preRequisiteDAL.GetAll();
+            return await _preRequisiteDAL.GetAllAsync();
         }
-        public bool UpdatePreRequisite(PreRequisiteModel preRequisite)
+
+        public async Task<bool> UpdatePreRequisiteAsync(PreRequisiteModel preRequisite)
         {
-            return _preRequisiteDAL.Update(preRequisite);
+            return await _preRequisiteDAL.UpdateAsync(preRequisite);
         }
     }
 }

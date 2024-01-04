@@ -1,38 +1,50 @@
 ﻿using SkillsLabProject.Common.DAL;
 using SkillsLabProject.Common.Models.ViewModels;
 using System.Collections.Generic;
-using System.Data;
 using System.Data.SqlClient;
+using System.Threading.Tasks;
 
 namespace SkillsLabProject.DAL.DAL
 {
     public interface IAppUserDAL
     {
-        bool AuthenticateUser(LoginViewModel login);
-        bool RegisterUser(RegisterViewModel registration);
-        IEnumerable<string> GetAllEmails();
-        string GetHashedPassword(LoginViewModel login);
+        Task<bool> AuthenticateUserAsync(LoginViewModel login);
+        Task<bool> RegisterUserAsync(RegisterViewModel registration);
+        Task<IEnumerable<string>> GetAllEmailsAsync();
+        Task<string> GetHashedPasswordAsync(LoginViewModel login);
     }
     public class AppUserDAL : IAppUserDAL
     {
-        public bool AuthenticateUser(LoginViewModel login)
+        public async Task<bool> AuthenticateUserAsync(LoginViewModel login)
         {
             const string AuthenticateUserQuery = @"
                 SELECT e.EmployeeId
                 FROM [dbo].[Employee] e 
-                INNER JOIN [dbo].[AppUser] a ON e.[EmployeeId]=a.[EmployeeId] 
+                INNER JOIN [dbo].[AppUser] a ON e.[EmployeeId] = a.[EmployeeId] 
                 WHERE a.[Email] = @Email AND a.[Password] = @Password 
             ";
+
             var parameters = new List<SqlParameter>
             {
                 new SqlParameter("@Email", login.Email),
                 new SqlParameter("@Password", login.Password)
             };
-            var dt = DBCommand.GetDataWithCondition(AuthenticateUserQuery, parameters);
-            return dt.Rows.Count > 0;
+
+            try
+            {
+                using (SqlDataReader dataReader = await DBCommand.GetDataWithConditionAsync(AuthenticateUserQuery, parameters))
+                {
+                    return await dataReader.ReadAsync();
+                }
+            }
+            catch
+            {
+                throw;
+            }
         }
 
-        public bool RegisterUser(RegisterViewModel registration)
+
+        public async Task<bool> RegisterUserAsync(RegisterViewModel registration)
         {
             const string RegisterUserQuery = @"
                 BEGIN TRANSACTION
@@ -57,38 +69,62 @@ namespace SkillsLabProject.DAL.DAL
                 new SqlParameter("@DepartmentId", registration.DepartmentId),
                 new SqlParameter("@RoleId", (int)registration.Role)
             };
-            return DBCommand.InsertUpdateData(RegisterUserQuery, parameters);
+            return await DBCommand.InsertDataAsync(RegisterUserQuery, parameters);
         }
-        public IEnumerable<string> GetAllEmails()
+        public async Task<IEnumerable<string>> GetAllEmailsAsync()
         {
-            const string GET_ALL_EMAILS_QUERY = @"SELECT Email FROM [dbo].[AppUser]";
-            var dt = DBCommand.GetData(GET_ALL_EMAILS_QUERY);
+            const string GetAllEmailsQuery = @"SELECT Email FROM [dbo].[AppUser]";
+
             var emails = new List<string>();
-            foreach (DataRow row in dt.Rows)
+
+            try
             {
-                emails.Add(row["Email"].ToString());
+                using (SqlDataReader dataReader = await DBCommand.GetDataAsync(GetAllEmailsQuery))
+                {
+                    while (await dataReader.ReadAsync())
+                    {
+                        string email = dataReader["Email"].ToString();
+                        emails.Add(email);
+                    }
+                }
             }
+            catch
+            {
+                throw;
+            }
+
             return emails;
         }
-        public string GetHashedPassword(LoginViewModel login)
+        public async Task<string> GetHashedPasswordAsync(LoginViewModel login)
         {
             const string GetHashedPasswordQuery = @"
                 SELECT Password 
                 FROM [dbo].[AppUser] a 
-                INNER JOIN Employee e ON a.EmployeeId=e.EmployeeId
-                WHERE a.Email=@Email
+                INNER JOIN Employee e ON a.EmployeeId = e.EmployeeId
+                WHERE a.Email = @Email
             ";
+
             var parameters = new List<SqlParameter>
             {
                 new SqlParameter("@Email", login.Email)
             };
-            var dt = DBCommand.GetDataWithCondition(GetHashedPasswordQuery, parameters);
-            string hashedPassword = "";
-            foreach (DataRow row in dt.Rows)
+
+            try
             {
-                hashedPassword = row["Password"].ToString();
+                using (SqlDataReader dataReader = await DBCommand.GetDataWithConditionAsync(GetHashedPasswordQuery, parameters))
+                {
+                    if (await dataReader.ReadAsync())
+                    {
+                        return dataReader["Password"].ToString();
+                    }
+                }
             }
-            return hashedPassword;
+            catch
+            {
+                throw;
+            }
+
+            return null;
         }
     }
 }

@@ -1,21 +1,19 @@
-﻿using SkillsLabProject.DAL.DAL;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using SkillsLabProject.Common.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+using SkillsLabProject.DAL.DAL;
 
 namespace SkillsLabProject.BL.BL
 {
     public interface IDepartmentBL
     {
-        IEnumerable<DepartmentModel> GetAllDepartments();
-        DepartmentModel GetDepartmentById(int departmentId);
-        bool AddDepartment(DepartmentModel model);
-        bool UpdateDepartment(DepartmentModel model);
-        bool DeleteDepartment(int DepartmentId);
-
+        Task<IEnumerable<DepartmentModel>> GetAllDepartmentsAsync();
+        Task<DepartmentModel> GetDepartmentByIdAsync(int departmentId);
+        Task<bool> AddDepartmentAsync(DepartmentModel model);
+        Task<bool> UpdateDepartmentAsync(DepartmentModel model);
+        Task<bool> DeleteDepartmentAsync(int departmentId);
     }
+
     public class DepartmentBL : IDepartmentBL
     {
         private readonly IDepartmentDAL _departmentDAL;
@@ -25,25 +23,29 @@ namespace SkillsLabProject.BL.BL
             _departmentDAL = departmentDAL;
         }
 
-        public bool AddDepartment(DepartmentModel department)
+        public async Task<bool> AddDepartmentAsync(DepartmentModel department)
         {
-            return _departmentDAL.Add(department);
+            return await _departmentDAL.AddAsync(department);
         }
-        public bool DeleteDepartment(int DepartmentId)
+
+        public async Task<bool> DeleteDepartmentAsync(int departmentId)
         {
-            return _departmentDAL.Delete(DepartmentId);
+            return await _departmentDAL.DeleteAsync(departmentId);
         }
-        public DepartmentModel GetDepartmentById(int departmentId)
+
+        public async Task<DepartmentModel> GetDepartmentByIdAsync(int departmentId)
         {
-            return _departmentDAL.GetById(departmentId);
+            return await _departmentDAL.GetByIdAsync(departmentId);
         }
-        public IEnumerable<DepartmentModel> GetAllDepartments()
+
+        public async Task<IEnumerable<DepartmentModel>> GetAllDepartmentsAsync()
         {
-            return _departmentDAL.GetAll();
+            return await _departmentDAL.GetAllAsync();
         }
-        public bool UpdateDepartment(DepartmentModel department)
+
+        public async Task<bool> UpdateDepartmentAsync(DepartmentModel department)
         {
-            return _departmentDAL.Update(department);
+            return await _departmentDAL.UpdateAsync(department);
         }
     }
 }
