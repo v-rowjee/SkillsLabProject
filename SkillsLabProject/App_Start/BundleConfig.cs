@@ -23,11 +23,13 @@ namespace SkillsLabProject
             bundles.Add(new StyleBundle("~/Content/css").Include(
                 "~/Content/bootstrap/bootstrap.min.css",
                 "~/Content/icons/font-awesome.min.css",
+                "~/Content/snackbar/snackbar.min.css",
                 "~/Content/site.css"));
 
             bundles.Add(new ScriptBundle("~/Scripts/head").Include(
                 "~/Scripts/jquery/jquery-{version}.js",
-                "~/Scripts/modernizr/modernizr-*"));
+                "~/Scripts/modernizr/modernizr-*",
+                "~/Scripts/snackbar/snackbar.min.js"));
 
             bundles.Add(new ScriptBundle("~/Scripts/body").Include(
                 "~/Scripts/custom/site.js"));

@@ -13,6 +13,7 @@
     "gulp-typescript": "^6.0.0-alpha.1"
   },
   "dependencies": {
-    "lodash": "^4.17.21"
+    "lodash": "^4.17.21",
+    "node-snackbar": "^0.1.16"
   }
 }

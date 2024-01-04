@@ -12140,6 +12140,10 @@
     <Content Include="Scripts\custom\login.js" />
     <Content Include="Scripts\modernizr\modernizr-2.8.3.js" />
     <Content Include="Scripts\custom\site.js" />
+    <Content Include="Content\Snackbar\snackbar.css" />
+    <Content Include="Scripts\snackbar\snackbar.js" />
+    <Content Include="Content\Snackbar\snackbar.min.css" />
+    <Content Include="Scripts\snackbar\snackbar.min.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -12165,6 +12169,8 @@
     <Content Include="Views\Enrollment\View.cshtml" />
     <Content Include="Views\Common\Role.cshtml" />
     <Content Include="Views\Enrollment\_ViewPartial.cshtml" />
+    <Content Include="Content\Snackbar\snackbar.css.map" />
+    <Content Include="Scripts\snackbar\snackbar.min.js.map" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Content\Uploads\" />
