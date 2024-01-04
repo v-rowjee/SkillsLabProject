@@ -23,7 +23,7 @@
             <p class="lead">
                 @ViewBag.ErrorDetail
             </p>
-            @Html.ActionLink("Go Back", "Index", "Common", null, new { @class = "btn btn-primary" })
+            <a href="javascript:history.back()" class="btn btn-primary">Go Back</a>
         </div>
     </main>
 </body>
