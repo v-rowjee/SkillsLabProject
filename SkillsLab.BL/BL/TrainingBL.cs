@@ -70,7 +70,7 @@ namespace SkillsLabProject.BL.BL
             var trainings = await _trainingDAL.GetAllAsync();
             foreach (var training in trainings)
             {
-                var employeeEnrolled = (await _enrollmentDAL.GetAllAsync()).Count(e => e.TrainingId == training.TrainingId);
+                var employeeEnrolled = (await _enrollmentDAL.GetAllAsync()).Count(e => e.TrainingId == training.TrainingId && e.Status == Common.Enums.Status.Approved);
                 var prerequisitesString = (await _preRequisiteDAL.GetAllAsync()).Where(p => p.TrainingId == training.TrainingId).Select(p => p.Detail).ToList();
                 var trainingModel = new TrainingViewModel
                 {
