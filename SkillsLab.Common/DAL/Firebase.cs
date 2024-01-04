@@ -40,15 +40,9 @@ namespace SkillsLabProject.Common.DAL
                 .Child(fileName)
                 .PutAsync(stream);
 
-            try
-            {
-                string downloadUrl = await task;
-                return downloadUrl;
-            }
-            catch (Exception)
-            {
-                throw;
-            }
+            string downloadUrl = await task;
+            return downloadUrl;
+
         }
     }
 }

@@ -30,16 +30,9 @@ namespace SkillsLabProject.DAL.DAL
                 new SqlParameter("@Password", login.Password)
             };
 
-            try
+            using (SqlDataReader dataReader = await DBCommand.GetDataWithConditionAsync(AuthenticateUserQuery, parameters).ConfigureAwait(false))
             {
-                using (SqlDataReader dataReader = await DBCommand.GetDataWithConditionAsync(AuthenticateUserQuery, parameters))
-                {
-                    return await dataReader.ReadAsync();
-                }
-            }
-            catch
-            {
-                throw;
+                return await dataReader.ReadAsync().ConfigureAwait(false);
             }
         }
 
@@ -69,7 +62,7 @@ namespace SkillsLabProject.DAL.DAL
                 new SqlParameter("@DepartmentId", registration.DepartmentId),
                 new SqlParameter("@RoleId", (int)registration.Role)
             };
-            return await DBCommand.InsertDataAsync(RegisterUserQuery, parameters);
+            return await DBCommand.InsertDataAsync(RegisterUserQuery, parameters).ConfigureAwait(false);
         }
         public async Task<IEnumerable<string>> GetAllEmailsAsync()
         {
@@ -77,20 +70,13 @@ namespace SkillsLabProject.DAL.DAL
 
             var emails = new List<string>();
 
-            try
+            using (SqlDataReader dataReader = await DBCommand.GetDataAsync(GetAllEmailsQuery).ConfigureAwait(false))
             {
-                using (SqlDataReader dataReader = await DBCommand.GetDataAsync(GetAllEmailsQuery))
+                while (await dataReader.ReadAsync().ConfigureAwait(false))
                 {
-                    while (await dataReader.ReadAsync())
-                    {
-                        string email = dataReader["Email"].ToString();
-                        emails.Add(email);
-                    }
+                    string email = dataReader["Email"].ToString();
+                    emails.Add(email);
                 }
-            }
-            catch
-            {
-                throw;
             }
 
             return emails;
@@ -109,21 +95,13 @@ namespace SkillsLabProject.DAL.DAL
                 new SqlParameter("@Email", login.Email)
             };
 
-            try
+            using (SqlDataReader dataReader = await DBCommand.GetDataWithConditionAsync(GetHashedPasswordQuery, parameters).ConfigureAwait(false))
             {
-                using (SqlDataReader dataReader = await DBCommand.GetDataWithConditionAsync(GetHashedPasswordQuery, parameters))
+                if (await dataReader.ReadAsync().ConfigureAwait(false))
                 {
-                    if (await dataReader.ReadAsync())
-                    {
-                        return dataReader["Password"].ToString();
-                    }
+                    return dataReader["Password"].ToString();
                 }
             }
-            catch
-            {
-                throw;
-            }
-
             return null;
         }
     }

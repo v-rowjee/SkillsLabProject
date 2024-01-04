@@ -6,6 +6,7 @@ using SkillsLabProject.Common.Models.ViewModels;
 using SkillsLabProject.DAL.DAL;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -114,7 +115,7 @@ namespace SkillsLabProject.BL.BL
                 string recipientEmail = employee.Email;
                 string ccEmail = manager.Email;
 
-                await Task.Run(() => _emailService.SendEmail(subject, body, recipientEmail, ccEmail));
+                _emailService.SendEmail(subject, body, recipientEmail, ccEmail);
             }
             return isApproved;
         }
@@ -140,7 +141,7 @@ namespace SkillsLabProject.BL.BL
                 string recipientEmail = employee.Email;
                 string ccEmail = manager.Email;
 
-                await Task.Run(() => _emailService.SendEmail(subject, body, recipientEmail, ccEmail));
+                _emailService.SendEmail(subject, body, recipientEmail, ccEmail);
             }
             return isDeclined;
         }
@@ -150,7 +151,7 @@ namespace SkillsLabProject.BL.BL
             var trainingTitle = (await _trainingDAL.GetByIdAsync(trainingId)).Title;
             var enrollments = (await _enrollmentDAL.GetAllAsync()).Where(e => e.TrainingId == trainingId).ToList();
 
-            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+            ExcelPackage.LicenseContext = Enum.TryParse(ConfigurationManager.AppSettings["EPPlus:ExcelPackage.LicenseContext"], out LicenseContext context) ? context : LicenseContext.NonCommercial;
             using (var package = new ExcelPackage())
             {
                 var worksheet = package.Workbook.Worksheets.Add("Enrollments");
@@ -323,7 +324,7 @@ namespace SkillsLabProject.BL.BL
                     string recipientEmail = manager.Email;
                     string ccEmail = employee.Email;
 
-                    await _emailService.SendEmail(subject, body, recipientEmail, ccEmail);
+                    _emailService.SendEmail(subject, body, recipientEmail, ccEmail);
                 }
             });
         }

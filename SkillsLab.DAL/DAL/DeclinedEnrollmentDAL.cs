@@ -21,7 +21,7 @@ namespace SkillsLabProject.DAL.DAL
             const string AddDeclinedEnrollmentQuery = @"
                 INSERT [dbo].[DeclinedEnrollment] (EnrollmentId, Reason) VALUES (@EnrollmentId, @Reason);
             ";
-            return await DBCommand.InsertDataAsync(AddDeclinedEnrollmentQuery, parameters);
+            return await DBCommand.InsertDataAsync(AddDeclinedEnrollmentQuery, parameters).ConfigureAwait(false);
         }
         public async Task<bool> DeleteAsync(int declinedEnrollmentId)
         {
@@ -30,7 +30,7 @@ namespace SkillsLabProject.DAL.DAL
                 WHERE DeclinedEnrollmentId=@DeclinedEnrollmentId
             ";
             var parameter = new SqlParameter("@DeclinedEnrollmentId", declinedEnrollmentId);
-            return await DBCommand.DeleteDataAsync(DeleteDeclinedEnrollmentQuery, parameter);
+            return await DBCommand.DeleteDataAsync(DeleteDeclinedEnrollmentQuery, parameter).ConfigureAwait(false);
         }
         public async Task<IEnumerable<DeclinedEnrollmentModel>> GetAllAsync()
         {
@@ -43,9 +43,9 @@ namespace SkillsLabProject.DAL.DAL
 
             try
             {
-                using (SqlDataReader dataReader = await DBCommand.GetDataAsync(GetAllDeclinedEnrollmentsQuery))
+                using (SqlDataReader dataReader = await DBCommand.GetDataAsync(GetAllDeclinedEnrollmentsQuery).ConfigureAwait(false))
                 {
-                    while (await dataReader.ReadAsync())
+                    while (await dataReader.ReadAsync().ConfigureAwait(false))
                     {
                         DeclinedEnrollmentModel DeclinedEnrollment = new DeclinedEnrollmentModel
                         {
@@ -81,7 +81,7 @@ namespace SkillsLabProject.DAL.DAL
 
             try
             {
-                using (SqlDataReader dataReader = await DBCommand.GetDataWithConditionAsync(GetDeclinedEnrollmentQuery, parameters))
+                using (SqlDataReader dataReader = await DBCommand.GetDataWithConditionAsync(GetDeclinedEnrollmentQuery, parameters).ConfigureAwait(false))
                 {
                     while (await dataReader.ReadAsync().ConfigureAwait(false))
                     {
@@ -111,7 +111,7 @@ namespace SkillsLabProject.DAL.DAL
                 new SqlParameter("@EnrollmentId", model.EnrollmentId),
                 new SqlParameter("@Reason", model.Reason)
             };
-            return await DBCommand.UpdateDataAsync(UpdateDeclinedEnrollmentQuery, parameters);
+            return await DBCommand.UpdateDataAsync(UpdateDeclinedEnrollmentQuery, parameters).ConfigureAwait(false);
         }
     }
 }

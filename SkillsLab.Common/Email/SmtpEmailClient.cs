@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using System.Configuration;
+using SkillsLabProject.Common.Exceptions;
 
 namespace SkillsLabProject.Common.Email
 {
@@ -38,15 +39,19 @@ namespace SkillsLabProject.Common.Email
                         message.Body = body;
                         message.IsBodyHtml = true;
 
-                        await client.SendMailAsync(message);
+                        if (bool.Parse(ConfigurationManager.AppSettings["smtp:Enabled"]))
+                        {
+                            await client.SendMailAsync(message).ConfigureAwait(false);
+                        }
                         return true;
                     };
                 }
             }
-            catch (Exception)
+            catch (Exception error)
             {
+                var exception = new CustomException(error);
+                exception.Log();
                 return false;
-                throw;
             }
         }
     }

@@ -40,9 +40,9 @@ namespace SkillsLabProject.DAL.DAL
 
             var employees = new List<EmployeeModel>();
 
-            using (SqlDataReader dataReader = await DBCommand.GetDataAsync(GetAllEmployeesQuery))
+            using (SqlDataReader dataReader = await DBCommand.GetDataAsync(GetAllEmployeesQuery).ConfigureAwait(false))
             {
-                while (await dataReader.ReadAsync())
+                while (await dataReader.ReadAsync().ConfigureAwait(false))
                 {
                     var employee = new EmployeeModel
                     {
@@ -82,9 +82,9 @@ namespace SkillsLabProject.DAL.DAL
 
             var employee = new EmployeeModel();
 
-            using (SqlDataReader dataReader = await DBCommand.GetDataWithConditionAsync(GetEmployeeQuery, parameters))
+            using (SqlDataReader dataReader = await DBCommand.GetDataWithConditionAsync(GetEmployeeQuery, parameters).ConfigureAwait(false))
             {
-                while (await dataReader.ReadAsync())
+                while (await dataReader.ReadAsync().ConfigureAwait(false))
                 {
                     employee.EmployeeId = dataReader.GetInt32(dataReader.GetOrdinal("EmployeeId"));
                     employee.FirstName = dataReader["FirstName"].ToString();
@@ -120,9 +120,9 @@ namespace SkillsLabProject.DAL.DAL
 
             var employee = new EmployeeModel();
 
-            using (SqlDataReader dataReader = await DBCommand.GetDataWithConditionAsync(GetEmployeeQuery, parameters))
+            using (SqlDataReader dataReader = await DBCommand.GetDataWithConditionAsync(GetEmployeeQuery, parameters).ConfigureAwait(false))
             {
-                while (await dataReader.ReadAsync())
+                while (await dataReader.ReadAsync().ConfigureAwait(false))
                 {
                     employee.EmployeeId = dataReader.GetInt32(dataReader.GetOrdinal("EmployeeId"));
                     employee.FirstName = dataReader["FirstName"].ToString();
@@ -163,7 +163,7 @@ namespace SkillsLabProject.DAL.DAL
                 new SqlParameter("@Title", employee.Department.Title),
             };
 
-            return await DBCommand.UpdateDataAsync(UpdateEmployeeQuery, parameters);
+            return await DBCommand.UpdateDataAsync(UpdateEmployeeQuery, parameters).ConfigureAwait(false);
         }
 
 
@@ -183,9 +183,9 @@ namespace SkillsLabProject.DAL.DAL
 
             var roles = new List<Role>();
 
-            using (SqlDataReader dataReader = await DBCommand.GetDataWithConditionAsync(GetRolesQuery, parameters))
+            using (SqlDataReader dataReader = await DBCommand.GetDataWithConditionAsync(GetRolesQuery, parameters).ConfigureAwait(false))
             {
-                while (await dataReader.ReadAsync())
+                while (await dataReader.ReadAsync().ConfigureAwait(false))
                 {
                     Role role = (Role)dataReader.GetInt32(dataReader.GetOrdinal("RoleId"));
                     roles.Add(role);

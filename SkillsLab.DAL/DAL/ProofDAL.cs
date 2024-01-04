@@ -44,9 +44,9 @@ namespace SkillsLabProject.DAL.DAL
 
             var proofs = new List<ProofModel>();
 
-            using (SqlDataReader dataReader = await DBCommand.GetDataAsync(GetAllProofsQuery))
+            using (SqlDataReader dataReader = await DBCommand.GetDataAsync(GetAllProofsQuery).ConfigureAwait(false))
             {
-                while (await dataReader.ReadAsync())
+                while (await dataReader.ReadAsync().ConfigureAwait(false))
                 {
                     var proof = new ProofModel
                     {
@@ -77,9 +77,9 @@ namespace SkillsLabProject.DAL.DAL
 
             var proof = new ProofModel();
 
-            using (SqlDataReader dataReader = await DBCommand.GetDataWithConditionAsync(GetProofQuery, parameters))
+            using (SqlDataReader dataReader = await DBCommand.GetDataWithConditionAsync(GetProofQuery, parameters).ConfigureAwait(false))
             {
-                while (await dataReader.ReadAsync())
+                while (await dataReader.ReadAsync().ConfigureAwait(false))
                 {
                     proof.ProofId = dataReader.GetInt32(dataReader.GetOrdinal("ProofId"));
                     proof.EnrollmentId = dataReader.GetInt32(dataReader.GetOrdinal("EnrollmentId"));

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SkillsLabProject.Common.Exceptions;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
@@ -42,8 +43,10 @@ namespace SkillsLabProject.Common.DAL
 
                 return rowsAffected > 0;
             }
-            catch
+            catch(SqlException error)
             {
+                var exception = new CustomException(error);
+                exception.Log();
                 return false;
                 throw;
             }

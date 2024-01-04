@@ -115,6 +115,11 @@ $(function () {
             Status: status,
         }
 
+        var approveButton = $('#approveEnrollment');
+        var originalButtonText = approveButton.text()
+        approveButton.html(`<div class="spinner-border spinner-border-sm" role="status"></div>`)
+        $(':button').prop('disabled', true);
+
         $.ajax({
             type: "POST",
             url: '/Enrollment/Approve',
@@ -140,6 +145,10 @@ $(function () {
                     text: "Unable to change enrollment status.",
                     actionTextColor: "#CFE2FF"
                 });
+            },
+            complete: () => {
+                approveButton.html(originalButtonText)
+                $(':button').prop('disabled', false);
             }
         });
 
@@ -155,6 +164,11 @@ $(function () {
             Status: status,
             DeclinedReason: reason
         }
+
+        var declineButton = $('#declineEnrollment')
+        var originalButtonText = declineButton.text()
+        declineButton.html(`<div class="spinner-border spinner-border-sm" role="status"></div>`)
+        $(':button').prop('disabled', true);
 
         $.ajax({
             type: "POST",
@@ -181,6 +195,10 @@ $(function () {
                     text: "Unable to change enrollment status.",
                     actionTextColor: "#CFE2FF"
                 });
+            },
+            complete: () => {
+                declineButton.html(originalButtonText)
+                $(':button').prop('disabled', false);
             }
         });
 

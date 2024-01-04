@@ -48,9 +48,9 @@ namespace SkillsLabProject.DAL.DAL
 
             var preRequisites = new List<PreRequisiteModel>();
 
-            using (SqlDataReader dataReader = await DBCommand.GetDataAsync(GetAllPreRequisitesQuery))
+            using (SqlDataReader dataReader = await DBCommand.GetDataAsync(GetAllPreRequisitesQuery).ConfigureAwait(false))
             {
-                while (await dataReader.ReadAsync())
+                while (await dataReader.ReadAsync().ConfigureAwait(false))
                 {
                     var preRequisite = new PreRequisiteModel
                     {
@@ -83,16 +83,15 @@ namespace SkillsLabProject.DAL.DAL
 
             var preRequisite = new PreRequisiteModel();
 
-            using (SqlDataReader dataReader = await DBCommand.GetDataWithConditionAsync(GetPreRequisiteQuery, parameters))
+            using (SqlDataReader dataReader = await DBCommand.GetDataWithConditionAsync(GetPreRequisiteQuery, parameters).ConfigureAwait(false))
             {
-                while (await dataReader.ReadAsync())
+                while (await dataReader.ReadAsync().ConfigureAwait(false))
                 {
                     preRequisite.PreRequisiteId = dataReader.GetInt32(dataReader.GetOrdinal("PreRequisiteId"));
                     preRequisite.Detail = dataReader.GetString(dataReader.GetOrdinal("Detail"));
                     preRequisite.TrainingId = dataReader.GetInt32(dataReader.GetOrdinal("TrainingId"));
                 }
             }
-
             return preRequisite;
         }
 

@@ -22,15 +22,15 @@ namespace SkillsLabProject.DAL.DAL
         public async Task<IEnumerable<EnrollmentModel>> GetAllAsync()
         {
             const string GetAllEnrollmentsQuery = @"
-        SELECT EnrollmentId, EmployeeId, TrainingId, StatusId, UpdatedOn, CreatedOn
-        FROM [dbo].[Enrollment]
-    ";
+                SELECT EnrollmentId, EmployeeId, TrainingId, StatusId, UpdatedOn, CreatedOn
+                FROM [dbo].[Enrollment]
+            ";
 
             var enrollments = new List<EnrollmentModel>();
 
-            using (SqlDataReader dataReader = await DBCommand.GetDataAsync(GetAllEnrollmentsQuery))
+            using (SqlDataReader dataReader = await DBCommand.GetDataAsync(GetAllEnrollmentsQuery).ConfigureAwait(false))
             {
-                while (await dataReader.ReadAsync())
+                while (await dataReader.ReadAsync().ConfigureAwait(false))
                 {
                     var enrollment = new EnrollmentModel
                     {
@@ -64,9 +64,9 @@ namespace SkillsLabProject.DAL.DAL
 
             var enrollment = new EnrollmentModel();
 
-            using (SqlDataReader dataReader = await DBCommand.GetDataWithConditionAsync(GetEnrollmentQuery, parameters))
+            using (SqlDataReader dataReader = await DBCommand.GetDataWithConditionAsync(GetEnrollmentQuery, parameters).ConfigureAwait(false))
             {
-                while (await dataReader.ReadAsync())
+                while (await dataReader.ReadAsync().ConfigureAwait(false))
                 {
                     enrollment.EnrollmentId = dataReader.GetInt32(dataReader.GetOrdinal("EnrollmentId"));
                     enrollment.EmployeeId = dataReader.GetInt32(dataReader.GetOrdinal("EmployeeId"));
@@ -187,7 +187,7 @@ namespace SkillsLabProject.DAL.DAL
         public async Task<string> UploadAndGetDownloadUrlAsync(FileStream stream, string fileName)
         {
             Firebase firebase = new Firebase();
-            return await firebase.UploadFileAsync(stream, fileName);
+            return await firebase.UploadFileAsync(stream, fileName).ConfigureAwait(false);
         }
     }
 }

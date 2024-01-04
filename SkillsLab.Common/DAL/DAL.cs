@@ -19,37 +19,23 @@ namespace SkillsLabProject.Common.DAL
 
         public async Task OpenConnectionAsync()
         {
-            try
+            if (Connection.State == ConnectionState.Open)
             {
-                if (Connection.State == ConnectionState.Open)
-                {
-                    Connection.Close();
-                }
-
-                await Connection.OpenAsync();
+                Connection.Close();
             }
-            catch (SqlException)
-            {
-                throw;
-            }
+            await Connection.OpenAsync();
         }
 
         public async Task OpenConnectionAsync(string connectionString)
         {
-            try
-            {
-                Connection = new SqlConnection(connectionString);
-                if (Connection.State == ConnectionState.Open)
-                {
-                    Connection.Close();
-                }
 
-                await Connection.OpenAsync();
-            }
-            catch (SqlException)
+            Connection = new SqlConnection(connectionString);
+            if (Connection.State == ConnectionState.Open)
             {
-                throw;
+                Connection.Close();
             }
+
+            await Connection.OpenAsync();
         }
 
         public void CloseConnection()
