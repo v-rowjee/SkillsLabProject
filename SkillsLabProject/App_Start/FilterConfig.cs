@@ -1,5 +1,4 @@
-﻿using SkillsLabProject.Common.Log;
-using System.Web;
+﻿using SkillsLab.Common.Exceptions;
 using System.Web.Mvc;
 
 namespace SkillsLabProject
@@ -8,6 +7,7 @@ namespace SkillsLabProject
     {
         public static void RegisterGlobalFilters(GlobalFilterCollection filters)
         {
+            filters.Add(new GlobalExceptionHandler());
             filters.Add(new HandleErrorAttribute());
         }
     }

@@ -15,12 +15,5 @@ namespace SkillsLabProject
             BundleConfig.RegisterBundles(BundleTable.Bundles);
             UnityConfig.RegisterComponents();
         }
-
-        protected void Application_Error()
-        {
-            var error = Server.GetLastError();
-            var exception = new CustomException(error);
-            exception.Log();
-        }
     }
 }

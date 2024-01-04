@@ -33,7 +33,7 @@ namespace SkillsLabProject.Controllers
         public ActionResult InternalServerError()
         {
             ViewBag.ErrorCode = 500;
-            ViewBag.ErrorName = "Error";
+            ViewBag.ErrorName = "Internal Error";
             ViewBag.ErrorDetail = "The server has encountered an error, please contact system administrator.";
             return View("Index");
         }

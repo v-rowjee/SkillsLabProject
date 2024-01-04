@@ -1,6 +1,5 @@
 ﻿using SkillsLabProject.Common.Log;
 using System;
-using System.Diagnostics;
 
 namespace SkillsLabProject.Common.Exceptions
 {
@@ -17,10 +16,10 @@ namespace SkillsLabProject.Common.Exceptions
             string fullMessage = "";
             fullMessage += Environment.NewLine + "--------------------------------------------------------";
             fullMessage += Environment.NewLine + $"Timestamp: {DateTime.Now}";
-            fullMessage += Environment.NewLine + $"Exception Type: {GetType().FullName}";
+            fullMessage += Environment.NewLine + $"Exception Type: {InnerException.GetType().FullName}";
             fullMessage += Environment.NewLine + $"Message Type: {Message}";
-            fullMessage += Environment.NewLine + $"Inner Exception: {InnerException}";
-            fullMessage += Environment.NewLine + $"Stack Trace: {StackTrace}";
+            fullMessage += Environment.NewLine + $"Inner Exception: {InnerException?.Message}";
+            fullMessage += Environment.NewLine + $"Stack Trace: {InnerException?.StackTrace}";
             fullMessage += Environment.NewLine + "--------------------------------------------------------";
             _logger.Log(fullMessage);
         }

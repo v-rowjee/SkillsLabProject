@@ -7,12 +7,10 @@ namespace SkillsLabProject.Controllers
     public class LoginController : Controller
     {
         private IAppUserBL _appUserBL;
-        private IEmployeeBL _employeeBL;
 
-        public LoginController(IAppUserBL appUserBL,IEmployeeBL employeeBL)
+        public LoginController(IAppUserBL appUserBL)
         {
             _appUserBL = appUserBL;
-            _employeeBL = employeeBL;
         }
 
         // GET: Login
@@ -23,8 +21,6 @@ namespace SkillsLabProject.Controllers
             {
                 return RedirectToAction("Role", "Common");
             }
-            var x = 0;
-            x = 0 / x;
             return View();
         }
 
