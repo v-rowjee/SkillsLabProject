@@ -17,7 +17,7 @@
     <!-- Lodash-->
     <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js"></script>
 </head>
-<body data-bs-theme="dark">
+<body data-bs-theme="light">
     <div id="overlay-spinner">
         <span class="spinner-border text-primary"></span>
     </div>
@@ -43,7 +43,7 @@
                     </li>
                     <li class="nav-item dropdown mx-2">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            @if (ViewBag.Employee != null) {@ViewBag.Employee.FirstName @ViewBag.Employee.LastName}
+                            @(ViewBag.Employee != null ? ViewBag.Employee.FirstName + " " + ViewBag.Employee.LastName : "")
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end">
                             <li>

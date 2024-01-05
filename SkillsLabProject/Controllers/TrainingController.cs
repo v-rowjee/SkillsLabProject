@@ -35,7 +35,7 @@ namespace SkillsLabProject.Controllers
             var employee = await _employeeBL.GetEmployeeAsync(loggeduser);
             ViewBag.Employee = employee;
 
-            var trainings = (await _trainingBL.GetAllTrainingsAsync()).Where(t => t.Deadline >= DateTime.Now).ToList();
+            var trainings = (await _trainingBL.GetAllTrainingsAsync()).Where(t => t.Deadline >= DateTime.Now.AddDays(-7)).ToList();
             ViewBag.Trainings = trainings;
 
             Enum.TryParse(Session["CurrentRole"] as string, out Role role);
@@ -118,7 +118,8 @@ namespace SkillsLabProject.Controllers
             if (id == null) return RedirectToAction("Index");
 
             var loggeduser = Session["CurrentUser"] as LoginViewModel;
-            ViewBag.Employee = _employeeBL.GetEmployeeAsync(loggeduser);
+            var employee = await _employeeBL.GetEmployeeAsync(loggeduser);
+            ViewBag.Employee = employee;
 
             var departments = await _departmentBL.GetAllDepartmentsAsync();
             ViewBag.Departments = departments;
@@ -139,7 +140,7 @@ namespace SkillsLabProject.Controllers
         [CustomAuthorization("Admin")]
         public async Task<JsonResult> Edit(TrainingViewModel training)
         {
-            var result = await _trainingBL.AddTrainingAsync(training);
+            var result = await _trainingBL.UpdateTrainingAsync(training);
             if (result)
             {
                 return Json(new { result = "Success", url = Url.Action("View", "Training",training.TrainingId) });

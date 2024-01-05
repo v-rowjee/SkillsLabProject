@@ -48,7 +48,7 @@ function setLoading(flag) {
 
 // Dark Mode
 var currentTheme = localStorage.getItem("theme") || getDefaultTheme();
-updateTheme(currentTheme);
+//updateTheme(currentTheme);
 
 $(document).ready(function () {
     $("#darkModeToggle").click(function () {

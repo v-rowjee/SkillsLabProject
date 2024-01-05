@@ -206,6 +206,11 @@ namespace SkillsLabProject.DAL.DAL
                     FROM PreRequisite p
                     JOIN @Details d ON p.Detail = d.Detail
 
+                    DELETE Proof
+                    FROM Proof p
+                    INNER JOIN Enrollment e ON p.EnrollmentId = e.EnrollmentId
+                    WHERE e.TrainingId = @TrainingId;
+
                     DELETE FROM Enrollment WHERE TrainingId = @TrainingId
                 COMMIT
             ";
