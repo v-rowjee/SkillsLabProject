@@ -103,8 +103,6 @@ namespace SkillsLabProject.Controllers
             var preRequisites = (await _preRequisiteBL.GetAllPreRequisitesAsync()).Where(p => p.TrainingId == enrollment.Training.TrainingId).ToList();
             ViewBag.Prerequisites = preRequisites;
 
-
-            
             return View();
         }
 

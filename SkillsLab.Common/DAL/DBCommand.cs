@@ -77,7 +77,7 @@ namespace SkillsLabProject.Common.DAL
             return ExecuteNonQueryAsync(query, new List<SqlParameter> { parameter });
         }
 
-        public static Task<bool> ExecuteStoredProcedureAsync(string storedProcedureName, List<SqlParameter> parameters)
+        public static Task<bool> ExecuteStoredProcedureAsync(string storedProcedureName, List<SqlParameter> parameters = null)
         {
             return ExecuteNonQueryAsync(storedProcedureName, parameters, CommandType.StoredProcedure);
         }

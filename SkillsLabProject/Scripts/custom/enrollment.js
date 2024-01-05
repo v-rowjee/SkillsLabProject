@@ -1,5 +1,11 @@
 $(function () {
 
+    $('img').on('load', function () {
+
+            $('#proofSpinner').fadeOut();
+
+    });
+
     $('#enrollmentForm').submit((e) => {
         e.preventDefault()
         return false;

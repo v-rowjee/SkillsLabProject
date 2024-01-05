@@ -13,6 +13,7 @@ namespace SkillsLabProject.DAL.DAL
         Task<bool> AddAsync(TrainingViewModel training);
         Task<bool> UpdateAsync(TrainingViewModel training);
         Task<bool> CloseAsync(int trainingId);
+        Task<bool> AutoCloseAsync();
     }
     public class TrainingDAL : ITrainingDAL
     {
@@ -288,6 +289,11 @@ namespace SkillsLabProject.DAL.DAL
             };
 
             return await DBCommand.ExecuteStoredProcedureAsync("dbo.ProcessEnrollments", parameters).ConfigureAwait(false);
+        }
+
+        public async Task<bool> AutoCloseAsync()
+        {
+            return await DBCommand.ExecuteStoredProcedureAsync("dbo.AutoProcessEnrollments").ConfigureAwait(false);
         }
     }
 }

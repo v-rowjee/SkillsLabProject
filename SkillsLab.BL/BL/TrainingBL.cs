@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using SkillsLabProject.Common.Models.ViewModels;
 using SkillsLabProject.Common.Models;
 using SkillsLabProject.DAL.DAL;
+using System.Diagnostics;
 
 namespace SkillsLabProject.BL.BL
 {
@@ -15,6 +16,7 @@ namespace SkillsLabProject.BL.BL
         Task<bool> UpdateTrainingAsync(TrainingViewModel model);
         Task<bool> DeleteTrainingAsync(int trainingId);
         Task<bool> CloseTrainingAsync(int trainingId);
+        Task<bool> AutoCloseTrainingAsync();
     }
 
     public class TrainingBL : ITrainingBL
@@ -22,15 +24,13 @@ namespace SkillsLabProject.BL.BL
         private readonly ITrainingDAL _trainingDAL;
         private readonly IDepartmentDAL _departmentDAL;
         private readonly IEnrollmentDAL _enrollmentDAL;
-        private readonly IEmployeeDAL _employeeDAL;
         private readonly IPreRequisiteDAL _preRequisiteDAL;
 
-        public TrainingBL(ITrainingDAL trainingDAL, IDepartmentDAL departmentDAL, IEnrollmentDAL enrollmentDAL, IEmployeeDAL employeeDAL, IPreRequisiteDAL preRequisiteDAL)
+        public TrainingBL(ITrainingDAL trainingDAL, IDepartmentDAL departmentDAL, IEnrollmentDAL enrollmentDAL, IPreRequisiteDAL preRequisiteDAL)
         {
             _trainingDAL = trainingDAL;
             _departmentDAL = departmentDAL;
             _enrollmentDAL = enrollmentDAL;
-            _employeeDAL = employeeDAL;
             _preRequisiteDAL = preRequisiteDAL;
         }
 
@@ -112,6 +112,11 @@ namespace SkillsLabProject.BL.BL
         public async Task<bool> CloseTrainingAsync(int trainingId)
         {
             return await _trainingDAL.CloseAsync(trainingId);
+        }
+
+        public async Task<bool> AutoCloseTrainingAsync()
+        {
+            return await _trainingDAL.AutoCloseAsync();
         }
     }
 }
