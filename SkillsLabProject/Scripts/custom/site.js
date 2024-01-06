@@ -99,7 +99,7 @@ updateTheme(currentTheme);
 
 $(document).ready(function () {
     $("#darkModeToggle").click(function () {
-        currentTheme = theme === "dark" ? "light" : "dark";
+        currentTheme = currentTheme === "dark" ? "light" : "dark";
         updateTheme(currentTheme);
     });
 });
@@ -107,10 +107,6 @@ $(document).ready(function () {
 function getDefaultTheme() {
     //return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
     return 'light';
-}
-
-function toggleTheme(theme) {
-    return theme === "dark" ? "light" : "dark";
 }
 
 function updateTheme(theme) {

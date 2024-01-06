@@ -116,6 +116,7 @@ namespace SkillsLabProject.BL.BL
 
         public async Task<bool> AutoCloseTrainingAsync()
         {
+            Debug.WriteLine("Job Executed");
             return await _trainingDAL.AutoCloseAsync();
         }
     }

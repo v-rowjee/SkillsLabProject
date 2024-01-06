@@ -1,9 +1,23 @@
 $(function () {
 
     $('img').on('load', function () {
+        $('#viewProofs').html("View")
+        $('#viewProofs').attr('disabled', false);
+    });
+    $('#downloadProofs').click(function () {
+        var proofImages = $('.proof-img');
+        proofImages.each(function (index) {
+            console.log("downlaod")
 
-            $('#proofSpinner').fadeOut();
-
+            var link = document.createElement('a');
+            link.href = $(this).attr('src');
+            link.download = 'proof' + (index + 1) + '.jpg';
+            link.target = '_blank';
+            link.style.display = 'none';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        });
     });
 
     $('#enrollmentForm').submit((e) => {
