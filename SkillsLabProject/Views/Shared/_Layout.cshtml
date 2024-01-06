@@ -1,5 +1,5 @@
 ﻿<!DOCTYPE html>
-<html>
+<html data-bs-theme="light">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -17,14 +17,14 @@
     <!-- Lodash-->
     <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js"></script>
 </head>
-<body data-bs-theme="light">
+<body>
     <div id="overlay-spinner">
         <span class="spinner-border text-primary"></span>
     </div>
     <nav class="navbar navbar-expand-lg sticky-top bg-light">
         <div class="container-fluid">
             <img src="~/Content/Images/logo.png" class="logo" />
-            @Html.ActionLink("SkillsLab", "Index", "Common", new { area = "" }, new { @class = "navbar-brand display-3" })
+            @Html.ActionLink("SkillsLab", "Index", "Common", new { area = "" }, new { @class = "navbar-brand" })
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -49,9 +49,9 @@
                             <li>
                                 @Html.ActionLink("Account", "Index", "Account", null, new { @class = "dropdown-item" })
                             </li>
-                            @*<li>
+                            <li>
                                 <a href="" id="darkModeToggle" class="dropdown-item">Dark mode</a>
-                            </li>*@
+                            </li>
                             <li><hr class="dropdown-divider"></li>
                             <li>
                                 @Html.ActionLink("Log Out", "Logout", "Common", null, new { @class = "dropdown-item" })

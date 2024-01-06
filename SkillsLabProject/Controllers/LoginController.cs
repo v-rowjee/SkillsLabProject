@@ -29,13 +29,15 @@ namespace SkillsLabProject.Controllers
         [HttpPost]
         public async Task<JsonResult> Authenticate(LoginViewModel model)
         {
-            var IsUserValid = await _appUserBL.AuthenticateUserAsync(model);
-            if (IsUserValid)
+            var response = await _appUserBL.AuthenticateUserAsync(model);
+
+            if (response.IsSuccess)
             {
                 Session["CurrentUser"] = model;
+                response.RedirectUrl = Url.Action("Role", "Common");
             }
-            return Json(new { result = IsUserValid, url = Url.Action("Role", "Common") });
 
+            return Json(response);
         }
     }
 }

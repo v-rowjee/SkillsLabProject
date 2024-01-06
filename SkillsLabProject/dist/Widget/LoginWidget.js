@@ -8,7 +8,7 @@ define(["require", "exports", "dojo/_base/declare", "dijit/_Widget", "dijit/_Tem
     var LoginWidget = /** @class */ (function () {
         function LoginWidget() {
             this.templateString = template;
-            console.log('cpnstructor');
+            console.log('constructor');
         }
         LoginWidget.prototype.postCreate = function () {
             this.inherited(arguments);

@@ -33,7 +33,7 @@ namespace SkillsLabProject
             BundleConfig.RegisterBundles(BundleTable.Bundles);
 
             HangfireAspNet.Use(GetHangfireServers);
-            RecurringJob.AddOrUpdate<ITrainingBL>("EnrollmentProcessingJob", x =>  x.AutoCloseTrainingAsync(), Cron.Minutely);
+            RecurringJob.AddOrUpdate<ITrainingBL>("EnrollmentProcessingJob", t =>  t.AutoCloseTrainingAsync(), Cron.Minutely);
         }
     }
 }

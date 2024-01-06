@@ -203,8 +203,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Exceptions\CustomException.cs" />
-    <Compile Include="Exceptions\GlobalExceptionFilter.cs" />
+    <Compile Include="Custom\CustomException.cs" />
+    <Compile Include="Custom\GlobalExceptionFilter.cs" />
+    <Compile Include="Custom\Result.cs" />
     <Compile Include="Log\ILogger.cs" />
     <Compile Include="Log\Logger.cs" />
     <Compile Include="DAL\DAL.cs" />

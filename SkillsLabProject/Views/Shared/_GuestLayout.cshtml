@@ -1,5 +1,5 @@
 ﻿<!DOCTYPE html>
-<html>
+<html data-bs-theme="light">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,14 +9,14 @@
     @* Font Awesome *@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
-<body data-bs-theme="light">
+<body>
     <div id="overlay-spinner">
         <span class="spinner-border text-primary"></span>
     </div>
     <nav class="navbar navbar-expand-lg sticky-top bg-light">
         <div class="container-fluid">
             <img src="~/Content/Images/logo.png" class="logo" />
-            @Html.ActionLink("SkillsLab", "Index", "Common", new { area = "" }, new { @class = "navbar-brand display-3" })
+            @Html.ActionLink("SkillsLab", "Index", "Common", new { area = "" }, new { @class = "navbar-brand" })
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>

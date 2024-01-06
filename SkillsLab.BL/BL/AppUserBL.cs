@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using CryptoHelper;
+using SkillsLabProject.Common.Custom;
 using SkillsLabProject.Common.Models.ViewModels;
 using SkillsLabProject.DAL.DAL;
 
@@ -9,7 +10,7 @@ namespace SkillsLabProject.BL.BL
 {
     public interface IAppUserBL
     {
-        Task<bool> AuthenticateUserAsync(LoginViewModel model);
+        Task<Result> AuthenticateUserAsync(LoginViewModel model);
         Task<List<string>> RegisterUserAsync(RegisterViewModel model);
     }
 
@@ -24,10 +25,16 @@ namespace SkillsLabProject.BL.BL
             _employeeDAL = employeeDAL;
         }
 
-        public async Task<bool> AuthenticateUserAsync(LoginViewModel model)
+        public async Task<Result> AuthenticateUserAsync(LoginViewModel model)
         {
             var hashedPassword = await _appUserDAL.GetHashedPasswordAsync(model);
-            return hashedPassword != null && VerifyPassword(hashedPassword, model.Password);
+            var isAuthenticated = hashedPassword != null && VerifyPassword(hashedPassword, model.Password);
+
+            return new Result()
+            {
+                IsSuccess = isAuthenticated,
+                Message = isAuthenticated ? "Authentication successful!" : "Unable to authenticate."
+            };
         }
 
         public async Task<List<string>> RegisterUserAsync(RegisterViewModel model)

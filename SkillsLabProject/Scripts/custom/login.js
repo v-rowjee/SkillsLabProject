@@ -1,5 +1,4 @@
-
-$(function () {
+$(() => {
     $("#togglePassword").parent().click(() => {
         $("#togglePassword").toggleClass("fa-eye fa-eye-slash");
         var input = $("#password");
@@ -25,43 +24,16 @@ $(function () {
 
         if (error != '') {
             error = error.slice(0, -8) // to remove the last <br><br>
-            Snackbar.show({
-                text: error,
-                actionTextColor: "#CFE2FF"
-            });
+            showSnackbar(error);
         }
         else {
-            var LoginViewModelObj = { Email: email, Password: password }
+            var loginViewModelObj = { Email: email, Password: password }
 
-            $.ajax({
-                type: "POST",
+            performAjaxRequest({
+                method: "POST",
                 url: "/Login/Authenticate",
-                data: LoginViewModelObj,
-                dataType: "json",
-                success: (response) => {
-                    if (response.result) {
-                        Snackbar.show({
-                            text: "Authentication successful!",
-                            actionTextColor: "#CFE2FF"
-                        });
-                        window.location.replace(response.url);
-                    }
-                    else {
-                        Snackbar.show({
-                            text: "Unable to authenticate",
-                            actionTextColor: "#CFE2FF"
-                        });
-                    }
-                },
-                error: () => {
-                    Snackbar.show({
-                        text: "An error occurred while authenticating",
-                        actionTextColor: "#CFE2FF"
-                    });
-                }
+                data: loginViewModelObj,
             })
         }
-
     })
-
 })

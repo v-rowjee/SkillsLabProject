@@ -18,7 +18,8 @@ class LoginWidget {
     private templateString: any = template;
 
     constructor() {
-        console.log('cpnstructor');
+        console.log('constructor');
+
     }
 
     postCreate() {
