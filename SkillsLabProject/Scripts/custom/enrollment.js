@@ -1,5 +1,4 @@
-$(function () {
-
+$(() => {
     $('img').on('load', function () {
         $('#viewProofs').html("View")
         $('#viewProofs').attr('disabled', false);
@@ -7,8 +6,6 @@ $(function () {
     $('#downloadProofs').click(function () {
         var proofImages = $('.proof-img');
         proofImages.each(function (index) {
-            console.log("downlaod")
-
             var link = document.createElement('a');
             link.href = $(this).attr('src');
             link.download = 'proof' + (index + 1) + '.jpg';
@@ -266,3 +263,15 @@ function deleteEnrollment(deleteBtn) {
     });
 
 } 
+
+
+// Loading
+function setLoading(flag) {
+    if (flag) {
+        $('#enroll').prop('disabled', true);
+        $('#overlay-spinner').show()
+    } else {
+        $('#enroll').prop('disabled', false);
+        $('#overlay-spinner').hide()
+    }
+}

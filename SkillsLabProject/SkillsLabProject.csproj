@@ -205,6 +205,7 @@
     <Content Include="Scripts\bootstrap\bootstrap.js" />
     <Content Include="Scripts\bootstrap\bootstrap.min.js" />
     <Content Include="Scripts\custom\enrollment-table.js" />
+    <Content Include="Scripts\custom\_functions.js" />
     <Content Include="Scripts\custom\role.js" />
     <Content Include="Scripts\dojoSRC\dijit-themes\.gitignore" />
     <Content Include="Scripts\dojoSRC\dijit-themes\flat\dgrid\flat.css" />

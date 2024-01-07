@@ -1,11 +1,10 @@
-﻿
-@{
+﻿@{
     ViewBag.Title = "Login";
     Layout = "~/Views/Shared/_GuestLayout.cshtml";
 }
 
 @section scripts {
-    <script src="~/Scripts/custom/login.js"></script>
+    <script type="module" src="~/Scripts/custom/login.js"></script>
 }
 
 <main class="container d-flex align-content-center">
@@ -17,6 +16,7 @@
         <div class="col-md-6 px-5">
             <h2 class="display-4 fw-bold">Welcome Back!</h2>
             <form id="loginForm" class="my-5 needs-validation" novalidate>
+                @Html.AntiForgeryToken()
                 <div class="mb-3">
                     <label for="email" class="form-label">Email Address</label>
                     <input type="email" class="form-control" id="email" placeholder="Ex. johndoe@example.com" required>
