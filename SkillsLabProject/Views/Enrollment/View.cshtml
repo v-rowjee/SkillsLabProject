@@ -128,6 +128,7 @@
         </div>
         <div class="col-lg-4 ps-lg-4">
             <form id="editEnrollmentForm" class="needs-validation" novalidate>
+                @Html.AntiForgeryToken()
                 <h2 class="display-6 mb-3">Enrollment</h2>
                 @if (ViewBag.Enrollment.Training.IsClosed)
                 {
@@ -149,7 +150,8 @@
                 </div>
                 <div class="card my-3">
                     <div class="card-header">
-                        Proofs @if(ViewBag.Proofs.Count > 0) { <span class="badge text-bg-primary">@ViewBag.Proofs.Count</span> }
+                        Proofs @if (ViewBag.Proofs.Count > 0)
+                        {<span class="badge text-bg-primary">@ViewBag.Proofs.Count</span>}
                     </div>
                     <div class="card-body">
                         @if (ViewBag.Proofs.Count > 0)

@@ -16,6 +16,7 @@
         <div class="col-lg-6 px-5">
             <h2 class="display-4 fw-bold pb-0">Registration</h2>
             <form id="registerForm" class="my-5 needs-validation" novalidate>
+                @Html.AntiForgeryToken()
                 <div class="mb-4 p-3 border border-primary border-opacity-25 rounded row gap-3 gap-sm-0">
                     <div class="col-sm-4">
                         <input type="radio" checked class="btn-check" name="role" value="Employee" id="roleEmployee" autocomplete="off">

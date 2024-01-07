@@ -14,6 +14,7 @@
             </h1>
 
             <form id="editTrainingForm" class="needs-validation" novalidate>
+                @Html.AntiForgeryToken()
                 <div class="card mb-4">
                     <div class="card-header">
                         <i class="fa-solid fa-graduation-cap me-1"></i>
@@ -110,7 +111,7 @@
                                 foreach (var PreRequisite in ViewBag.PreRequisites)
                                 {
                                     <li class="list-group-item d-inline-flex rounded">
-                                        <input list="prerequisiteList" id="@("prerequisite"+PreRequisite.PreRequisiteId)" class="form-control prerequisite-input my-2 me-3" value="@PreRequisite.Detail" required >
+                                        <input list="prerequisiteList" id="@("prerequisite"+PreRequisite.PreRequisiteId)" class="form-control prerequisite-input my-2 me-3" value="@PreRequisite.Detail" required>
                                         <button id="deletePrerequisite" class="btn btn-sm btn-outline-danger my-2"><i class="fa fa-trash my-2"></i></button>
                                     </li>
                                 }
@@ -123,7 +124,7 @@
                         @Html.ActionLink("Cancel", "Index", "Training", null, new { @class = "btn btn-secondary me-2 w-100" })
                     </div>
                     <div class="col-8">
-                        <input type="hidden" id="trainingId"  value="@ViewBag.Training.TrainingId" />
+                        <input type="hidden" id="trainingId" value="@ViewBag.Training.TrainingId" />
                         <input type="submit" id="editTraining" class="btn btn-primary me-2 w-100" value="Save Changes" />
                     </div>
                 </div>
