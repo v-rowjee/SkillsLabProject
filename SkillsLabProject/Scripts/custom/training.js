@@ -226,7 +226,7 @@ function deleteTraining(deleteBtn) {
         success: (response) => {
             showSnackbar(response.Message)
             if (response.IsSuccess) {
-                window.location.replace(response.RedirectUrl);
+                setTimeout(() => { window.location.replace(response.RedirectUrl) }, 500)
             }
             else {
                 $(deleteBtn).attr('disable', true)
