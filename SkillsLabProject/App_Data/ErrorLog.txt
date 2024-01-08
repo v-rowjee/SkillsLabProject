@@ -364,7 +364,7 @@ Stack Trace:    at System.Net.Mail.SendMailAsyncResult.End(IAsyncResult result)
 --------------------------------------------------------
 
 --------------------------------------------------------
-Timestamp: 1/5/2024 12:54:46 PM
+Timestamp: 1/5/2024 12:54:46 AM
 Exception Type: System.Data.SqlClient.SqlException
 Message Type: The DELETE statement conflicted with the REFERENCE constraint "FK_Proof_EnrollmentId_Enrollment_EnrollmentId". The conflict occurred in database "SkillsLabDB", table "dbo.Proof", column 'EnrollmentId'.
 The statement has been terminated.
@@ -384,4 +384,154 @@ Stack Trace:    at System.Data.SqlClient.SqlConnection.OnError(SqlException exce
    at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
    at System.Runtime.CompilerServices.ConfiguredTaskAwaitable`1.ConfiguredTaskAwaiter.GetResult()
    at SkillsLabProject.Common.DAL.DBCommand.<ExecuteNonQueryAsync>d__1.MoveNext() in C:\Users\P12AC8C\source\repos\SkillsLabProject\SkillsLab.Common\DAL\DBCommand.cs:line 41
+--------------------------------------------------------
+
+--------------------------------------------------------
+Timestamp: 1/8/2024 3:03:50 PM
+Exception Type: System.InvalidCastException
+Message Type: Specified cast is not valid.
+Inner Exception: Specified cast is not valid.
+Stack Trace:    at System.Data.SqlClient.SqlBuffer.get_Int32()
+   at SkillsLabProject.DAL.DAL.EmployeeDAL.<GetUserRolesAsync>d__5.MoveNext() in C:\Users\P12AC8C\source\repos\SkillsLabProject\SkillsLab.DAL\DAL\EmployeeDAL.cs:line 190
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at SkillsLabProject.BL.BL.EmployeeBL.<GetUserRolesAsync>d__7.MoveNext() in C:\Users\P12AC8C\source\repos\SkillsLabProject\SkillsLab.BL\BL\EmployeeBL.cs:line 56
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at SkillsLabProject.Controllers.CommonController.<Role>d__3.MoveNext() in C:\Users\P12AC8C\source\repos\SkillsLabProject\SkillsLabProject\Controllers\CommonController.cs:line 43
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Web.Mvc.Async.TaskAsyncActionDescriptor.EndExecute(IAsyncResult asyncResult)
+   at System.Web.Mvc.Async.AsyncControllerActionInvoker.<>c__DisplayClass8_0.<BeginInvokeAsynchronousActionMethod>b__1(IAsyncResult asyncResult)
+   at System.Web.Mvc.Async.AsyncControllerActionInvoker.EndInvokeActionMethod(IAsyncResult asyncResult)
+   at System.Web.Mvc.Async.AsyncControllerActionInvoker.AsyncInvocationWithFilters.<>c__DisplayClass11_0.<InvokeActionMethodFilterAsynchronouslyRecursive>b__0()
+   at System.Web.Mvc.Async.AsyncControllerActionInvoker.AsyncInvocationWithFilters.<>c__DisplayClass11_2.<InvokeActionMethodFilterAsynchronouslyRecursive>b__2()
+   at System.Web.Mvc.Async.AsyncControllerActionInvoker.EndInvokeActionMethodWithFilters(IAsyncResult asyncResult)
+   at System.Web.Mvc.Async.AsyncControllerActionInvoker.<>c__DisplayClass3_6.<BeginInvokeAction>b__4()
+   at System.Web.Mvc.Async.AsyncControllerActionInvoker.<>c__DisplayClass3_1.<BeginInvokeAction>b__1(IAsyncResult asyncResult)
+--------------------------------------------------------
+
+--------------------------------------------------------
+Timestamp: 1/8/2024 3:28:40 PM
+Exception Type: System.InvalidCastException
+Message Type: Specified cast is not valid.
+Inner Exception: Specified cast is not valid.
+Stack Trace:    at System.Data.SqlClient.SqlBuffer.get_Int32()
+   at SkillsLabProject.DAL.DAL.EmployeeDAL.<GetUserRolesAsync>d__5.MoveNext() in C:\Users\P12AC8C\source\repos\SkillsLabProject\SkillsLab.DAL\DAL\EmployeeDAL.cs:line 190
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at SkillsLabProject.BL.BL.EmployeeBL.<GetUserRolesAsync>d__7.MoveNext() in C:\Users\P12AC8C\source\repos\SkillsLabProject\SkillsLab.BL\BL\EmployeeBL.cs:line 56
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at SkillsLabProject.Controllers.CommonController.<Role>d__3.MoveNext() in C:\Users\P12AC8C\source\repos\SkillsLabProject\SkillsLabProject\Controllers\CommonController.cs:line 43
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Web.Mvc.Async.TaskAsyncActionDescriptor.EndExecute(IAsyncResult asyncResult)
+   at System.Web.Mvc.Async.AsyncControllerActionInvoker.<>c__DisplayClass8_0.<BeginInvokeAsynchronousActionMethod>b__1(IAsyncResult asyncResult)
+   at System.Web.Mvc.Async.AsyncControllerActionInvoker.EndInvokeActionMethod(IAsyncResult asyncResult)
+   at System.Web.Mvc.Async.AsyncControllerActionInvoker.AsyncInvocationWithFilters.<>c__DisplayClass11_0.<InvokeActionMethodFilterAsynchronouslyRecursive>b__0()
+   at System.Web.Mvc.Async.AsyncControllerActionInvoker.AsyncInvocationWithFilters.<>c__DisplayClass11_2.<InvokeActionMethodFilterAsynchronouslyRecursive>b__2()
+   at System.Web.Mvc.Async.AsyncControllerActionInvoker.EndInvokeActionMethodWithFilters(IAsyncResult asyncResult)
+   at System.Web.Mvc.Async.AsyncControllerActionInvoker.<>c__DisplayClass3_6.<BeginInvokeAction>b__4()
+   at System.Web.Mvc.Async.AsyncControllerActionInvoker.<>c__DisplayClass3_1.<BeginInvokeAction>b__1(IAsyncResult asyncResult)
+--------------------------------------------------------
+
+--------------------------------------------------------
+Timestamp: 1/8/2024 3:31:50 PM
+Exception Type: System.InvalidCastException
+Message Type: Specified cast is not valid.
+Inner Exception: Specified cast is not valid.
+Stack Trace:    at System.Data.SqlClient.SqlBuffer.get_Int16()
+   at SkillsLabProject.DAL.DAL.EmployeeDAL.<GetEmployeeAsync>d__2.MoveNext() in C:\Users\P12AC8C\source\repos\SkillsLabProject\SkillsLab.DAL\DAL\EmployeeDAL.cs:line 95
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at SkillsLabProject.BL.BL.EmployeeBL.<GetEmployeeAsync>d__2.MoveNext() in C:\Users\P12AC8C\source\repos\SkillsLabProject\SkillsLab.BL\BL\EmployeeBL.cs:line 31
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at SkillsLabProject.Controllers.CommonController.<Role>d__3.MoveNext() in C:\Users\P12AC8C\source\repos\SkillsLabProject\SkillsLabProject\Controllers\CommonController.cs:line 40
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Web.Mvc.Async.TaskAsyncActionDescriptor.EndExecute(IAsyncResult asyncResult)
+   at System.Web.Mvc.Async.AsyncControllerActionInvoker.<>c__DisplayClass8_0.<BeginInvokeAsynchronousActionMethod>b__1(IAsyncResult asyncResult)
+   at System.Web.Mvc.Async.AsyncControllerActionInvoker.EndInvokeActionMethod(IAsyncResult asyncResult)
+   at System.Web.Mvc.Async.AsyncControllerActionInvoker.AsyncInvocationWithFilters.<>c__DisplayClass11_0.<InvokeActionMethodFilterAsynchronouslyRecursive>b__0()
+   at System.Web.Mvc.Async.AsyncControllerActionInvoker.AsyncInvocationWithFilters.<>c__DisplayClass11_2.<InvokeActionMethodFilterAsynchronouslyRecursive>b__2()
+   at System.Web.Mvc.Async.AsyncControllerActionInvoker.EndInvokeActionMethodWithFilters(IAsyncResult asyncResult)
+   at System.Web.Mvc.Async.AsyncControllerActionInvoker.<>c__DisplayClass3_6.<BeginInvokeAction>b__4()
+   at System.Web.Mvc.Async.AsyncControllerActionInvoker.<>c__DisplayClass3_1.<BeginInvokeAction>b__1(IAsyncResult asyncResult)
+--------------------------------------------------------
+
+--------------------------------------------------------
+Timestamp: 1/8/2024 3:33:21 PM
+Exception Type: System.InvalidCastException
+Message Type: Specified cast is not valid.
+Inner Exception: Specified cast is not valid.
+Stack Trace:    at System.Data.SqlClient.SqlBuffer.get_Int32()
+   at SkillsLabProject.DAL.DAL.EmployeeDAL.<GetUserRolesAsync>d__5.MoveNext() in C:\Users\P12AC8C\source\repos\SkillsLabProject\SkillsLab.DAL\DAL\EmployeeDAL.cs:line 190
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at SkillsLabProject.BL.BL.EmployeeBL.<GetUserRolesAsync>d__7.MoveNext() in C:\Users\P12AC8C\source\repos\SkillsLabProject\SkillsLab.BL\BL\EmployeeBL.cs:line 56
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at SkillsLabProject.Controllers.CommonController.<Role>d__3.MoveNext() in C:\Users\P12AC8C\source\repos\SkillsLabProject\SkillsLabProject\Controllers\CommonController.cs:line 43
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Web.Mvc.Async.TaskAsyncActionDescriptor.EndExecute(IAsyncResult asyncResult)
+   at System.Web.Mvc.Async.AsyncControllerActionInvoker.<>c__DisplayClass8_0.<BeginInvokeAsynchronousActionMethod>b__1(IAsyncResult asyncResult)
+   at System.Web.Mvc.Async.AsyncControllerActionInvoker.EndInvokeActionMethod(IAsyncResult asyncResult)
+   at System.Web.Mvc.Async.AsyncControllerActionInvoker.AsyncInvocationWithFilters.<>c__DisplayClass11_0.<InvokeActionMethodFilterAsynchronouslyRecursive>b__0()
+   at System.Web.Mvc.Async.AsyncControllerActionInvoker.AsyncInvocationWithFilters.<>c__DisplayClass11_2.<InvokeActionMethodFilterAsynchronouslyRecursive>b__2()
+   at System.Web.Mvc.Async.AsyncControllerActionInvoker.EndInvokeActionMethodWithFilters(IAsyncResult asyncResult)
+   at System.Web.Mvc.Async.AsyncControllerActionInvoker.<>c__DisplayClass3_6.<BeginInvokeAction>b__4()
+   at System.Web.Mvc.Async.AsyncControllerActionInvoker.<>c__DisplayClass3_1.<BeginInvokeAction>b__1(IAsyncResult asyncResult)
+--------------------------------------------------------
+
+--------------------------------------------------------
+Timestamp: 1/8/2024 3:41:03 PM
+Exception Type: System.InvalidCastException
+Message Type: Specified cast is not valid.
+Inner Exception: Specified cast is not valid.
+Stack Trace:    at System.Data.SqlClient.SqlBuffer.get_Byte()
+   at SkillsLabProject.DAL.DAL.EmployeeDAL.<GetEmployeeAsync>d__2.MoveNext() in C:\Users\P12AC8C\source\repos\SkillsLabProject\SkillsLab.DAL\DAL\EmployeeDAL.cs:line 95
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at SkillsLabProject.BL.BL.EmployeeBL.<GetEmployeeAsync>d__2.MoveNext() in C:\Users\P12AC8C\source\repos\SkillsLabProject\SkillsLab.BL\BL\EmployeeBL.cs:line 31
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at SkillsLabProject.Controllers.CommonController.<Role>d__3.MoveNext() in C:\Users\P12AC8C\source\repos\SkillsLabProject\SkillsLabProject\Controllers\CommonController.cs:line 40
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Web.Mvc.Async.TaskAsyncActionDescriptor.EndExecute(IAsyncResult asyncResult)
+   at System.Web.Mvc.Async.AsyncControllerActionInvoker.<>c__DisplayClass8_0.<BeginInvokeAsynchronousActionMethod>b__1(IAsyncResult asyncResult)
+   at System.Web.Mvc.Async.AsyncControllerActionInvoker.EndInvokeActionMethod(IAsyncResult asyncResult)
+   at System.Web.Mvc.Async.AsyncControllerActionInvoker.AsyncInvocationWithFilters.<>c__DisplayClass11_0.<InvokeActionMethodFilterAsynchronouslyRecursive>b__0()
+   at System.Web.Mvc.Async.AsyncControllerActionInvoker.AsyncInvocationWithFilters.<>c__DisplayClass11_2.<InvokeActionMethodFilterAsynchronouslyRecursive>b__2()
+   at System.Web.Mvc.Async.AsyncControllerActionInvoker.EndInvokeActionMethodWithFilters(IAsyncResult asyncResult)
+   at System.Web.Mvc.Async.AsyncControllerActionInvoker.<>c__DisplayClass3_6.<BeginInvokeAction>b__4()
+   at System.Web.Mvc.Async.AsyncControllerActionInvoker.<>c__DisplayClass3_1.<BeginInvokeAction>b__1(IAsyncResult asyncResult)
 --------------------------------------------------------

@@ -35,11 +35,11 @@ namespace SkillsLabProject.DAL.DAL
                 {
                     var training = new TrainingModel
                     {
-                        TrainingId = dataReader.GetInt32(dataReader.GetOrdinal("TrainingId")),
+                        TrainingId = dataReader.GetInt16(dataReader.GetOrdinal("TrainingId")),
                         Title = dataReader.GetString(dataReader.GetOrdinal("Title")),
                         Description = dataReader.GetString(dataReader.GetOrdinal("Description")),
                         Deadline = dataReader.GetDateTime(dataReader.GetOrdinal("Deadline")),
-                        Capacity = dataReader.GetInt32(dataReader.GetOrdinal("Capacity")),
+                        Capacity = dataReader.GetInt16(dataReader.GetOrdinal("Capacity")),
                         IsClosed = dataReader.GetBoolean(dataReader.GetOrdinal("IsClosed"))
                     };
 
@@ -47,7 +47,7 @@ namespace SkillsLabProject.DAL.DAL
                     {
                         training.PriorityDepartment = new DepartmentModel
                         {
-                            DepartmentId = dataReader.GetInt32(dataReader.GetOrdinal("PriorityDepartmentId")),
+                            DepartmentId = dataReader.GetByte(dataReader.GetOrdinal("PriorityDepartmentId")),
                             Title = dataReader.GetString(dataReader.GetOrdinal("DepartmentTitle"))
                         };
                     }
@@ -84,18 +84,18 @@ namespace SkillsLabProject.DAL.DAL
 
                 if (await dataReader.ReadAsync())
                 {
-                    training.TrainingId = dataReader.GetInt32(dataReader.GetOrdinal("TrainingId"));
+                    training.TrainingId = dataReader.GetInt16(dataReader.GetOrdinal("TrainingId"));
                     training.Title = dataReader.GetString(dataReader.GetOrdinal("Title"));
                     training.Description = dataReader.GetString(dataReader.GetOrdinal("Description"));
                     training.Deadline = dataReader.GetDateTime(dataReader.GetOrdinal("Deadline"));
-                    training.Capacity = dataReader.GetInt32(dataReader.GetOrdinal("Capacity"));
+                    training.Capacity = dataReader.GetInt16(dataReader.GetOrdinal("Capacity"));
                     training.IsClosed = dataReader.GetBoolean(dataReader.GetOrdinal("IsClosed"));
 
                     if (!dataReader.IsDBNull(dataReader.GetOrdinal("PriorityDepartmentId")))
                     {
                         training.PriorityDepartment = new DepartmentModel
                         {
-                            DepartmentId = dataReader.GetInt32(dataReader.GetOrdinal("PriorityDepartmentId")),
+                            DepartmentId = dataReader.GetByte(dataReader.GetOrdinal("PriorityDepartmentId")),
                             Title = dataReader.GetString(dataReader.GetOrdinal("DepartmentTitle"))
                         };
                     }

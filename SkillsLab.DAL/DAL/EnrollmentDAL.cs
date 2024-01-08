@@ -34,10 +34,10 @@ namespace SkillsLabProject.DAL.DAL
                 {
                     var enrollment = new EnrollmentModel
                     {
-                        EnrollmentId = dataReader.GetInt32(dataReader.GetOrdinal("EnrollmentId")),
-                        EmployeeId = dataReader.GetInt32(dataReader.GetOrdinal("EmployeeId")),
-                        TrainingId = dataReader.GetInt32(dataReader.GetOrdinal("TrainingId")),
-                        Status = (Status)dataReader.GetInt32(dataReader.GetOrdinal("StatusId")),
+                        EnrollmentId = dataReader.GetInt16(dataReader.GetOrdinal("EnrollmentId")),
+                        EmployeeId = dataReader.GetInt16(dataReader.GetOrdinal("EmployeeId")),
+                        TrainingId = dataReader.GetInt16(dataReader.GetOrdinal("TrainingId")),
+                        Status = (Status)dataReader.GetByte(dataReader.GetOrdinal("StatusId")),
                         UpdatedOn = dataReader.GetDateTime(dataReader.GetOrdinal("UpdatedOn")),
                         CreatedOn = dataReader.GetDateTime(dataReader.GetOrdinal("CreatedOn"))
                     };
@@ -68,10 +68,10 @@ namespace SkillsLabProject.DAL.DAL
             {
                 while (await dataReader.ReadAsync().ConfigureAwait(false))
                 {
-                    enrollment.EnrollmentId = dataReader.GetInt32(dataReader.GetOrdinal("EnrollmentId"));
-                    enrollment.EmployeeId = dataReader.GetInt32(dataReader.GetOrdinal("EmployeeId"));
-                    enrollment.TrainingId = dataReader.GetInt32(dataReader.GetOrdinal("TrainingId"));
-                    enrollment.Status = (Status)dataReader.GetInt32(dataReader.GetOrdinal("StatusId"));
+                    enrollment.EnrollmentId = dataReader.GetInt16(dataReader.GetOrdinal("EnrollmentId"));
+                    enrollment.EmployeeId = dataReader.GetInt16(dataReader.GetOrdinal("EmployeeId"));
+                    enrollment.TrainingId = dataReader.GetInt16(dataReader.GetOrdinal("TrainingId"));
+                    enrollment.Status = (Status)dataReader.GetByte(dataReader.GetOrdinal("StatusId"));
                     enrollment.UpdatedOn = dataReader.GetDateTime(dataReader.GetOrdinal("UpdatedOn"));
                     enrollment.CreatedOn = dataReader.GetDateTime(dataReader.GetOrdinal("CreatedOn"));
                 }

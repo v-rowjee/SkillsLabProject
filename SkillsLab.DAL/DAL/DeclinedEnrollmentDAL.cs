@@ -49,8 +49,8 @@ namespace SkillsLabProject.DAL.DAL
                     {
                         DeclinedEnrollmentModel DeclinedEnrollment = new DeclinedEnrollmentModel
                         {
-                            DeclinedEnrollmentId = dataReader.GetInt32(dataReader.GetOrdinal("DeclinedEnrollmentId")),
-                            EnrollmentId = dataReader.GetInt32(dataReader.GetOrdinal("EnrollmentId")),
+                            DeclinedEnrollmentId = dataReader.GetInt16(dataReader.GetOrdinal("DeclinedEnrollmentId")),
+                            EnrollmentId = dataReader.GetInt16(dataReader.GetOrdinal("EnrollmentId")),
                             Reason = dataReader["Reason"].ToString()
                         };
                         DeclinedEnrollments.Add(DeclinedEnrollment);
@@ -79,22 +79,16 @@ namespace SkillsLabProject.DAL.DAL
 
             var DeclinedEnrollment = new DeclinedEnrollmentModel();
 
-            try
+            using (SqlDataReader dataReader = await DBCommand.GetDataWithConditionAsync(GetDeclinedEnrollmentQuery, parameters).ConfigureAwait(false))
             {
-                using (SqlDataReader dataReader = await DBCommand.GetDataWithConditionAsync(GetDeclinedEnrollmentQuery, parameters).ConfigureAwait(false))
+                while (await dataReader.ReadAsync().ConfigureAwait(false))
                 {
-                    while (await dataReader.ReadAsync().ConfigureAwait(false))
-                    {
-                        DeclinedEnrollment.DeclinedEnrollmentId = dataReader.GetInt32(dataReader.GetOrdinal("DeclinedEnrollmentId"));
-                        DeclinedEnrollment.EnrollmentId = dataReader.GetInt32(dataReader.GetOrdinal("EnrollmentId"));
-                        DeclinedEnrollment.Reason = dataReader["Reason"].ToString();
-                    }
+                    DeclinedEnrollment.DeclinedEnrollmentId = dataReader.GetInt16(dataReader.GetOrdinal("DeclinedEnrollmentId"));
+                    DeclinedEnrollment.EnrollmentId = dataReader.GetInt16(dataReader.GetOrdinal("EnrollmentId"));
+                    DeclinedEnrollment.Reason = dataReader["Reason"].ToString();
                 }
             }
-            catch
-            {
-                throw;
-            }
+
 
             return DeclinedEnrollment;
         }

@@ -50,8 +50,8 @@ namespace SkillsLabProject.DAL.DAL
                 {
                     var proof = new ProofModel
                     {
-                        ProofId = dataReader.GetInt32(dataReader.GetOrdinal("ProofId")),
-                        EnrollmentId = dataReader.GetInt32(dataReader.GetOrdinal("EnrollmentId")),
+                        ProofId = dataReader.GetInt16(dataReader.GetOrdinal("ProofId")),
+                        EnrollmentId = dataReader.GetInt16(dataReader.GetOrdinal("EnrollmentId")),
                         Attachment = dataReader.GetString(dataReader.GetOrdinal("Attachment"))
                     };
 
@@ -81,8 +81,8 @@ namespace SkillsLabProject.DAL.DAL
             {
                 while (await dataReader.ReadAsync().ConfigureAwait(false))
                 {
-                    proof.ProofId = dataReader.GetInt32(dataReader.GetOrdinal("ProofId"));
-                    proof.EnrollmentId = dataReader.GetInt32(dataReader.GetOrdinal("EnrollmentId"));
+                    proof.ProofId = dataReader.GetInt16(dataReader.GetOrdinal("ProofId"));
+                    proof.EnrollmentId = dataReader.GetInt16(dataReader.GetOrdinal("EnrollmentId"));
                     proof.Attachment = dataReader.GetString(dataReader.GetOrdinal("Attachment"));
                 }
             }

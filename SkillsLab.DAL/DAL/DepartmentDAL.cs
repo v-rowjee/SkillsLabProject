@@ -48,7 +48,7 @@ namespace SkillsLabProject.DAL.DAL
                 {
                     DepartmentModel Department = new DepartmentModel
                     {
-                        DepartmentId = dataReader.GetInt32(dataReader.GetOrdinal("DepartmentId")),
+                        DepartmentId = dataReader.GetByte(dataReader.GetOrdinal("DepartmentId")),
                         Title = dataReader["Title"].ToString()
                     };
 
@@ -78,7 +78,7 @@ namespace SkillsLabProject.DAL.DAL
             {
                 while (await dataReader.ReadAsync().ConfigureAwait(false))
                 {
-                    department.DepartmentId = dataReader.GetInt32(dataReader.GetOrdinal("DepartmentId"));
+                    department.DepartmentId = dataReader.GetByte(dataReader.GetOrdinal("DepartmentId"));
                     department.Title = dataReader["Title"].ToString();
                 }
             }

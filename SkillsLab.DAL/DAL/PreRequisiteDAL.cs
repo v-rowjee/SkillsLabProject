@@ -54,9 +54,9 @@ namespace SkillsLabProject.DAL.DAL
                 {
                     var preRequisite = new PreRequisiteModel
                     {
-                        PreRequisiteId = dataReader.GetInt32(dataReader.GetOrdinal("PreRequisiteId")),
+                        PreRequisiteId = dataReader.GetInt16(dataReader.GetOrdinal("PreRequisiteId")),
                         Detail = dataReader.GetString(dataReader.GetOrdinal("Detail")),
-                        TrainingId = dataReader.GetInt32(dataReader.GetOrdinal("TrainingId"))
+                        TrainingId = dataReader.GetInt16(dataReader.GetOrdinal("TrainingId"))
                     };
 
                     preRequisites.Add(preRequisite);
@@ -87,9 +87,9 @@ namespace SkillsLabProject.DAL.DAL
             {
                 while (await dataReader.ReadAsync().ConfigureAwait(false))
                 {
-                    preRequisite.PreRequisiteId = dataReader.GetInt32(dataReader.GetOrdinal("PreRequisiteId"));
+                    preRequisite.PreRequisiteId = dataReader.GetInt16(dataReader.GetOrdinal("PreRequisiteId"));
                     preRequisite.Detail = dataReader.GetString(dataReader.GetOrdinal("Detail"));
-                    preRequisite.TrainingId = dataReader.GetInt32(dataReader.GetOrdinal("TrainingId"));
+                    preRequisite.TrainingId = dataReader.GetInt16(dataReader.GetOrdinal("TrainingId"));
                 }
             }
             return preRequisite;

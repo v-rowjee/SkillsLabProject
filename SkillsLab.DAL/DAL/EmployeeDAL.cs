@@ -46,7 +46,7 @@ namespace SkillsLabProject.DAL.DAL
                 {
                     var employee = new EmployeeModel
                     {
-                        EmployeeId = dataReader.GetInt32(dataReader.GetOrdinal("EmployeeId")),
+                        EmployeeId = dataReader.GetInt16(dataReader.GetOrdinal("EmployeeId")),
                         FirstName = dataReader["FirstName"].ToString(),
                         LastName = dataReader["LastName"].ToString(),
                         NIC = dataReader["NIC"].ToString(),
@@ -54,7 +54,7 @@ namespace SkillsLabProject.DAL.DAL
                         Email = dataReader["Email"].ToString(),
                         Department = new DepartmentModel
                         {
-                            DepartmentId = dataReader.GetInt32(dataReader.GetOrdinal("DepartmentId")),
+                            DepartmentId = dataReader.GetByte(dataReader.GetOrdinal("DepartmentId")),
                             Title = dataReader["Title"].ToString()
                         },
                     };
@@ -86,7 +86,7 @@ namespace SkillsLabProject.DAL.DAL
             {
                 while (await dataReader.ReadAsync().ConfigureAwait(false))
                 {
-                    employee.EmployeeId = dataReader.GetInt32(dataReader.GetOrdinal("EmployeeId"));
+                    employee.EmployeeId = dataReader.GetInt16(dataReader.GetOrdinal("EmployeeId"));
                     employee.FirstName = dataReader["FirstName"].ToString();
                     employee.LastName = dataReader["LastName"].ToString();
                     employee.NIC = dataReader["NIC"].ToString();
@@ -94,7 +94,7 @@ namespace SkillsLabProject.DAL.DAL
                     employee.Email = dataReader["Email"].ToString();
                     employee.Department = new DepartmentModel
                     {
-                        DepartmentId = dataReader.GetInt32(dataReader.GetOrdinal("DepartmentId")),
+                        DepartmentId = dataReader.GetByte(dataReader.GetOrdinal("DepartmentId")),
                         Title = dataReader["Title"].ToString()
                     };
                 }
@@ -124,7 +124,7 @@ namespace SkillsLabProject.DAL.DAL
             {
                 while (await dataReader.ReadAsync().ConfigureAwait(false))
                 {
-                    employee.EmployeeId = dataReader.GetInt32(dataReader.GetOrdinal("EmployeeId"));
+                    employee.EmployeeId = dataReader.GetInt16(dataReader.GetOrdinal("EmployeeId"));
                     employee.FirstName = dataReader["FirstName"].ToString();
                     employee.LastName = dataReader["LastName"].ToString();
                     employee.NIC = dataReader["NIC"].ToString();
@@ -132,7 +132,7 @@ namespace SkillsLabProject.DAL.DAL
                     employee.Email = dataReader["Email"].ToString();
                     employee.Department = new DepartmentModel
                     {
-                        DepartmentId = dataReader.GetInt32(dataReader.GetOrdinal("DepartmentId")),
+                        DepartmentId = dataReader.GetByte(dataReader.GetOrdinal("DepartmentId")),
                         Title = dataReader["Title"].ToString()
                     };
                 }
@@ -187,7 +187,7 @@ namespace SkillsLabProject.DAL.DAL
             {
                 while (await dataReader.ReadAsync().ConfigureAwait(false))
                 {
-                    Role role = (Role)dataReader.GetInt32(dataReader.GetOrdinal("RoleId"));
+                    Role role = (Role)dataReader.GetByte(dataReader.GetOrdinal("RoleId"));
                     roles.Add(role);
                 }
             }
