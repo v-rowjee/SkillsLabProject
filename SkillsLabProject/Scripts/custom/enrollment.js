@@ -225,11 +225,12 @@ $(() => {
 
 // DELETE ENROLLMENT
 function deleteEnrollment(deleteBtn) {
+    var enrollmentId = $('#enrollmentId').val();
+
+    var deleteBtnOriginalText = $(deleteBtn).text()
     $(deleteBtn).html(`
         <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
     `)
-
-    var enrollmentId = $(deleteBtn).siblings('input[type="hidden"]').val();
 
     $.ajax({
         type: "POST",
@@ -251,14 +252,15 @@ function deleteEnrollment(deleteBtn) {
                 });
             }
         },
-        error: () => {
+        error: (e) => {
+            console.log(e)
             Snackbar.show({
-                text: "Unable to remove enrollment of this training.",
+                text: "An error occured while removing enrollment.",
                 actionTextColor: "#CFE2FF"
             });
         },
         complete: () => {
-            $(deleteBtn).html('<i class="fa-solid fa-pen-to-square"></i>')
+            $(deleteBtn).html(deleteBtnOriginalText)
         }
     });
 

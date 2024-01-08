@@ -225,7 +225,12 @@ function deleteTraining(deleteBtn) {
         dataType: "json",
         success: (response) => {
             showSnackbar(response.Message)
-            window.location.replace(response.RedirectUrl);
+            if (response.IsSuccess) {
+                window.location.replace(response.RedirectUrl);
+            }
+            else {
+                $(deleteBtn).attr('disable', true)
+            }
         },
         error: () => {
             showSnackbar(response.Message)

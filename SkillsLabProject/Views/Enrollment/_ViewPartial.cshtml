@@ -85,9 +85,4 @@ else if (ViewBag.Enrollment.Status.ToString() == "Pending")
         </div>
     </div>
 }
-else
-{
-    <input type="hidden" value="@ViewBag.Enrollment.EnrollmentId" id="enrollmentId" />
-    <button type="button" class="btn btn-danger w-100" onclick="deleteEnrollment(this)">Remove</button>
-}
 

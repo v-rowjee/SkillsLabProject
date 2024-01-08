@@ -45,8 +45,11 @@ namespace SkillsLabProject.BL.BL
                     Description = training.Description,
                     Deadline = training.Deadline,
                     Capacity = training.Capacity,
-                    PriorityDepartment = await _departmentDAL.GetByIdAsync(training.PriorityDepartment.DepartmentId)
                 };
+                if (training.PriorityDepartment != null)
+                {
+                    trainingModel.PriorityDepartment = await _departmentDAL.GetByIdAsync(training.PriorityDepartment.DepartmentId);
+                }
                 return await _trainingDAL.AddAsync(trainingModel);
             }
             else
@@ -57,14 +60,14 @@ namespace SkillsLabProject.BL.BL
 
         public async Task<Result> DeleteTrainingAsync(int trainingId)
         {
-            var enrollmentsExist = (await _enrollmentDAL.GetAllAsync()).Any(e => e.TrainingId == trainingId);
+            var enrollments = (await _enrollmentDAL.GetAllAsync()).Where(e => e.TrainingId == trainingId);
 
-            if (enrollmentsExist)
+            if (enrollments.Any())
             {
                 return new Result()
                 {
                     IsSuccess = false,
-                    Message = "Cannot delete training because enrollments exist."
+                    Message = $"Cannot delete training because {enrollments.Count()} enrollments exist."
                 };
             }
 

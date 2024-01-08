@@ -2,7 +2,7 @@
     ViewBag.Title = "Enrollments";
 }
 @section scripts {
-    <script type="module" src="~/Scripts/custom/enrollment.js"></script>
+    <script src="~/Scripts/custom/enrollment.js"></script>
 }
 
 <main class="container">
@@ -128,7 +128,6 @@
         </div>
         <div class="col-lg-4 ps-lg-4">
             <form id="editEnrollmentForm" class="needs-validation" novalidate>
-                @Html.AntiForgeryToken()
                 <h2 class="display-6 mb-3">Enrollment</h2>
                 @if (ViewBag.Enrollment.Training.IsClosed)
                 {
@@ -139,6 +138,12 @@
                 else
                 {
                     @Html.Partial("_ViewPartial")
+
+                    if (Session["CurrentRole"] as string != "Manager")
+                    {
+                        <input type="hidden" value="@ViewBag.Enrollment.EnrollmentId" id="enrollmentId" />
+                        <button type="button" class="btn btn-danger w-100" onclick="deleteEnrollment(this)">Remove</button>
+                    }
                 }
                 <div class="card my-3">
                     <div class="card-header">
