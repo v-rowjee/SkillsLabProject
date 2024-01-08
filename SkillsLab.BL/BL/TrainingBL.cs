@@ -5,6 +5,7 @@ using SkillsLabProject.Common.Models.ViewModels;
 using SkillsLabProject.Common.Models;
 using SkillsLabProject.DAL.DAL;
 using System.Diagnostics;
+using SkillsLabProject.Common.Custom;
 
 namespace SkillsLabProject.BL.BL
 {
@@ -14,7 +15,7 @@ namespace SkillsLabProject.BL.BL
         Task<TrainingModel> GetTrainingByIdAsync(int trainingId);
         Task<bool> AddTrainingAsync(TrainingViewModel model);
         Task<bool> UpdateTrainingAsync(TrainingViewModel model);
-        Task<bool> DeleteTrainingAsync(int trainingId);
+        Task<Result> DeleteTrainingAsync(int trainingId);
         Task<bool> CloseTrainingAsync(int trainingId);
         Task<bool> AutoCloseTrainingAsync();
     }
@@ -54,10 +55,28 @@ namespace SkillsLabProject.BL.BL
             }
         }
 
-        public async Task<bool> DeleteTrainingAsync(int trainingId)
+        public async Task<Result> DeleteTrainingAsync(int trainingId)
         {
-            return await _trainingDAL.DeleteAsync(trainingId);
+            var enrollmentsExist = (await _enrollmentDAL.GetAllAsync()).Any(e => e.TrainingId == trainingId);
+
+            if (enrollmentsExist)
+            {
+                return new Result()
+                {
+                    IsSuccess = false,
+                    Message = "Cannot delete training because enrollments exist."
+                };
+            }
+
+            var trainingDeleted = await _trainingDAL.DeleteAsync(trainingId);
+
+            return new Result()
+            {
+                IsSuccess = trainingDeleted,
+                Message = trainingDeleted ? "Training removed." : "An error occurred while trying to delete training."
+            };
         }
+
 
         public async Task<TrainingModel> GetTrainingByIdAsync(int trainingId)
         {

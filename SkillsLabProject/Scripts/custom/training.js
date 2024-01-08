@@ -224,19 +224,11 @@ function deleteTraining(deleteBtn) {
         data: { id: trainingId },
         dataType: "json",
         success: (response) => {
-            if (response.result == "Success") {
-                Snackbar.show({
-                    text: "Training removed!",
-                    actionTextColor: "#CFE2FF"
-                });
-                window.location.replace(response.url);
-            }
-            else {
-                Snackbar.show({
-                    text: "Unable to remove training.",
-                    actionTextColor: "#CFE2FF"
-                });
-            }
+            showSnackbar(response.Message)
+            window.location.replace(response.RedirectUrl);
+        },
+        error: () => {
+            showSnackbar(response.Message)
         },
         complete: () => {
             $(deleteBtn).html(`<i class="fa-solid fa-trash"></i>`)

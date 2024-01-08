@@ -59,6 +59,7 @@ function showSnackbar(message) {
         text: message,
         actionTextColor: "#CFE2FF"
     });
+    setTimeout(() => {}, 500);
 }
 
 function performAjaxRequest(requestParams) {
@@ -85,9 +86,7 @@ function performAjaxRequest(requestParams) {
             showSnackbar(response.Message);
 
             if (response.RedirectUrl) {
-                setTimeout(() => {
-                    window.location.replace(response.RedirectUrl);
-                }, 1000);
+                window.location.replace(response.RedirectUrl);
             }
             return response;
         })

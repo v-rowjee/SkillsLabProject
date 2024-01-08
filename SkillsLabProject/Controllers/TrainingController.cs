@@ -41,11 +41,11 @@ namespace SkillsLabProject.Controllers
             Enum.TryParse(Session["CurrentRole"] as string, out Role role);
             employee.Role = role;
             var enrollmentOfEmployee = (await _enrollmentBL.GetAllEnrollmentsAsync(employee)).ToList();
-            ViewBag.EnrollmentIds = new Dictionary<int, int?>();
+            ViewBag.EnrollmentId = new Dictionary<int, int?>();
             foreach (var training in trainings)
             {
                 var enrollment = enrollmentOfEmployee.FirstOrDefault(e => e.Training.TrainingId == training.TrainingId);
-                ViewBag.EnrollmentIds[training.TrainingId] = enrollment?.EnrollmentId;
+                ViewBag.EnrollmentId[training.TrainingId] = enrollment?.EnrollmentId;
             }
             return View();
         }
@@ -155,14 +155,11 @@ namespace SkillsLabProject.Controllers
         public async Task<JsonResult> Delete(int id)
         {
             var result = await _trainingBL.DeleteTrainingAsync(id);
-            if (result)
+            if (result.IsSuccess)
             {
-                return Json(new { result = "Success", url = Url.Action("Index", "Training") });
+                result.RedirectUrl = Url.Action("Index", "Training");
             }
-            else
-            {
-                return Json(new { result = "Error" });
-            }
+            return Json(result);
         }
 
         [HttpPost]
