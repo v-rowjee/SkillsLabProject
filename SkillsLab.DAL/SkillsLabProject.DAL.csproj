@@ -187,9 +187,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SkillsLab.Common\SkillsLab.Common.csproj">
+    <ProjectReference Include="..\SkillsLab.Common\SkillsLabProject.Common.csproj">
       <Project>{b84c77b0-015c-4bd7-be9f-c12821fbae19}</Project>
-      <Name>SkillsLab.Common</Name>
+      <Name>SkillsLabProject.Common</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

@@ -12308,17 +12308,17 @@
     <Content Include="Scripts\jquery\jquery-3.4.1.min.map" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SkillsLab.BL\SkillsLab.BL.csproj">
+    <ProjectReference Include="..\SkillsLab.BL\SkillsLabProject.BL.csproj">
       <Project>{bbaafb2d-a8e8-4622-91da-d9b475395d89}</Project>
-      <Name>SkillsLab.BL</Name>
+      <Name>SkillsLabProject.BL</Name>
     </ProjectReference>
-    <ProjectReference Include="..\SkillsLab.Common\SkillsLab.Common.csproj">
+    <ProjectReference Include="..\SkillsLab.Common\SkillsLabProject.Common.csproj">
       <Project>{b84c77b0-015c-4bd7-be9f-c12821fbae19}</Project>
-      <Name>SkillsLab.Common</Name>
+      <Name>SkillsLabProject.Common</Name>
     </ProjectReference>
-    <ProjectReference Include="..\SkillsLab.DAL\SkillsLab.DAL.csproj">
+    <ProjectReference Include="..\SkillsLab.DAL\SkillsLabProject.DAL.csproj">
       <Project>{0DDB7430-D342-4894-8DEE-AABD080467AA}</Project>
-      <Name>SkillsLab.DAL</Name>
+      <Name>SkillsLabProject.DAL</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

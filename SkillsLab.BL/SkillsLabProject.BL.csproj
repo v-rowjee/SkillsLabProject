@@ -100,13 +100,13 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SkillsLab.Common\SkillsLab.Common.csproj">
+    <ProjectReference Include="..\SkillsLab.Common\SkillsLabProject.Common.csproj">
       <Project>{b84c77b0-015c-4bd7-be9f-c12821fbae19}</Project>
-      <Name>SkillsLab.Common</Name>
+      <Name>SkillsLabProject.Common</Name>
     </ProjectReference>
-    <ProjectReference Include="..\SkillsLab.DAL\SkillsLab.DAL.csproj">
+    <ProjectReference Include="..\SkillsLab.DAL\SkillsLabProject.DAL.csproj">
       <Project>{0ddb7430-d342-4894-8dee-aabd080467aa}</Project>
-      <Name>SkillsLab.DAL</Name>
+      <Name>SkillsLabProject.DAL</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

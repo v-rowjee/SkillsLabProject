@@ -6,6 +6,7 @@ using SkillsLabProject.Common.Models;
 using SkillsLabProject.DAL.DAL;
 using System.Diagnostics;
 using SkillsLabProject.Common.Custom;
+using SkillsLabProject.Common.Enums;
 
 namespace SkillsLabProject.BL.BL
 {
@@ -60,14 +61,13 @@ namespace SkillsLabProject.BL.BL
 
         public async Task<Result> DeleteTrainingAsync(int trainingId)
         {
-            var enrollments = (await _enrollmentDAL.GetAllAsync()).Where(e => e.TrainingId == trainingId);
-
+            var enrollments = (await _enrollmentDAL.GetAllAsync()).Where(e => e.TrainingId == trainingId && e.Status == Status.Approved);
             if (enrollments.Any())
             {
                 return new Result()
                 {
                     IsSuccess = false,
-                    Message = $"Cannot delete training because {enrollments.Count()} enrollments exist."
+                    Message = $"Cannot delete training because {enrollments.Count()} enrollments was approved."
                 };
             }
 
