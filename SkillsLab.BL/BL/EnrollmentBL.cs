@@ -11,6 +11,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
+using System.Drawing;
 
 namespace SkillsLabProject.BL.BL
 {
@@ -188,9 +189,9 @@ namespace SkillsLabProject.BL.BL
                 worksheet.Cells["A3:E3"].Style.Font.Bold = true;
 
                 worksheet.Cells["A1:B1"].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
-                worksheet.Cells["A1:B1"].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightGray);
+                worksheet.Cells["A1:B1"].Style.Fill.BackgroundColor.SetColor(Color.LightGray);
                 worksheet.Cells["A3:E3"].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
-                worksheet.Cells["A3:E3"].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightGray);
+                worksheet.Cells["A3:E3"].Style.Fill.BackgroundColor.SetColor(Color.LightGray);
 
                 worksheet.Cells.AutoFitColumns();
 

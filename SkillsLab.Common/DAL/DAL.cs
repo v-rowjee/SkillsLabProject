@@ -13,7 +13,7 @@ namespace SkillsLabProject.Common.DAL
 
         public DAL()
         {
-            _connectionString = ConfigurationManager.AppSettings["ConnectionString"].ToString();
+            _connectionString = ConfigurationManager.AppSettings["DBConnectionString"].ToString();
             Connection = new SqlConnection(_connectionString);
         }
 

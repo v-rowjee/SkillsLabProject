@@ -24,12 +24,12 @@ $(() => {
 
         if (error != '') {
             error = error.slice(0, -8) // to remove the last <br><br>
-            App.showSnackbar(error);
+            showSnackbar(error);
         }
         else {
             var loginViewModelObj = { Email: email, Password: password }
 
-            App.performAjaxRequest({
+            performAjaxRequest({
                 method: "POST",
                 url: "/Login/Authenticate",
                 data: loginViewModelObj,

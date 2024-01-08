@@ -92,6 +92,7 @@
                     {
                         using (Html.BeginForm("Export", "Enrollment", FormMethod.Post))
                         {
+                            @Html.AntiForgeryToken()
                             <input type="hidden" id="exportTrainingId" name="trainingId" value="" />
                             <button id="export" class="btn btn-sm btn-dark me-2 px-3">Export</button>
                         }
