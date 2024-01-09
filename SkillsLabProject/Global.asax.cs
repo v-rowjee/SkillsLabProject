@@ -8,6 +8,8 @@ using System.Web.Routing;
 using System.Configuration;
 using SkillsLabProject.BL.BL;
 using System.Diagnostics;
+using SkillsLabProject.DAL.DAL;
+using SkillsLabProject.App_Start;
 
 namespace SkillsLabProject
 {
@@ -21,7 +23,8 @@ namespace SkillsLabProject
                 .SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
                 .UseSimpleAssemblyNameTypeSerializer()
                 .UseRecommendedSerializerSettings()
-                .UseSqlServerStorage(hangfireConnectionString);
+                .UseSqlServerStorage(hangfireConnectionString)
+                .UseActivator(new ContainerJobActivator(UnityConfig.Container));
 
             yield return new BackgroundJobServer();
         }
@@ -34,7 +37,7 @@ namespace SkillsLabProject
             BundleConfig.RegisterBundles(BundleTable.Bundles);
 
             HangfireAspNet.Use(GetHangfireServers);
-            BackgroundJob.Schedule<ITrainingBL>(t => t.AutoCloseTrainingAsync(), TimeSpan.FromMinutes(1));
+            BackgroundJob.Schedule<ITrainingBL>(t => t.AutoCloseTrainingAsync() , TimeSpan.FromMinutes(5));
             //RecurringJob.AddOrUpdate<ITrainingBL>("EnrollmentProcessingJob", t =>  t.AutoCloseTrainingAsync(), Cron.Minutely);
         }
     }

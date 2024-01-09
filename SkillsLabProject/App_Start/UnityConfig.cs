@@ -9,6 +9,7 @@ namespace SkillsLabProject
 {
     public static class UnityConfig
     {
+        public static IUnityContainer Container { get; internal set; }
         public static void RegisterComponents()
         {
 			var container = new UnityContainer();
@@ -40,6 +41,7 @@ namespace SkillsLabProject
             container.RegisterType<IEmailService, EmailService>();
 
             DependencyResolver.SetResolver(new UnityDependencyResolver(container));
+            Container = container;
         }
     }
 }

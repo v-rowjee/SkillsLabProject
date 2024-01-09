@@ -4,9 +4,9 @@ using System.Threading.Tasks;
 using SkillsLabProject.Common.Models.ViewModels;
 using SkillsLabProject.Common.Models;
 using SkillsLabProject.DAL.DAL;
-using System.Diagnostics;
 using SkillsLabProject.Common.Custom;
 using SkillsLabProject.Common.Enums;
+using System.Diagnostics;
 
 namespace SkillsLabProject.BL.BL
 {
@@ -138,7 +138,6 @@ namespace SkillsLabProject.BL.BL
 
         public async Task<bool> AutoCloseTrainingAsync()
         {
-            Debug.WriteLine("Job Executed");
             return await _trainingDAL.AutoCloseAsync();
         }
     }
