@@ -11,9 +11,9 @@ let tsProject = ts.createProject('tsconfig.json');
 
 gulp.task('ts-default', function () {
     // place code for your default task here
-    return tsProject.src().pipe(tsProject()).js.pipe(gulp.dest("dist"));
+    return tsProject.src().pipe(tsProject()).js.pipe(gulp.dest("Scripts/dist/"));
 });
 
 gulp.task('match:ts-default', async function () {
-    gulp.watch('src/Widget/*.ts', gulp.series('ts-default'));
+    gulp.watch('Scripts/src/Widget/*.ts', gulp.series('ts-default'));
 });

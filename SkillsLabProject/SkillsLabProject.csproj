@@ -208,6 +208,7 @@
     <Content Include="Scripts\custom\enrollment-table.js" />
     <Content Include="Scripts\custom\_functions.js" />
     <Content Include="Scripts\custom\role.js" />
+    <Content Include="Scripts\dist\Widget\LoginWidget.js" />
     <Content Include="Scripts\dojoSRC\dijit-themes\.gitignore" />
     <Content Include="Scripts\dojoSRC\dijit-themes\flat\dgrid\flat.css" />
     <Content Include="Scripts\dojoSRC\dijit-themes\flat\dijit\Calendar.css" />
@@ -12301,7 +12302,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Content\Uploads\" />
-    <Folder Include="Scripts\dist\Widget\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

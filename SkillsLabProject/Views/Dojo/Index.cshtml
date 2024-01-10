@@ -24,9 +24,8 @@
                 { name: 'dojo', location: '@Url.Content("~/Scripts/dojoSRC/dojo")' },
                 { name: 'dijit', location: '@Url.Content("~/Scripts/dojoSRC/dijit")' },
                 { name: 'themes', location: '@Url.Content("~/Scripts/dojoSRC/dijit-themes")' },
-                { name: 'custom', location: '@Url.Content("~/Scripts/Custom")' },
-                { name: 'tsCustom', location: '@Url.Content("~/dist/Widget")'},
-                { name: 'jsCustom', location: '@Url.Content("~/Scripts/DojoJS")'},
+                { name: 'custom', location: '@Url.Content("~/Scripts/custom")' },
+                { name: 'widget', location: '@Url.Content("~/Scripts/dist/Widget")'},
             ],
         }
     </script>
@@ -35,15 +34,13 @@
 
     <script>var exports = {};</script>
     <script>
-        //require(["dijit/registry", "dojo/parser", "tsCustom/LoginWidget", "dojo/domReady!"], function (registry, parser) {
-        //    parser.parse();
-        //})
-        require(["dijit/registry", "dojo/parser", "jsCustom/LoginWidget", "dojo/domReady!"], function (registry, parser) {
+        require(["dijit/registry", "dojo/parser", "dojo/dom", "widget/LoginWidget" , "dojo/domReady!"], function (registry, parser, dom, loginWidget) {
             parser.parse();
         })
     </script>
 </head>
 <body>
-    <div data-dojo-type="tsCustom/LoginWidget" data-dojo-props="testUserName : 'test name'"></div>
+    @*<div data-dojo-type="widget/LoginWidget" data-dojo-props="testUserName : 'test name'"></div>*@
+    <div data-dojo-type="widget/LoginWidget"></div>
 </body>
 </html>
