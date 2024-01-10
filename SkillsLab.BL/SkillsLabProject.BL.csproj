@@ -90,6 +90,7 @@
     <Compile Include="BL\DepartmentBL.cs" />
     <Compile Include="BL\EmployeeBL.cs" />
     <Compile Include="BL\EnrollmentBL.cs" />
+    <Compile Include="BL\NotificationBL.cs" />
     <Compile Include="BL\PreRequisiteBL.cs" />
     <Compile Include="BL\ProofBL.cs" />
     <Compile Include="BL\TrainingBL.cs" />

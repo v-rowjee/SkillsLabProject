@@ -11,6 +11,7 @@ using System.Web.Mvc;
 namespace SkillsLabProject.Controllers
 {
     [UserSession]
+    [Notification]
     public class TrainingController : Controller
     {
         private IEmployeeBL _employeeBL;
@@ -26,12 +27,12 @@ namespace SkillsLabProject.Controllers
             _departmentBL = departmentBL;
             _enrollmentBL = enrollmentBL;
         }
+
         [HttpGet]
         [CustomAuthorization("Employee,Manager,Admin")]
         public async Task<ActionResult> Index()
         {
             var loggeduser = Session["CurrentUser"] as LoginViewModel;
-
             var employee = await _employeeBL.GetEmployeeAsync(loggeduser);
             ViewBag.Employee = employee;
 

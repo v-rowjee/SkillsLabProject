@@ -1,0 +1,45 @@
+﻿@{
+    ViewBag.Title = "Notifications";
+}
+@section scripts {
+    <script src="~/Scripts/custom/notification.js"></script>
+}
+<div class="container">
+    <h1 class="pb-2">Notifications</h1>
+
+    <div class="table-responsive p-2">
+        <table id="notificationTable" class="table table-borderless table-hover pb-4">
+            <thead class="bg-light">
+                <tr class="align-middle">
+                    <th class="d-none"></th>
+                    <th class="rounded-start py-3 p-xl-3 border text-nowrap">Received On</th>
+                    <th class="py-3 p-xl-3 border">Message</th>
+                    <th class=" rounded-end py-3 p-xl-3 border text-center">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var Notification in ViewBag.Notifications)
+                {
+                    <tr class=@(!Notification.IsRead ? "fw-bold" : "")>
+                        <td class="d-none">
+                            <input type="hidden" class="notificationId" value="@Notification.NotificationId" />
+                            <input type="hidden" class="notificationIsRead" value="@(Notification.IsRead ? "1" : "0")" />
+                        </td>
+                        <td class="rounded-start py-3 p-xl-3">
+                            @Notification.ReceivedOn.ToString("f")
+                        </td>
+                        <td class="py-3 p-xl-3">
+                            @Notification.Message
+                        </td>
+                        <td class="rounded-end py-3 p-xl-3 text-center">
+                            <button class="btn btn-sm btn-danger deleteNotif">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+    </div>
+</div>
+

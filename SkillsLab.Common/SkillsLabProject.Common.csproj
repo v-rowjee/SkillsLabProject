@@ -220,6 +220,7 @@
     <Compile Include="Models\DepartmentModel.cs" />
     <Compile Include="Models\EmployeeModel.cs" />
     <Compile Include="Models\EnrollmentModel.cs" />
+    <Compile Include="Models\NotificationModel.cs" />
     <Compile Include="Models\PreRequisiteModel.cs" />
     <Compile Include="Models\ProofModel.cs" />
     <Compile Include="Models\TrainingModel.cs" />

@@ -16,7 +16,6 @@ namespace SkillsLabProject.Common.Email
         private readonly string _server;
         private readonly int _port;
         private readonly string _senderEmail = ConfigurationManager.AppSettings["AdminEmail"].ToString();
-        private readonly string _senderPassword = ConfigurationManager.AppSettings["AdminPassword"].ToString();
         public SmtpEmailClient() 
         {
             _server = "smtp-mail.outlook.com";
@@ -30,7 +29,7 @@ namespace SkillsLabProject.Common.Email
                 {
                     client.Port = _port;
                     client.EnableSsl = true;
-                    client.Credentials = new NetworkCredential(_senderEmail, _senderPassword);
+                    client.UseDefaultCredentials = true;
 
                     using (MailMessage message = new MailMessage(_senderEmail, to))
                     {

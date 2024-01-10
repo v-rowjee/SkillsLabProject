@@ -12,6 +12,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using System.Drawing;
+using SkillsLab.Common.Models;
 
 namespace SkillsLabProject.BL.BL
 {
@@ -33,8 +34,9 @@ namespace SkillsLabProject.BL.BL
         private readonly IProofDAL _proofDAL;
         private readonly IPreRequisiteDAL _preRequisiteDAL;
         private readonly IEmailService _emailService;
+        private readonly INotificationDAL _notificationDAL;
 
-        public EnrollmentBL(IEnrollmentDAL enrollmentDAL, ITrainingDAL trainingDAL, IEmployeeDAL employeeDAL, IProofDAL proofDAL, IPreRequisiteDAL preRequisiteDAL, IEmailService emailService)
+        public EnrollmentBL(IEnrollmentDAL enrollmentDAL, ITrainingDAL trainingDAL, IEmployeeDAL employeeDAL, IProofDAL proofDAL, IPreRequisiteDAL preRequisiteDAL, IEmailService emailService, INotificationDAL notificationDAL)
         {
             _enrollmentDAL = enrollmentDAL;
             _trainingDAL = trainingDAL;
@@ -42,6 +44,7 @@ namespace SkillsLabProject.BL.BL
             _proofDAL = proofDAL;
             _preRequisiteDAL = preRequisiteDAL;
             _emailService = emailService;
+            _notificationDAL = notificationDAL;
         }
         public async Task<bool> DeleteEnrollmentAsync(int enrollmentId)
         {
@@ -116,6 +119,12 @@ namespace SkillsLabProject.BL.BL
                 string recipientEmail = employee.Email;
                 string ccEmail = manager.Email;
 
+                var notification = new NotificationModel()
+                {
+                    EmployeeId = employee.EmployeeId,
+                    Message = $"Training {training.Title} enrollment approved by manager {manager.FirstName} {manager.LastName}.",
+                };
+                await _notificationDAL.AddAsync(notification);
                 _emailService.SendEmail(subject, body, recipientEmail, ccEmail);
             }
             return isApproved;
@@ -142,6 +151,12 @@ namespace SkillsLabProject.BL.BL
                 string recipientEmail = employee.Email;
                 string ccEmail = manager.Email;
 
+                var notification = new NotificationModel()
+                {
+                    EmployeeId = employee.EmployeeId,
+                    Message = $"Training {training.Title} enrollment declined by manager {manager.FirstName} {manager.LastName}.",
+                };
+                await _notificationDAL.AddAsync(notification);
                 _emailService.SendEmail(subject, body, recipientEmail, ccEmail);
             }
             return isDeclined;
@@ -324,6 +339,12 @@ namespace SkillsLabProject.BL.BL
                 string recipientEmail = manager.Email;
                 string ccEmail = employee.Email;
 
+                var notification = new NotificationModel()
+                {
+                    EmployeeId = manager.EmployeeId,
+                    Message = $"Employee {employee.FirstName} {employee.LastName} waiting for approval of training {training.Title}.",
+                };
+                await _notificationDAL.AddAsync(notification);
                 _emailService.SendEmail(subject, body, recipientEmail, ccEmail);
             }
         }

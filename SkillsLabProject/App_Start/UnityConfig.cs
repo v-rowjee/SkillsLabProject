@@ -38,6 +38,9 @@ namespace SkillsLabProject
             container.RegisterType<IDepartmentBL, DepartmentBL>();
             container.RegisterType<IDepartmentDAL, DepartmentDAL>();
 
+            container.RegisterType<INotificationBL, NotificationBL>();
+            container.RegisterType<INotificationDAL, NotificationDAL>();
+
             container.RegisterType<IEmailService, EmailService>();
 
             DependencyResolver.SetResolver(new UnityDependencyResolver(container));

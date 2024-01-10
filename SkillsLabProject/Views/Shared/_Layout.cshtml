@@ -36,6 +36,15 @@
                     <li class="nav-item mx-2">
                         @Html.ActionLink("Enrollments", "Index", "Enrollment", null, new { @class = @ViewBag.Title == "Enrollments" ? "nav-link active" : "nav-link" })
                     </li>
+                    <li class="nav-item mx-2">
+                        <a href="@Url.Action("Index", "Notification")" class=@(ViewBag.Title == "Notifications" ? "nav-link active" : "nav-link")>
+                            Notifications
+                            @if (ViewBag.Notifications != null)
+                            {
+                                <span class="badge text-bg-secondary">@ViewBag.Notifications.Count</span>
+                            }
+                        </a>
+                    </li>
                 </ul>
                 <ul class="navbar-nav d-table">
                     <li class="nav-item dropdown d-table-cell align-middle">
@@ -47,7 +56,7 @@
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end">
                             <li>
-                                @Html.ActionLink("Account", "Index", "Account", null, new { @class = "dropdown-item" })
+                                @Html.ActionLink("Profile", "Index", "Account", null, new { @class = "dropdown-item" })
                             </li>
                             <li>
                                 <a href="" id="darkModeToggle" class="dropdown-item">Dark mode</a>

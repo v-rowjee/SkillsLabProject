@@ -14,6 +14,7 @@ using System.Web.Mvc;
 namespace SkillsLabProject.Controllers
 {
     [UserSession]
+    [Notification]
     public class EnrollmentController : Controller
     {
         private readonly IEmployeeBL _employeeBL;

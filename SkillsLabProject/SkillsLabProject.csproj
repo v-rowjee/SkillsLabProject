@@ -166,9 +166,11 @@
     <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\CommonController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
+    <Compile Include="Controllers\NotificationController.cs" />
     <Compile Include="Controllers\RegisterController.cs" />
     <Compile Include="Controllers\TrainingController.cs" />
     <Compile Include="Custom\CustomAuthorizationAttribute.cs" />
+    <Compile Include="Custom\NotificationAttribute.cs" />
     <Compile Include="Custom\UserSessionAttribute.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -206,6 +208,7 @@
     <Content Include="Scripts\bootstrap\bootstrap.js" />
     <Content Include="Scripts\bootstrap\bootstrap.min.js" />
     <Content Include="Scripts\custom\enrollment-table.js" />
+    <Content Include="Scripts\custom\notification.js" />
     <Content Include="Scripts\custom\_functions.js" />
     <Content Include="Scripts\custom\role.js" />
     <Content Include="Scripts\dist\Widget\LoginWidget.js" />
@@ -12299,6 +12302,8 @@
     <Content Include="Views\Enrollment\_ViewPartial.cshtml" />
     <Content Include="Content\Snackbar\snackbar.css.map" />
     <Content Include="Scripts\snackbar\snackbar.min.js.map" />
+    <Content Include="Views\Notification\Index.cshtml" />
+    <Content Include="Views\Shared\Error.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Content\Uploads\" />

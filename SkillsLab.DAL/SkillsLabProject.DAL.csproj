@@ -181,6 +181,7 @@
     <Compile Include="DAL\DepartmentDAL.cs" />
     <Compile Include="DAL\EmployeeDAL.cs" />
     <Compile Include="DAL\EnrollmentDAL.cs" />
+    <Compile Include="DAL\NotificationDAL.cs" />
     <Compile Include="DAL\PreRequisiteDAL.cs" />
     <Compile Include="DAL\ProofDAL.cs" />
     <Compile Include="DAL\TrainingDAL.cs" />
