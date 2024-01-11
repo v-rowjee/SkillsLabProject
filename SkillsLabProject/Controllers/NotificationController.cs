@@ -1,13 +1,15 @@
 ﻿using SkillsLabProject.BL.BL;
+using SkillsLabProject.Common.Enums;
 using SkillsLabProject.Common.Models.ViewModels;
 using SkillsLabProject.Custom;
+using System.Linq;
+using System;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 
 namespace SkillsLabProject.Controllers
 {
     [UserSession]
-    [Notification]
     public class NotificationController : Controller
     {
         private readonly IEmployeeBL _employeeBL;
@@ -28,8 +30,14 @@ namespace SkillsLabProject.Controllers
             var employee = await _employeeBL.GetEmployeeAsync(loggeduser);
             ViewBag.Employee = employee;
 
-            var notifications = await _notificationBL.GetAllByEmployeeAsync(employee);
+            Enum.TryParse(Session["CurrentRole"] as string, out Role role);
+
+            var notifications = (await _notificationBL.GetAllByEmployeeAsync(employee)).Where(n => n.EmployeeRole == role).ToList();
             ViewBag.Notifications = notifications;
+
+            var notificationCount = notifications.Where(n => !n.IsRead).Count();
+            ViewBag.NotificationCount = notificationCount;
+
 
             return View();
         }

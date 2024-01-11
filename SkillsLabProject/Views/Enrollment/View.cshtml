@@ -168,7 +168,7 @@
                                     </button>
                                 </div>
                                 <div class="col-sm-6">
-                                    <button type="button" id="downloadProofs" class="btn btn-outline-primary w-100">
+                                    <button type="button" id="downloadProofs" class="btn btn-outline-primary w-100 text-nowrap">
                                         Open in new Tab
                                     </button>
                                 </div>
@@ -213,7 +213,7 @@
                         }
                     </div>
                 </div>
-                <button class="btn btn-secondary w-100 mb-3" onclick="window.history.back();">Back</button>
+                @Html.ActionLink("Back", "Index","Enrollment", null, new { @class= "btn btn-secondary w-100 mb-3" })
             </form>
         </div>
     </div>

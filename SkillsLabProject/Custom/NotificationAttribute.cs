@@ -1,5 +1,7 @@
 ﻿using SkillsLabProject.BL.BL;
+using SkillsLabProject.Common.Enums;
 using SkillsLabProject.Common.Models.ViewModels;
+using System;
 using System.Linq;
 using System.Web.Mvc;
 
@@ -19,11 +21,10 @@ namespace SkillsLabProject.Custom
                 var employee = await employeeBL.GetEmployeeAsync(loggedUser);
                 //filterContext.Controller.ViewBag.Employee = employee;
 
-                //Enum.TryParse(filterContext.HttpContext.Session["CurrentRole"] as string, out Role role);
+                Enum.TryParse(filterContext.HttpContext.Session["CurrentRole"] as string, out Role role);
                 //filterContext.Controller.ViewBag.Employee.Role = role;
-
-                var notifications = await notificationBL.GetAllByEmployeeAsync(employee);
-                filterContext.Controller.ViewBag.Notifications = notifications.ToList();
+                var notifications = (await notificationBL.GetAllByEmployeeAsync(employee)).Where(n => !n.IsRead && n.EmployeeRole == role).ToList();
+                filterContext.Controller.ViewBag.Notifications = notifications;
             }
 
             base.OnActionExecuting(filterContext);

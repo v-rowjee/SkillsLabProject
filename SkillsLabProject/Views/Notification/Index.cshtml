@@ -4,8 +4,8 @@
 @section scripts {
     <script src="~/Scripts/custom/notification.js"></script>
 }
-<div class="container">
-    <h1 class="pb-2">Notifications</h1>
+<main class="container">
+    <h1 class="mb-4">Notifications</h1>
 
     <div class="table-responsive p-2">
         <table id="notificationTable" class="table table-borderless table-hover pb-4">
@@ -20,7 +20,7 @@
             <tbody>
                 @foreach (var Notification in ViewBag.Notifications)
                 {
-                    <tr class=@(!Notification.IsRead ? "fw-bold" : "")>
+                    <tr class=@(!Notification.IsRead ? "fw-bold" : "") style="cursor: pointer;">
                         <td class="d-none">
                             <input type="hidden" class="notificationId" value="@Notification.NotificationId" />
                             <input type="hidden" class="notificationIsRead" value="@(Notification.IsRead ? "1" : "0")" />
@@ -41,5 +41,5 @@
                 </tbody>
             </table>
     </div>
-</div>
+</main>
 

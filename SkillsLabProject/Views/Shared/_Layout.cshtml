@@ -36,15 +36,15 @@
                     <li class="nav-item mx-2">
                         @Html.ActionLink("Enrollments", "Index", "Enrollment", null, new { @class = @ViewBag.Title == "Enrollments" ? "nav-link active" : "nav-link" })
                     </li>
-                    <li class="nav-item mx-2">
-                        <a href="@Url.Action("Index", "Notification")" class=@(ViewBag.Title == "Notifications" ? "nav-link active" : "nav-link")>
-                            Notifications
-                            @if (ViewBag.Notifications != null)
-                            {
-                                <span class="badge text-bg-secondary">@ViewBag.Notifications.Count</span>
-                            }
-                        </a>
-                    </li>
+                    @if (Session["CurrentRole"] as string != "Admin")
+                    {
+                        <li class="nav-item mx-2">
+                            <a href="@Url.Action("Index", "Notification")" class=@(ViewBag.Title == "Notifications" ? "nav-link active" : "nav-link")>
+                                Notifications
+                                <span class="badge text-bg-dark">@ViewBag.NotificationCount</span>
+                            </a>
+                        </li>
+                    }
                 </ul>
                 <ul class="navbar-nav d-table">
                     <li class="nav-item dropdown d-table-cell align-middle">
@@ -79,9 +79,9 @@
     @RenderBody()
 
 
-    <footer class="container-fluid">
+    <footer class="sticky-bottom bg-light">
         <hr />
-        <div class="d-flex mb-2">
+        <div class="container-fluid d-flex mb-2">
             <p class="my-1">&copy; @DateTime.Now.Year - SkillsLab</p>
             <img src="~/Content/Images/logo.png" class="logo ms-auto d-inline-block opacity-25" />
         </div>

@@ -14,7 +14,6 @@ using System.Web.Mvc;
 namespace SkillsLabProject.Controllers
 {
     [UserSession]
-    [Notification]
     public class EnrollmentController : Controller
     {
         private readonly IEmployeeBL _employeeBL;
@@ -25,7 +24,8 @@ namespace SkillsLabProject.Controllers
         private readonly IDeclinedEnrollmentBL _declinedEnrollmentBL;
         private readonly IEmailService _emailService;
         private readonly IDepartmentBL _departmentBL;
-        public EnrollmentController(IEmployeeBL employeeBL,IEnrollmentBL enrollmentBL, ITrainingBL trainingBL, IPreRequisiteBL preRequisiteBL, IProofBL proofBL, IDeclinedEnrollmentBL declinedEnrollmentBL,IDepartmentBL departmentBL, IEmailService emailService)
+        private readonly INotificationBL _notificationBL;
+        public EnrollmentController(IEmployeeBL employeeBL,IEnrollmentBL enrollmentBL, ITrainingBL trainingBL, IPreRequisiteBL preRequisiteBL, IProofBL proofBL, IDeclinedEnrollmentBL declinedEnrollmentBL,IDepartmentBL departmentBL, IEmailService emailService, INotificationBL notificationBL)
         {
             _employeeBL = employeeBL;
             _enrollmentBL = enrollmentBL;
@@ -35,14 +35,15 @@ namespace SkillsLabProject.Controllers
             _declinedEnrollmentBL = declinedEnrollmentBL;
             _departmentBL = departmentBL;
             _emailService = emailService;
+            _notificationBL = notificationBL;
         }
+
         // GET: Enrollment
+        [HttpGet]
         [CustomAuthorization("Employee,Manager,Admin")]
         public async Task<ActionResult> Index()
         {
-            var loggeduser = Session["CurrentUser"] as LoginViewModel;
-            if (loggeduser == null) return RedirectToAction("Index", "Login");
-            
+            var loggeduser = Session["CurrentUser"] as LoginViewModel;            
             var employee = await _employeeBL.GetEmployeeAsync(loggeduser);
             ViewBag.Employee = employee;
 
@@ -51,6 +52,8 @@ namespace SkillsLabProject.Controllers
             var enrollments = (await _enrollmentBL.GetAllEnrollmentsAsync(employee)).ToList();
             ViewBag.Enrollments = enrollments;
 
+            var notificationCount = (await _notificationBL.GetAllByEmployeeAsync(employee)).Where(n => n.EmployeeRole == role && !n.IsRead).Count();
+            ViewBag.NotificationCount = notificationCount;
 
             var trainings = await _trainingBL.GetAllTrainingsAsync();
             var departments = new List<DepartmentModel>() { employee.Department };
@@ -89,7 +92,12 @@ namespace SkillsLabProject.Controllers
             var employee = await _employeeBL.GetEmployeeAsync(loggeduser);
             ViewBag.Employee = employee;
 
-            if (Session["CurrentRole"] as string == "Employee" && enrollment.Employee.EmployeeId != employee.EmployeeId)
+            Enum.TryParse(Session["CurrentRole"] as string, out Role role);
+
+            var notificationCount = (await _notificationBL.GetAllByEmployeeAsync(employee)).Where(n => n.EmployeeRole == role && !n.IsRead).Count();
+            ViewBag.NotificationCount = notificationCount;
+
+            if (role == Role.Employee && enrollment.Employee.EmployeeId != employee.EmployeeId)
             {
                 return RedirectToAction("Unauthorized","Error");
             }
@@ -175,7 +183,7 @@ namespace SkillsLabProject.Controllers
 
         [HttpPost]
         [CustomAuthorization("Admin")]
-        public async Task<ActionResult> Export(int trainingId)
+        public async Task<FileResult> Export(int trainingId)
         {
             var fileContent = await _enrollmentBL.ExportAsync(trainingId);
 

@@ -1,6 +1,7 @@
 ﻿using SkillsLab.Common.Models;
 using SkillsLabProject.Common.Custom;
 using SkillsLabProject.Common.DAL;
+using SkillsLabProject.Common.Enums;
 using SkillsLabProject.Common.Models;
 using System;
 using System.Collections.Generic;
@@ -22,12 +23,13 @@ namespace SkillsLabProject.DAL.DAL
         public async Task<bool> AddAsync(NotificationModel notif)
         {
             const string AddNotificationQuery = @"
-                INSERT Notification (EmployeeId, Message)
-                VALUES (@EmployeeId, @Message)
+                INSERT Notification (EmployeeId, EmployeeRoleId, Message)
+                VALUES (@EmployeeId, @EmployeeRoleId, @Message)
             ";
             var parameters = new List<SqlParameter>
             {
                 new SqlParameter("@EmployeeId", notif.EmployeeId),
+                new SqlParameter("@EmployeeRoleId", notif.EmployeeRole),
                 new SqlParameter("@Message", notif.Message),
             };
 
@@ -48,7 +50,7 @@ namespace SkillsLabProject.DAL.DAL
         public async Task<IEnumerable<NotificationModel>> GetAllByEmployeeAsync(EmployeeModel employee)
         {
             const string GetAllNotificationQuery = @"
-                SELECT NotificationId, EmployeeId, Message, IsRead, ReceivedOn
+                SELECT NotificationId, EmployeeId, EmployeeRoleId, Message, IsRead, ReceivedOn
                 FROM Notification 
                 WHERE EmployeeId = @EmployeeId
             ";
@@ -67,6 +69,7 @@ namespace SkillsLabProject.DAL.DAL
                     {
                         NotificationId = dataReader.GetInt16(dataReader.GetOrdinal("NotificationId")),
                         EmployeeId = dataReader.GetInt16(dataReader.GetOrdinal("EmployeeId")),
+                        EmployeeRole = (Role)dataReader.GetByte(dataReader.GetOrdinal("EmployeeRoleId")),
                         Message = dataReader.GetString(dataReader.GetOrdinal("Message")),
                         ReceivedOn = dataReader.GetDateTime(dataReader.GetOrdinal("ReceivedOn")),
                         IsRead = dataReader.GetBoolean(dataReader.GetOrdinal("IsRead"))
@@ -81,7 +84,7 @@ namespace SkillsLabProject.DAL.DAL
         public async Task<NotificationModel> GetByIdAsync(int id)
         {
             const string GetNotificationQuery = @"
-                SELECT NotificationId, EmployeeId, Message, IsRead, ReceivedOn
+                SELECT NotificationId, EmployeeId, EmployeeRoleId, Message, IsRead, ReceivedOn
                 FROM Notification 
                 WHERE NotificationId = @NotificationId
             ";
@@ -96,9 +99,11 @@ namespace SkillsLabProject.DAL.DAL
 
                 if (await dataReader.ReadAsync().ConfigureAwait(false))
                 {
-                    notification = new NotificationModel(){
+                    notification = new NotificationModel()
+                    {
                         NotificationId = dataReader.GetInt16(dataReader.GetOrdinal("NotificationId")),
                         EmployeeId = dataReader.GetInt16(dataReader.GetOrdinal("EmployeeId")),
+                        EmployeeRole = (Role)dataReader.GetByte(dataReader.GetOrdinal("EmployeeRoleId")),
                         Message = dataReader.GetString(dataReader.GetOrdinal("Message")),
                         ReceivedOn = dataReader.GetDateTime(dataReader.GetOrdinal("ReceivedOn")),
                         IsRead = dataReader.GetBoolean(dataReader.GetOrdinal("IsRead"))
@@ -111,16 +116,16 @@ namespace SkillsLabProject.DAL.DAL
         {
             const string UpdateAllNotificationQuery = @"
                 UPDATE Notification
-                SET EmployeeId=@EmployeeId, Message=@Message, IsRead=@IsRead, ReceivedOn=@ReceivedOn
+                SET EmployeeId=@EmployeeId, EmployeeRoleId=@EmployeeRoleId, Message=@Message, IsRead=@IsRead
                 WHERE NotificationId=@NotificationId
             ";
             var parameters = new List<SqlParameter>
             {
                 new SqlParameter("@NotificationId", notif.NotificationId),
                 new SqlParameter("@EmployeeId", notif.EmployeeId),
+                new SqlParameter("@EmployeeRoleId", notif.EmployeeRole),
                 new SqlParameter("@Message", notif.Message),
                 new SqlParameter("@IsRead", notif.IsRead),
-                new SqlParameter("@ReceivedOn", notif.ReceivedOn),
             };
 
             return await DBCommand.UpdateDataAsync(UpdateAllNotificationQuery, parameters).ConfigureAwait(false);

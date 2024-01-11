@@ -38,7 +38,7 @@ namespace SkillsLabProject
 
             HangfireAspNet.Use(GetHangfireServers);
             //BackgroundJob.Schedule<ITrainingBL>(t => t.AutoCloseTrainingAsync() , TimeSpan.FromSeconds(30));
-            RecurringJob.AddOrUpdate<ITrainingBL>("EnrollmentProcessingJob", t =>  t.AutoCloseTrainingAsync(), Cron.Daily);
+            RecurringJob.AddOrUpdate<ITrainingBL>("EnrollmentProcessingJob", t =>  t.AutoCloseTrainingAsync(), Cron.Minutely);
         }
     }
 }

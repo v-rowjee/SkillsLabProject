@@ -16,6 +16,7 @@
                 '<option value="25">25</option>' +
                 '<option value="-1">All</option>' +
                 '</select>',
+            emptyTable: '<img src="Content/Images/no-data.png" class="w-25" />'
         },
     });
 

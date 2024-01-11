@@ -122,6 +122,7 @@ namespace SkillsLabProject.BL.BL
                 var notification = new NotificationModel()
                 {
                     EmployeeId = employee.EmployeeId,
+                    EmployeeRole = Role.Employee,
                     Message = $"Training {training.Title} enrollment approved by manager {manager.FirstName} {manager.LastName}.",
                 };
                 await _notificationDAL.AddAsync(notification);
@@ -154,6 +155,7 @@ namespace SkillsLabProject.BL.BL
                 var notification = new NotificationModel()
                 {
                     EmployeeId = employee.EmployeeId,
+                    EmployeeRole = Role.Employee,
                     Message = $"Training {training.Title} enrollment declined by manager {manager.FirstName} {manager.LastName}.",
                 };
                 await _notificationDAL.AddAsync(notification);
@@ -342,6 +344,7 @@ namespace SkillsLabProject.BL.BL
                 var notification = new NotificationModel()
                 {
                     EmployeeId = manager.EmployeeId,
+                    EmployeeRole = Role.Manager,
                     Message = $"Employee {employee.FirstName} {employee.LastName} waiting for approval of training {training.Title}.",
                 };
                 await _notificationDAL.AddAsync(notification);

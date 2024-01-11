@@ -199,7 +199,7 @@
     <Content Include="Content\custom.min.css">
       <DependentUpon>custom.css</DependentUpon>
     </Content>
-    <Content Include="Content\Images\no-enrollment.png" />
+    <Content Include="Content\Images\no-data.png" />
     <Content Include="gulpfile.js" />
     <Content Include="Scripts\bootstrap\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap\bootstrap.bundle.min.js" />
@@ -209,7 +209,6 @@
     <Content Include="Scripts\bootstrap\bootstrap.min.js" />
     <Content Include="Scripts\custom\enrollment-table.js" />
     <Content Include="Scripts\custom\notification.js" />
-    <Content Include="Scripts\custom\_functions.js" />
     <Content Include="Scripts\custom\role.js" />
     <Content Include="Scripts\dist\Widget\LoginWidget.js" />
     <Content Include="Scripts\dojoSRC\dijit-themes\.gitignore" />
@@ -12305,9 +12304,7 @@
     <Content Include="Views\Notification\Index.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Content\Uploads\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <None Include="packages.config" />
     <Content Include="Scripts\jquery\jquery-3.4.1.slim.min.map" />

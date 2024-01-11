@@ -1,15 +1,17 @@
-﻿﻿* {
+﻿:root {
+    --blue: #0099ff
+}
+﻿html {
     font-family: Verdana;
     padding: 0;
     margin: 0;
     box-sizing: border-box;
 }
-
-:root {
-    --blue: #0099ff
-}
 body {
     height: 100vh;
+}
+table.dataTable td {
+    background-color: transparent;
 }
 body > main {
     min-height: calc(100% - 160.67px);
@@ -17,6 +19,7 @@ body > main {
 .logo {
     height: 2.5rem;
 }
+
 /* Chrome, Safari, Edge, Opera */
 .no-arrow::-webkit-outer-spin-button,
 .no-arrow::-webkit-inner-spin-button {
