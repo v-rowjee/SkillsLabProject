@@ -30,14 +30,11 @@ namespace SkillsLabProject.Controllers
             var employee = await _employeeBL.GetEmployeeAsync(loggeduser);
             ViewBag.Employee = employee;
 
-            Enum.TryParse(Session["CurrentRole"] as string, out Role role);
-
-            var notifications = (await _notificationBL.GetAllByEmployeeAsync(employee)).Where(n => n.EmployeeRole == role).ToList();
+            var notifications = (await _notificationBL.GetAllByEmployeeAsync(employee)).Where(n => n.EmployeeRole == employee.CurrentRole).ToList();
             ViewBag.Notifications = notifications;
 
-            var notificationCount = notifications.Where(n => !n.IsRead).Count();
+            var notificationCount = await _notificationBL.GetNotificationCountAsync(employee);
             ViewBag.NotificationCount = notificationCount;
-
 
             return View();
         }

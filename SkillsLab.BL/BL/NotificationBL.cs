@@ -3,12 +3,14 @@ using SkillsLabProject.Common.Custom;
 using SkillsLabProject.Common.Models;
 using SkillsLabProject.DAL.DAL;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace SkillsLabProject.BL.BL
 {
     public interface INotificationBL
     {
+        Task<int> GetNotificationCountAsync(EmployeeModel employee);
         Task<bool> SendNotificationAsync(NotificationModel notif);
         Task<IEnumerable<NotificationModel>> GetAllByEmployeeAsync(EmployeeModel employee);
         Task<Result> MarkAsReadAsync(int notificationId);
@@ -21,6 +23,12 @@ namespace SkillsLabProject.BL.BL
         public NotificationBL(INotificationDAL notificationDAL)
         {
             _notificationDAL = notificationDAL;
+        }
+
+        public async Task<int> GetNotificationCountAsync(EmployeeModel employee)
+        {
+            var notifications = (await _notificationDAL.GetAllByEmployeeAsync(employee));
+            return notifications.Where(n => n.EmployeeRole == employee.CurrentRole && !n.IsRead).Count();
         }
 
         public async Task<Result> DeleteAsync(int notificationId)

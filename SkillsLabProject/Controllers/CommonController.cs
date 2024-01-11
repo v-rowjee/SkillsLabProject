@@ -18,11 +18,12 @@ namespace SkillsLabProject.Controllers
         // GET: Home
         public ActionResult Index()
         {
-            if (Session["CurrentRole"] == null)
+            var loggeduser = Session["CurrentUser"] as LoginViewModel;
+            if (loggeduser == null)
             {
                 return RedirectToAction("Index", "Login");
             }
-            else if (Session["CurrentRole"] as string == "Manager")
+            else if (loggeduser.CurrentRole == Common.Enums.Role.Manager)
             {
                 return RedirectToAction("Index", "Enrollment");
             }
@@ -33,10 +34,9 @@ namespace SkillsLabProject.Controllers
         [HttpGet]
         public async Task<ActionResult> Role()
         {
-            var role = Session["CurrentRole"] as string;
-            if (role != null) return RedirectToAction("Index", "Common");
             var loggeduser = Session["CurrentUser"] as LoginViewModel;
             if (loggeduser == null) return RedirectToAction("Index", "Login");
+
             var employee = await _employeeBL.GetEmployeeAsync(loggeduser);
             ViewBag.Employee = employee;
 
@@ -50,8 +50,10 @@ namespace SkillsLabProject.Controllers
         {
             if(Enum.TryParse(role, out Role roleEnum))
             {
-                Session["CurrentRole"] = roleEnum.ToString();
-                if(roleEnum == Common.Enums.Role.Manager)
+                var loggedUser = Session["CurrentUser"] as LoginViewModel;
+                loggedUser.CurrentRole = roleEnum;
+                Session["CurrentUser"] = loggedUser;
+                if (roleEnum == Common.Enums.Role.Manager)
                 {
                     return Json(new { result = "Success", url = Url.Action("Index", "Enrollment") });
                 }

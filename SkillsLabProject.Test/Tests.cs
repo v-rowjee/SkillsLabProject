@@ -47,7 +47,7 @@ namespace SkillsLabProject.Test
                         DepartmentId = 1,
                         Title = "TestDepartment"
                     },
-                    Role = Role.Employee
+                    CurrentRole = Role.Employee
                 }
             };
             _stubEmployee = new Mock<IEmployeeDAL>();

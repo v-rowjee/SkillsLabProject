@@ -37,22 +37,12 @@ namespace SkillsLabProject.Controllers
             var employee = await _employeeBL.GetEmployeeAsync(loggeduser);
             ViewBag.Employee = employee;
 
-            Enum.TryParse(Session["CurrentRole"] as string, out Role role);
-
-            var notificationCount = (await _notificationBL.GetAllByEmployeeAsync(employee)).Where(n => n.EmployeeRole == role && !n.IsRead).Count();
+            var notificationCount = await _notificationBL.GetNotificationCountAsync(employee);
             ViewBag.NotificationCount = notificationCount;
 
-            var trainings = (await _trainingBL.GetAllTrainingsAsync()).Where(t => t.Deadline >= DateTime.Now.AddDays(-7)).ToList();
+            var trainings = (await _trainingBL.GetAllTrainingViewModelsAsync(employee.EmployeeId)).Where(t => t.Deadline >= DateTime.Now.AddDays(-7)).ToList();
             ViewBag.Trainings = trainings;
 
-            employee.Role = role;
-            var enrollmentOfEmployee = (await _enrollmentBL.GetAllEnrollmentsAsync(employee)).ToList();
-            ViewBag.EnrollmentId = new Dictionary<int, int?>();
-            foreach (var training in trainings)
-            {
-                var enrollment = enrollmentOfEmployee.FirstOrDefault(e => e.Training.TrainingId == training.TrainingId);
-                ViewBag.EnrollmentId[training.TrainingId] = enrollment?.EnrollmentId;
-            }
             return View();
         }
 
@@ -69,15 +59,12 @@ namespace SkillsLabProject.Controllers
             var employee = await _employeeBL.GetEmployeeAsync(loggeduser);
             ViewBag.Employee = employee;
 
-            Enum.TryParse(Session["CurrentRole"] as string, out Role role);
-
-            var notificationCount = (await _notificationBL.GetAllByEmployeeAsync(employee)).Where(n => n.EmployeeRole == role && !n.IsRead).Count();
+            var notificationCount = await _notificationBL.GetNotificationCountAsync(employee);
             ViewBag.NotificationCount = notificationCount;
 
             var preRequisites = (await _preRequisiteBL.GetAllPreRequisitesAsync()).Where(p => p.TrainingId == training.TrainingId).ToList();
             ViewBag.Prerequisites = preRequisites.Any() ? preRequisites : null;
 
-            employee.Role = role;
             var enrolledStatus = (await _enrollmentBL.GetAllEnrollmentsAsync(employee)).Where(e => e.Training.TrainingId == training.TrainingId).Select(e => e.Status).FirstOrDefault().ToString();
             ViewBag.EnrolledStatus = enrolledStatus;
 
@@ -85,7 +72,7 @@ namespace SkillsLabProject.Controllers
             ViewBag.EnrollmentId = enrollmentId;
 
             ViewBag.IsEnrolled = enrolledStatus != "0";
-            ViewBag.IsEmployee = Session["CurrentRole"] as string == "Employee";
+            ViewBag.IsEmployee = loggeduser.CurrentRole == Role.Employee;
 
             return View();
         }
@@ -94,7 +81,11 @@ namespace SkillsLabProject.Controllers
         public async Task<ActionResult> Create()
         {
             var loggeduser = Session["CurrentUser"] as LoginViewModel;
-            ViewBag.Employee = await _employeeBL.GetEmployeeAsync(loggeduser);
+            var employee = await _employeeBL.GetEmployeeAsync(loggeduser);
+            ViewBag.Employee = employee;
+
+            var notificationCount = await _notificationBL.GetNotificationCountAsync(employee);
+            ViewBag.NotificationCount = notificationCount;
 
             var departments = await _departmentBL.GetAllDepartmentsAsync();
             ViewBag.Departments = departments;
@@ -127,21 +118,21 @@ namespace SkillsLabProject.Controllers
         {
             if (id == null) return RedirectToAction("Index");
 
+            var training = await _trainingBL.GetTrainingByIdAsync((int)id);
+            if (training == null) return RedirectToAction("Index");
+            ViewBag.Training = training;
+
             var loggeduser = Session["CurrentUser"] as LoginViewModel;
             var employee = await _employeeBL.GetEmployeeAsync(loggeduser);
             ViewBag.Employee = employee;
 
-            Enum.TryParse(Session["CurrentRole"] as string, out Role role);
-
-            var notificationCount = (await _notificationBL.GetAllByEmployeeAsync(employee)).Where(n => n.EmployeeRole == role && !n.IsRead).Count();
+            var notificationCount = await _notificationBL.GetNotificationCountAsync(employee);
             ViewBag.NotificationCount = notificationCount;
 
             var departments = await _departmentBL.GetAllDepartmentsAsync();
             ViewBag.Departments = departments;
 
-            var training = await _trainingBL.GetTrainingByIdAsync((int)id);
-            if (training == null) return RedirectToAction("Index");
-            ViewBag.Training = training;
+
 
             var preRequisites = (await _preRequisiteBL.GetAllPreRequisitesAsync()).Where(p => p.TrainingId == training.TrainingId).ToList();
             ViewBag.Prerequisites = preRequisites.Any() ? preRequisites : null;

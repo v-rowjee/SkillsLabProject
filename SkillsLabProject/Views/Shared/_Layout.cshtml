@@ -36,7 +36,7 @@
                     <li class="nav-item mx-2">
                         @Html.ActionLink("Enrollments", "Index", "Enrollment", null, new { @class = @ViewBag.Title == "Enrollments" ? "nav-link active" : "nav-link" })
                     </li>
-                    @if (Session["CurrentRole"] as string != "Admin")
+                    @if (ViewBag.Employee.CurrentRole.ToString() != "Admin")
                     {
                         <li class="nav-item mx-2">
                             <a href="@Url.Action("Index", "Notification")" class=@(ViewBag.Title == "Notifications" ? "nav-link active" : "nav-link")>
@@ -48,7 +48,7 @@
                 </ul>
                 <ul class="navbar-nav d-table">
                     <li class="nav-item dropdown d-table-cell align-middle">
-                        <span class="badge text-bg-light border border-dark opacity-75">@(Session["CurrentRole"])</span>
+                        <span class="badge text-bg-light border border-dark opacity-75">@(ViewBag.Employee.CurrentRole.ToString())</span>
                     </li>
                     <li class="nav-item dropdown mx-2">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">

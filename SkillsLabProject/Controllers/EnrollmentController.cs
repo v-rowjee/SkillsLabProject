@@ -47,18 +47,16 @@ namespace SkillsLabProject.Controllers
             var employee = await _employeeBL.GetEmployeeAsync(loggeduser);
             ViewBag.Employee = employee;
 
-            Enum.TryParse(Session["CurrentRole"] as string, out Role role);
-            employee.Role = role;
             var enrollments = (await _enrollmentBL.GetAllEnrollmentsAsync(employee)).ToList();
             ViewBag.Enrollments = enrollments;
 
-            var notificationCount = (await _notificationBL.GetAllByEmployeeAsync(employee)).Where(n => n.EmployeeRole == role && !n.IsRead).Count();
+            var notificationCount = await _notificationBL.GetNotificationCountAsync(employee);
             ViewBag.NotificationCount = notificationCount;
 
-            var trainings = await _trainingBL.GetAllTrainingsAsync();
-            var departments = new List<DepartmentModel>() { employee.Department };
+            var trainings = await _trainingBL.GetAllTrainingViewModelsAsync();
+            var departments = await _departmentBL.GetAllDepartmentsAsync();
 
-            if (Session["CurrentRole"] as string == "Admin")
+            if (employee.CurrentRole == Role.Admin)
             {
                 var departmentsWithEnrollments = enrollments.Select(e => e.Employee.Department.DepartmentId).Distinct();
                 departments = (await _departmentBL.GetAllDepartmentsAsync()).Where(d => departmentsWithEnrollments.Contains(d.DepartmentId)).ToList();
@@ -92,12 +90,10 @@ namespace SkillsLabProject.Controllers
             var employee = await _employeeBL.GetEmployeeAsync(loggeduser);
             ViewBag.Employee = employee;
 
-            Enum.TryParse(Session["CurrentRole"] as string, out Role role);
-
-            var notificationCount = (await _notificationBL.GetAllByEmployeeAsync(employee)).Where(n => n.EmployeeRole == role && !n.IsRead).Count();
+            var notificationCount = await _notificationBL.GetNotificationCountAsync(employee);
             ViewBag.NotificationCount = notificationCount;
 
-            if (role == Role.Employee && enrollment.Employee.EmployeeId != employee.EmployeeId)
+            if (employee.CurrentRole == Role.Employee && enrollment.Employee.EmployeeId != employee.EmployeeId)
             {
                 return RedirectToAction("Unauthorized","Error");
             }

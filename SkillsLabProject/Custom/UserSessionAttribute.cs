@@ -10,7 +10,7 @@ namespace SkillsLabProject.Custom
     {
         public override void OnActionExecuting(ActionExecutingContext filterContext)
         {
-            if (filterContext.HttpContext.Session["CurrentUser"] == null || filterContext.HttpContext.Session["CurrentRole"] == null)
+            if (filterContext.HttpContext.Session["CurrentUser"] == null)
             {
                 filterContext.Result = new RedirectResult("~/Login/Index");
             }

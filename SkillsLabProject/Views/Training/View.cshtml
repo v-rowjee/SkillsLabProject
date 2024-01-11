@@ -100,7 +100,7 @@
                     </div>
                 </div>
                 <div class="row mt-5">
-                    @if (Session["CurrentRole"] as string == "Admin")
+                    @if (ViewBag.Employee.CurrentRole.ToString() == "Admin")
                     {
 
                         if (ViewBag.Training.IsClosed)
@@ -127,7 +127,7 @@
                             </div>
                         }
                     }
-                    else if (Session["CurrentRole"] as string == "Manager")
+                    else if (ViewBag.Employee.CurrentRole.ToString() == "Manager")
                     {
                         <div class="col-4">
                             @Html.ActionLink("Back", "Index", "Training", null, new { @class = "btn btn-secondary w-100" })

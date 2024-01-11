@@ -17,5 +17,6 @@ namespace SkillsLabProject.Common.Models.ViewModels
         public List<string> PreRequisites { get; set;}
         public bool IsClosed {  get; set; }
         public int SeatsLeft {  get; set; }
+        public List<EnrollmentModel> Enrollments { get; set; }
     }
 }

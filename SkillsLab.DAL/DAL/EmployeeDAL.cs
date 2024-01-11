@@ -97,6 +97,7 @@ namespace SkillsLabProject.DAL.DAL
                         DepartmentId = dataReader.GetByte(dataReader.GetOrdinal("DepartmentId")),
                         Title = dataReader["Title"].ToString()
                     };
+                    employee.CurrentRole = login.CurrentRole;
                 }
             }
             return employee;

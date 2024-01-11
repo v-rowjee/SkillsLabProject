@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SkillsLabProject.Common.Enums;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,5 +11,6 @@ namespace SkillsLabProject.Common.Models.ViewModels
     {
         public string Email { get; set; }
         public string Password { get; set; }
+        public Role CurrentRole { get; set; }
     }
 }

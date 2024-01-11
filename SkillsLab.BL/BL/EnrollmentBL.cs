@@ -33,16 +33,18 @@ namespace SkillsLabProject.BL.BL
         private readonly IEmployeeDAL _employeeDAL;
         private readonly IProofDAL _proofDAL;
         private readonly IPreRequisiteDAL _preRequisiteDAL;
+        private readonly IDepartmentDAL _departmentDAL;
         private readonly IEmailService _emailService;
         private readonly INotificationDAL _notificationDAL;
 
-        public EnrollmentBL(IEnrollmentDAL enrollmentDAL, ITrainingDAL trainingDAL, IEmployeeDAL employeeDAL, IProofDAL proofDAL, IPreRequisiteDAL preRequisiteDAL, IEmailService emailService, INotificationDAL notificationDAL)
+        public EnrollmentBL(IEnrollmentDAL enrollmentDAL, ITrainingDAL trainingDAL, IEmployeeDAL employeeDAL, IProofDAL proofDAL, IPreRequisiteDAL preRequisiteDAL,IDepartmentDAL departmentDAL, IEmailService emailService, INotificationDAL notificationDAL)
         {
             _enrollmentDAL = enrollmentDAL;
             _trainingDAL = trainingDAL;
             _employeeDAL = employeeDAL;
             _proofDAL = proofDAL;
             _preRequisiteDAL = preRequisiteDAL;
+            _departmentDAL = departmentDAL;
             _emailService = emailService;
             _notificationDAL = notificationDAL;
         }
@@ -85,11 +87,11 @@ namespace SkillsLabProject.BL.BL
                     Proofs = proofs,
                     CreatedOn = enrollment.CreatedOn,
                 };
-                if (currentEmployee.Role == Role.Employee)
+                if (currentEmployee.CurrentRole == Role.Employee)
                 {
                     if (currentEmployee.EmployeeId != enrollment.EmployeeId) continue;
                 }
-                else if (currentEmployee.Role == Role.Manager)
+                else if (currentEmployee.CurrentRole == Role.Manager)
                 {
                     if (currentEmployee.Department.DepartmentId != employee.Department.DepartmentId) continue;
                 }

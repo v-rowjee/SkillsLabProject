@@ -11,6 +11,6 @@ namespace SkillsLabProject.Common.Models
         public string PhoneNumber { get; set; }
         public string Email { get; set; }
         public DepartmentModel Department { get; set; }
-        public Role Role { get; set; }
+        public Role CurrentRole { get; set; }
     }
 }

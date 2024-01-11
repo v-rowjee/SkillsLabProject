@@ -12,7 +12,8 @@ namespace SkillsLabProject.BL.BL
 {
     public interface ITrainingBL
     {
-        Task<IEnumerable<TrainingViewModel>> GetAllTrainingsAsync();
+        Task<IEnumerable<TrainingViewModel>> GetAllTrainingViewModelsAsync();
+        Task<IEnumerable<TrainingViewModel>> GetAllTrainingViewModelsAsync(int employeeId);
         Task<TrainingModel> GetTrainingByIdAsync(int trainingId);
         Task<bool> AddTrainingAsync(TrainingViewModel model);
         Task<bool> UpdateTrainingAsync(TrainingViewModel model);
@@ -86,14 +87,16 @@ namespace SkillsLabProject.BL.BL
             return await _trainingDAL.GetByIdAsync(trainingId);
         }
 
-        public async Task<IEnumerable<TrainingViewModel>> GetAllTrainingsAsync()
+        public async Task<IEnumerable<TrainingViewModel>> GetAllTrainingViewModelsAsync()
         {
             List<TrainingViewModel> trainingModels = new List<TrainingViewModel>();
             var trainings = await _trainingDAL.GetAllAsync();
             foreach (var training in trainings)
             {
-                var employeeEnrolled = (await _enrollmentDAL.GetAllAsync()).Count(e => e.TrainingId == training.TrainingId && e.Status == Common.Enums.Status.Approved);
                 var prerequisitesString = (await _preRequisiteDAL.GetAllAsync()).Where(p => p.TrainingId == training.TrainingId).Select(p => p.Detail).ToList();
+                var enrollments = (await _enrollmentDAL.GetAllAsync()).Where(e => e.TrainingId == training.TrainingId).ToList();
+                var employeeEnrolled = enrollments.Count(e => e.Status == Status.Approved);
+
                 var trainingModel = new TrainingViewModel
                 {
                     TrainingId = training.TrainingId,
@@ -105,7 +108,39 @@ namespace SkillsLabProject.BL.BL
                     IsClosed = training.IsClosed,
                     PriorityDepartment = training.PriorityDepartment,
                     SeatsLeft = training.Capacity - employeeEnrolled,
+                    Enrollments = enrollments,
                 };
+                
+                trainingModels.Add(trainingModel);
+            }
+            return trainingModels;
+        }
+
+        public async Task<IEnumerable<TrainingViewModel>> GetAllTrainingViewModelsAsync(int employeeId)
+        {
+            List<TrainingViewModel> trainingModels = new List<TrainingViewModel>();
+            var trainings = await _trainingDAL.GetAllAsync();
+            foreach (var training in trainings)
+            {
+                var prerequisitesString = (await _preRequisiteDAL.GetAllAsync()).Where(p => p.TrainingId == training.TrainingId).Select(p => p.Detail).ToList();
+                var enrollments = (await _enrollmentDAL.GetAllAsync()).Where(e => e.TrainingId == training.TrainingId).ToList();
+                var employeeEnrolled = enrollments.Count(e => e.Status == Status.Approved);
+                var enrollmentsOfEmployee = enrollments.Where(e => e.EmployeeId == employeeId).ToList();
+
+                var trainingModel = new TrainingViewModel
+                {
+                    TrainingId = training.TrainingId,
+                    Title = training.Title,
+                    Description = training.Description,
+                    Deadline = training.Deadline,
+                    Capacity = training.Capacity,
+                    PreRequisites = prerequisitesString,
+                    IsClosed = training.IsClosed,
+                    PriorityDepartment = training.PriorityDepartment,
+                    SeatsLeft = training.Capacity - employeeEnrolled,
+                    Enrollments = enrollmentsOfEmployee,
+                };
+
                 trainingModels.Add(trainingModel);
             }
             return trainingModels;

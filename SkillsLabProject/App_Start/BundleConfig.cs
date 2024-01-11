@@ -20,6 +20,7 @@ namespace SkillsLabProject
                 "~/Scripts/bootstrap/bootstrap.bundle.min.js"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
+                "~/Content/bootstrap/css/bootstrap.min.css",
                 "~/Content/icons/font-awesome.min.css",
                 "~/Content/snackbar/snackbar.min.css",
                 "~/Content/custom.min.css",
