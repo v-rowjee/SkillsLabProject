@@ -19,32 +19,37 @@ namespace SkillsLabProject.Common.Email
         public SmtpEmailClient() 
         {
             _server = "relay.ceridian.com";
-            _port = 587;
+            _port = 25;
         }
-        public async Task<bool> SendEmailAsync(string to, string cc, string subject, string body)
+        public bool SendEmailAsync(string to, string cc, string subject, string body)
         {
             try
             {
-                using (SmtpClient client = new SmtpClient(_server))
+                Task.Run(() =>
                 {
-                    client.Port = _port;
-                    client.EnableSsl = true;
-                    client.UseDefaultCredentials = true;
 
-                    using (MailMessage message = new MailMessage(_senderEmail, to))
+                    using (SmtpClient client = new SmtpClient(_server))
                     {
-                        message.CC.Add(cc);
-                        message.Subject = subject;
-                        message.Body = body;
-                        message.IsBodyHtml = true;
+                        client.Port = _port;
+                        client.EnableSsl = true;
+                        client.UseDefaultCredentials = true;
 
-                        if (bool.Parse(ConfigurationManager.AppSettings["smtp:Enabled"]))
+                        using (MailMessage message = new MailMessage(_senderEmail, to))
                         {
-                            await client.SendMailAsync(message).ConfigureAwait(false);
-                        }
-                        return true;
-                    };
-                }
+                            message.CC.Add(cc);
+                            message.Subject = subject;
+                            message.Body = body;
+                            message.IsBodyHtml = true;
+
+                            if (bool.Parse(ConfigurationManager.AppSettings["smtp:Enabled"]))
+                            {
+                                client.Send(message);
+                            }
+
+                        };
+                    }
+                });
+                return true;
             }
             catch (Exception error)
             {
