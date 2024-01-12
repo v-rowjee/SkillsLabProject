@@ -19,17 +19,5 @@ define(["require", "exports", "dojo/_base/declare", "dijit/_Widget", "dijit/_Tem
         };
         return LoginWidget;
     }());
-    return declare("Widget.LoginWidget", [_Widget, _TemplatedMixin, _WidgetsInTemplateMixin], {
-        templateString: template,
-        constructor: function () {
-            console.log('constructor');
-        },
-        postCreate: function () {
-            this.inherited(arguments);
-            console.log('Create Post');
-        },
-        startup: function () {
-            this.inherited(arguments);
-        }
-    });
+    return declare("widget/LoginWidget", [_Widget, _TemplatedMixin, _WidgetsInTemplateMixin], LoginWidget.prototype);
 });

@@ -32,19 +32,4 @@ class LoginWidget {
     }
 }
 
-export = declare("Widget.LoginWidget", [_Widget, _TemplatedMixin, _WidgetsInTemplateMixin], {
-    templateString: template,
-
-    constructor: function () {
-        console.log('constructor');
-    },
-
-    postCreate: function () {
-        this.inherited(arguments);
-        console.log('Create Post');
-    },
-
-    startup: function () {
-        this.inherited(arguments);
-    }
-});
+export = declare("widget/LoginWidget", [_Widget, _TemplatedMixin, _WidgetsInTemplateMixin], LoginWidget.prototype);

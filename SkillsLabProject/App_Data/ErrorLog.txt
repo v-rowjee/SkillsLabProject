@@ -680,3 +680,25 @@ Stack Trace:    at System.Data.SqlClient.SqlConnection.OnError(SqlException exce
    at System.Runtime.CompilerServices.ConfiguredTaskAwaitable`1.ConfiguredTaskAwaiter.GetResult()
    at SkillsLabProject.Common.DAL.DBCommand.<ExecuteNonQueryAsync>d__1.MoveNext() in C:\Users\P12AC8C\source\repos\SkillsLabProject\SkillsLab.Common\DAL\DBCommand.cs:line 41
 --------------------------------------------------------
+
+--------------------------------------------------------
+Timestamp: 1/12/2024 3:45:52 PM
+Exception Type: System.Net.Mail.SmtpException
+Message Type: Failure sending mail.
+Inner Exception: Failure sending mail.
+Stack Trace:    at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.ConfiguredTaskAwaitable.ConfiguredTaskAwaiter.GetResult()
+   at SkillsLabProject.Common.Email.SmtpEmailClient.<SendEmailAsync>d__4.MoveNext() in C:\Users\P12AC8C\source\repos\SkillsLabProject\SkillsLab.Common\Email\SmtpEmailClient.cs:line 43
+--------------------------------------------------------
+
+--------------------------------------------------------
+Timestamp: 1/12/2024 4:08:41 PM
+Exception Type: System.Net.Mail.SmtpException
+Message Type: Failure sending mail.
+Inner Exception: Failure sending mail.
+Stack Trace:    at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.GetResult()
+   at SkillsLabProject.Common.Email.SmtpEmailClient.<SendEmailAsync>d__4.MoveNext() in C:\Users\P12AC8C\source\repos\SkillsLabProject\SkillsLab.Common\Email\SmtpEmailClient.cs:line 43
+--------------------------------------------------------

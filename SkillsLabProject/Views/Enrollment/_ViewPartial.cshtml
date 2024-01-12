@@ -9,7 +9,7 @@
             <span class="badge text-bg-success">@ViewBag.Enrollment.Status.ToString()</span>
         </div>
     </div>
-    if (Session["CurrentRole"] as string == "Manager")
+    if (ViewBag.Enrollment.Status.ToString() == "Manager")
     {
         <button type="button" class="btn btn-danger w-100" data-bs-toggle="modal" data-bs-target="#declineReasonModal">Decline</button>
     }
@@ -35,7 +35,7 @@ else if (ViewBag.Enrollment.Status.ToString() == "Declined")
             @ViewBag.DeclineReason
         </div>
     </div>
-    if (Session["CurrentRole"] as string == "Manager")
+    if (ViewBag.Enrollment.Status.ToString() == "Manager")
     {
         <button id="approveEnrollment" class="btn btn-success w-100">Approve</button>
     }
@@ -52,7 +52,7 @@ else if (ViewBag.Enrollment.Status.ToString() == "Pending")
             <span class="badge text-bg-warning">@ViewBag.Enrollment.Status.ToString()</span>
         </div>
     </div>
-    if (Session["CurrentRole"] as string == "Manager")
+    if (ViewBag.Enrollment.Status.ToString() == "Manager")
     {
         <div class="d-flex gap-3">
             <button type="button" class="btn btn-danger w-100" data-bs-toggle="modal" data-bs-target="#declineReasonModal">Decline</button>
@@ -61,7 +61,7 @@ else if (ViewBag.Enrollment.Status.ToString() == "Pending")
     }
 }
 
-@if (Session["CurrentRole"] as string == "Manager")
+@if (ViewBag.Enrollment.Status.ToString() == "Manager")
 {
     <input type="hidden" value="@ViewBag.Enrollment.EnrollmentId" id="enrollmentId" />
 

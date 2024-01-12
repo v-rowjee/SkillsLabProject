@@ -161,7 +161,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\UnityConfig.cs" />
-    <Compile Include="Controllers\DojoController.cs" />
+    <Compile Include="Controllers\ProfileController.cs" />
     <Compile Include="Controllers\EnrollmentController.cs" />
     <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\CommonController.cs" />
@@ -12294,7 +12294,7 @@
     <Content Include="Views\Training\Edit.cshtml" />
     <Content Include="Views\Training\Create.cshtml" />
     <Content Include="tsconfig.json" />
-    <Content Include="Views\Dojo\Index.cshtml" />
+    <Content Include="Views\Profile\Index.cshtml" />
     <Content Include="StaticViews\LoginWidget.html" />
     <Content Include="Views\Enrollment\View.cshtml" />
     <Content Include="Views\Common\Role.cshtml" />
@@ -12303,6 +12303,7 @@
     <Content Include="Scripts\snackbar\snackbar.min.js.map" />
     <Content Include="Views\Notification\Index.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
+    <Content Include="Views\Shared\_DojoLayout.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

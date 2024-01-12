@@ -18,7 +18,7 @@ namespace SkillsLabProject.Common.Email
         private readonly string _senderEmail = ConfigurationManager.AppSettings["AdminEmail"].ToString();
         public SmtpEmailClient() 
         {
-            _server = "smtp-mail.outlook.com";
+            _server = "relay.ceridian.com";
             _port = 587;
         }
         public async Task<bool> SendEmailAsync(string to, string cc, string subject, string body)

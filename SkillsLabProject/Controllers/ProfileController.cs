@@ -6,7 +6,7 @@ using System.Web.Mvc;
 
 namespace SkillsLabProject.Controllers
 {
-    public class DojoController : Controller
+    public class ProfileController : Controller
     {
         // GET: Dojo
         public ActionResult Index()

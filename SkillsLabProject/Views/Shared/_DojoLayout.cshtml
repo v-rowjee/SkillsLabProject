@@ -1,0 +1,117 @@
+﻿<!DOCTYPE html>
+<html data-bs-theme="light">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - SkillsLab</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/Scripts/head")
+    <!-- Data Table JS -->
+    <script src='https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js'></script>
+    <script src='https://cdn.datatables.net/responsive/2.1.0/js/dataTables.responsive.min.js'></script>
+    <script src='https://cdn.datatables.net/1.13.5/js/dataTables.bootstrap5.min.js'></script>
+    <!-- Data Table CSS -->
+    <link rel='stylesheet' href='https://cdn.datatables.net/1.13.5/css/dataTables.bootstrap5.min.css'>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- Lodash-->
+    <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js"></script>
+    <!-- Dojo-->
+    <script>
+        var dojoConfig = {
+            async: true,
+            waitSeconds: 0,
+            packages: [
+                { name: 'dojo', location: '@Url.Content("~/Scripts/dojoSRC/dojo")' },
+                { name: 'dijit', location: '@Url.Content("~/Scripts/dojoSRC/dijit")' },
+                { name: 'themes', location: '@Url.Content("~/Scripts/dojoSRC/dijit-themes")' },
+                { name: 'custom', location: '@Url.Content("~/Scripts/custom")' },
+                { name: 'widget', location: '@Url.Content("~/Scripts/dist/Widget")'},
+            ],
+        }
+    </script>
+
+    <script src="~/Scripts/dojoSRC/dojo/dojo.js"></script>
+
+    <script>var exports = {};</script>
+    <script>
+        require(["dijit/registry", "dojo/parser", "dojo/dom", "widget/LoginWidget", "dojo/domReady!"], function (registry, parser, dom, loginWidget) {
+            parser.parse();
+        })
+    </script>
+</head>
+<body>
+    <div id="overlay-spinner">
+        <span class="spinner-border text-primary"></span>
+    </div>
+    <nav class="navbar navbar-expand-lg sticky-top bg-light">
+        <div class="container-fluid">
+            <img src="~/Content/Images/logo.png" class="logo" />
+            @Html.ActionLink("SkillsLab", "Index", "Common", new { area = "" }, new { @class = "navbar-brand" })
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarCollapse">
+                <ul class="navbar-nav me-auto my-2 my-lg-0">
+                    <li class="nav-item mx-2">
+                        @Html.ActionLink("Trainings", "Index", "Training", null, new { @class = @ViewBag.Title == "Trainings" ? "nav-link active" : "nav-link" })
+                    </li>
+                    <li class="nav-item mx-2">
+                        @Html.ActionLink("Enrollments", "Index", "Enrollment", null, new { @class = @ViewBag.Title == "Enrollments" ? "nav-link active" : "nav-link" })
+                    </li>
+                    @if (ViewBag.Employee.CurrentRole.ToString() != "Admin")
+                    {
+                        <li class="nav-item mx-2">
+                            <a href="@Url.Action("Index", "Notification")" class=@(ViewBag.Title == "Notifications" ? "nav-link active" : "nav-link")>
+                                Notifications
+                                <span class="badge text-bg-dark">@ViewBag.NotificationCount</span>
+                            </a>
+                        </li>
+                    }
+                </ul>
+                <ul class="navbar-nav d-table">
+                    <li class="nav-item dropdown d-table-cell align-middle">
+                        <span class="badge text-bg-light border border-dark opacity-75">@(ViewBag.Employee.CurrentRole.ToString())</span>
+                    </li>
+                    <li class="nav-item dropdown mx-2">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            @(ViewBag.Employee != null ? ViewBag.Employee.FirstName + " " + ViewBag.Employee.LastName : "")
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li>
+                                @Html.ActionLink("Profile", "Index", "Account", null, new { @class = "dropdown-item" })
+                            </li>
+                            <li>
+                                <a href="" id="darkModeToggle" class="dropdown-item">Dark mode</a>
+                            </li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                @Html.ActionLink("Log Out", "Logout", "Common", null, new { @class = "dropdown-item" })
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="progress mb-4 bg-transparent" style="height: 1px;">
+        <div class="progress-bar" id="loading" role="progressbar" style="width: 0%;"></div>
+    </div>
+
+
+    @RenderBody()
+
+
+    <footer class="sticky-bottom bg-light">
+        <hr />
+        <div class="container-fluid d-flex mb-2">
+            <p class="my-1">&copy; @DateTime.Now.Year - SkillsLab</p>
+            <img src="~/Content/Images/logo.png" class="logo ms-auto d-inline-block opacity-25" />
+        </div>
+    </footer>
+
+    @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/Scripts/body")
+    @RenderSection("scripts", required: false)
+</body>
+</html>
