@@ -13,7 +13,7 @@ namespace SkillsLabProject.Test
         private Mock<IAppUserDAL> _stubAppUser;
         private Mock<IEmployeeDAL> _stubEmployee;
         private AppUserBL _appUserBL;
-        List<AppUserModel> _appUsers;
+        private List<AppUserModel> _appUsers;
 
         [SetUp]
         public void Setup()

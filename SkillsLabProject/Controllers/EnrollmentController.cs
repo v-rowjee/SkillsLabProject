@@ -21,18 +21,16 @@ namespace SkillsLabProject.Controllers
         private readonly ITrainingBL _trainingBL;
         private readonly IPreRequisiteBL _preRequisiteBL;
         private readonly IProofBL _proofBL;
-        private readonly IDeclinedEnrollmentBL _declinedEnrollmentBL;
         private readonly IEmailService _emailService;
         private readonly IDepartmentBL _departmentBL;
         private readonly INotificationBL _notificationBL;
-        public EnrollmentController(IEmployeeBL employeeBL,IEnrollmentBL enrollmentBL, ITrainingBL trainingBL, IPreRequisiteBL preRequisiteBL, IProofBL proofBL, IDeclinedEnrollmentBL declinedEnrollmentBL,IDepartmentBL departmentBL, IEmailService emailService, INotificationBL notificationBL)
+        public EnrollmentController(IEmployeeBL employeeBL,IEnrollmentBL enrollmentBL, ITrainingBL trainingBL, IPreRequisiteBL preRequisiteBL, IProofBL proofBL,IDepartmentBL departmentBL, IEmailService emailService, INotificationBL notificationBL)
         {
             _employeeBL = employeeBL;
             _enrollmentBL = enrollmentBL;
             _trainingBL = trainingBL;
             _preRequisiteBL = preRequisiteBL;
             _proofBL = proofBL;
-            _declinedEnrollmentBL = declinedEnrollmentBL;
             _departmentBL = departmentBL;
             _emailService = emailService;
             _notificationBL = notificationBL;
@@ -99,10 +97,10 @@ namespace SkillsLabProject.Controllers
             }
             ViewBag.Enrollment = enrollment;
 
-            var declineReason = (await _declinedEnrollmentBL.GetAllDeclinedEnrollmentsAsync()).Where(d => d.EnrollmentId == id).Select(d => d.Reason).FirstOrDefault();
+            var declineReason = await _enrollmentBL.GetReasonForDeclinedByEnrollmentIdAsync(enrollment.EnrollmentId);
             ViewBag.DeclineReason = declineReason;
 
-            var proofs = (await _proofBL.GetAllProofsAsync()).Where(p => p.EnrollmentId == enrollment.EnrollmentId).ToList();
+            var proofs = (await _proofBL.GetAllProofsByEnrollmentIdAsync(enrollment.EnrollmentId));
             ViewBag.Proofs = proofs;
 
             var preRequisites = (await _preRequisiteBL.GetAllPreRequisitesAsync()).Where(p => p.TrainingId == enrollment.Training.TrainingId).ToList();

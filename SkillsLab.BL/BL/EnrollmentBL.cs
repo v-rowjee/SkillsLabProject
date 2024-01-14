@@ -20,6 +20,7 @@ namespace SkillsLabProject.BL.BL
     {
         Task<IEnumerable<EnrollmentViewModel>> GetAllEnrollmentsAsync(EmployeeModel employee);
         Task<EnrollmentViewModel> GetEnrollmentByIdAsync(int enrollmentId);
+        Task<string> GetReasonForDeclinedByEnrollmentIdAsync(int enrollmentId);
         Task<bool> ApproveEnrollmentAsync(EnrollmentModel model, EmployeeModel manager);
         Task<bool> DeclineEnrollmentAsync(EnrollmentModel model, EmployeeModel manager);
         Task<bool> DeleteEnrollmentAsync(int enrollmentId);
@@ -33,18 +34,18 @@ namespace SkillsLabProject.BL.BL
         private readonly IEmployeeDAL _employeeDAL;
         private readonly IProofDAL _proofDAL;
         private readonly IPreRequisiteDAL _preRequisiteDAL;
-        private readonly IDepartmentDAL _departmentDAL;
         private readonly IEmailService _emailService;
         private readonly INotificationDAL _notificationDAL;
+        private readonly IDeclinedEnrollmentDAL _declinedEnrollmentDAL;
 
-        public EnrollmentBL(IEnrollmentDAL enrollmentDAL, ITrainingDAL trainingDAL, IEmployeeDAL employeeDAL, IProofDAL proofDAL, IPreRequisiteDAL preRequisiteDAL,IDepartmentDAL departmentDAL, IEmailService emailService, INotificationDAL notificationDAL)
+        public EnrollmentBL(IEnrollmentDAL enrollmentDAL, ITrainingDAL trainingDAL, IEmployeeDAL employeeDAL, IProofDAL proofDAL, IPreRequisiteDAL preRequisiteDAL, IDeclinedEnrollmentDAL declinedEnrollmentDAL, IEmailService emailService, INotificationDAL notificationDAL)
         {
             _enrollmentDAL = enrollmentDAL;
             _trainingDAL = trainingDAL;
             _employeeDAL = employeeDAL;
             _proofDAL = proofDAL;
             _preRequisiteDAL = preRequisiteDAL;
-            _departmentDAL = departmentDAL;
+            _declinedEnrollmentDAL = declinedEnrollmentDAL;
             _emailService = emailService;
             _notificationDAL = notificationDAL;
         }
@@ -98,6 +99,11 @@ namespace SkillsLabProject.BL.BL
                 enrollmentsViews.Add(enrollmentView);
             }
             return enrollmentsViews;
+        }
+
+        public async Task<string> GetReasonForDeclinedByEnrollmentIdAsync(int enrollmentId)
+        {
+            return (await _declinedEnrollmentDAL.GetAllAsync()).Where(d => d.EnrollmentId == enrollmentId).Select(d => d.Reason).FirstOrDefault();
         }
 
         public async Task<bool> ApproveEnrollmentAsync(EnrollmentModel model, EmployeeModel manager)

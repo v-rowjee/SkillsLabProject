@@ -139,7 +139,7 @@
                 {
                     @Html.Partial("_ViewPartial")
 
-                    if (Session["CurrentRole"] as string != "Manager")
+                    if (ViewBag.Employee.CurrentRole.ToString() != "Manager")
                     {
                         <input type="hidden" value="@ViewBag.Enrollment.EnrollmentId" id="enrollmentId" />
                         <button type="button" class="btn btn-danger w-100" onclick="deleteEnrollment(this)">Remove</button>

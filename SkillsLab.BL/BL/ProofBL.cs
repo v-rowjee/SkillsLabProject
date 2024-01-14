@@ -1,13 +1,14 @@
 ﻿using SkillsLabProject.Common.Models;
 using SkillsLabProject.DAL.DAL;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace SkillsLabProject.BL.BL
 {
     public interface IProofBL
     {
-        Task<IEnumerable<ProofModel>> GetAllProofsAsync();
+        Task<IEnumerable<ProofModel>> GetAllProofsByEnrollmentIdAsync(int enrollmentId);
         Task<ProofModel> GetProofByIdAsync(int proofId);
         Task<bool> AddProofAsync(ProofModel model);
         Task<bool> UpdateProofAsync(ProofModel model);
@@ -38,9 +39,9 @@ namespace SkillsLabProject.BL.BL
             return await _proofDAL.GetByIdAsync(proofId);
         }
 
-        public async Task<IEnumerable<ProofModel>> GetAllProofsAsync()
+        public async Task<IEnumerable<ProofModel>> GetAllProofsByEnrollmentIdAsync(int enrollmentId)
         {
-            return await _proofDAL.GetAllAsync();
+            return (await _proofDAL.GetAllAsync()).Where(p => p.EnrollmentId == enrollmentId).ToList();
         }
 
         public async Task<bool> UpdateProofAsync(ProofModel proof)

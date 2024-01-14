@@ -32,7 +32,6 @@ namespace SkillsLabProject
             container.RegisterType<IProofBL, ProofBL>();
             container.RegisterType<IProofDAL, ProofDAL>();
 
-            container.RegisterType<IDeclinedEnrollmentBL, DeclinedEnrollmentBL>();
             container.RegisterType<IDeclinedEnrollmentDAL, DeclinedEnrollmentDAL>();
 
             container.RegisterType<IDepartmentBL, DepartmentBL>();
