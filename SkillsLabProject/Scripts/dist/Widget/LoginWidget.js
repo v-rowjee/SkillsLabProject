@@ -14,9 +14,6 @@ define(["require", "exports", "dojo/_base/declare", "dijit/_Widget", "dijit/_Tem
             this.inherited(arguments);
             console.log('Create Post');
         };
-        LoginWidget.prototype.startup = function () {
-            this.inherited(arguments);
-        };
         return LoginWidget;
     }());
     return declare("widget/LoginWidget", [_Widget, _TemplatedMixin, _WidgetsInTemplateMixin], LoginWidget.prototype);

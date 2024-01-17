@@ -11,24 +11,37 @@ namespace SkillsLabProject.Test
     public class Tests
     {
         private Mock<IAppUserDAL> _stubAppUser;
+        private Mock<IDepartmentDAL> _stubDepartment;
         private Mock<IEmployeeDAL> _stubEmployee;
+        private Mock<IEnrollmentDAL> _stubEnrollment;
+        private Mock<IPreRequisiteDAL> _stubPrerequisite;
+        private Mock<ITrainingDAL> _stubTraining;
+
         private AppUserBL _appUserBL;
+        private TrainingBL _trainingBL;
+
         private List<AppUserModel> _appUsers;
+        private List<DepartmentModel> _departments;
+        private List<EmployeeModel> _employees;
+        private List<TrainingModel> _trainings;
+        private List<EnrollmentModel> _enrollments;
 
         [SetUp]
         public void Setup()
         {
-            _appUsers = new List<AppUserModel>()
-            {
-                new AppUserModel()
-                {
-                    AppUserId = 1,
-                    Email = "user@ceridian.com",
-                    Password = "AQAAAAEAACcQAAAAENygCewQKrMCm6H5EZA8tl46Si9JRNa6y/NjIgepbLPtYX2WlwuvsQed5Df17edZog==",
-                    EmployeeId = 1
-                }
-            };
+            _appUsers = Data.AppUsers;
+            _departments = Data.Departments;
+            _employees = Data.Employees;
+            _enrollments = Data.Enrollments;
+            _trainings = Data.Trainings;
+
             _stubAppUser = new Mock<IAppUserDAL>();
+            _stubDepartment = new Mock<IDepartmentDAL>();
+            _stubEmployee = new Mock<IEmployeeDAL>();
+            _stubEnrollment = new Mock<IEnrollmentDAL>();
+            _stubPrerequisite = new Mock<IPreRequisiteDAL>();
+            _stubTraining = new Mock<ITrainingDAL>();
+
 
             _stubAppUser
                 .Setup(a => a.GetHashedPasswordAsync(It.IsAny<LoginViewModel>()))
@@ -36,37 +49,88 @@ namespace SkillsLabProject.Test
 
             _stubAppUser
                 .Setup(a => a.RegisterUserAsync(It.IsAny<RegisterViewModel>()))
-                .ReturnsAsync(true);
-
-            List<EmployeeModel> employees = new List<EmployeeModel>()
-            {
-                new EmployeeModel()
+                .ReturnsAsync((RegisterViewModel model) =>
                 {
-                    EmployeeId = 1,
-                    FirstName = "User",
-                    LastName = "Test",
-                    NIC = "U0930029930492",
-                    PhoneNumber = "57939928",
-                    Email = "user@ceridian.com",
-                    Department = new DepartmentModel()
+                    _employees.Add(new EmployeeModel
                     {
-                        DepartmentId = 1,
-                        Title = "TestDepartment"
-                    }
-                }
-            };
-            _stubEmployee = new Mock<IEmployeeDAL>();
+                        EmployeeId = _employees.Count + 1,
+                        FirstName = model.FirstName,
+                        LastName = model.LastName,
+                        NIC = model.NIC,
+                        PhoneNumber = model.PhoneNumber,
+                        Email = model.Email,
+                        Department = _departments.FirstOrDefault(d => d.DepartmentId == model.DepartmentId),
+                    });
+                    _appUsers.Add(new AppUserModel 
+                    { 
+                        AppUserId = _appUsers.Count + 1,
+                        Email = model.Email,
+                        Password = model.Password,
+                        EmployeeId = _employees.Last().EmployeeId,
+                    });
+                    return true;
+                });
+
+            _stubDepartment
+                .Setup(d => d.GetByIdAsync(It.IsAny<int>()))
+                .ReturnsAsync((int id) => _departments.First(d => d.DepartmentId.Equals(id)));
+
             _stubEmployee
                 .Setup(e => e.GetAllEmployeesAsync())
-                .ReturnsAsync(employees);
+                .ReturnsAsync(_employees);
+
+            _stubTraining
+                .Setup(t => t.AutoCloseAsync())
+                .ReturnsAsync(() =>
+                {
+                    return true;
+                });
+            _stubTraining
+                .Setup(t => t.AddAsync(It.IsAny<TrainingViewModel>()))
+                .ReturnsAsync((TrainingViewModel model) =>
+                {
+                    _trainings.Add(new TrainingModel
+                    {
+                        TrainingId = _trainings.Count + 1,
+                        Title = model.Title,
+                        Description = model.Description,
+                        Deadline = model.Deadline,
+                        Capacity = model.Capacity,
+                        PriorityDepartment = model.PriorityDepartment,
+                    });
+                    return true;
+                });
+            _stubTraining
+                .Setup(t => t.UpdateAsync(It.IsAny<TrainingModel>()))
+                .ReturnsAsync((TrainingModel model) =>
+                {
+                    var trainingToUpdate = _trainings.FirstOrDefault(t => t.TrainingId == model.TrainingId);
+
+                    if (trainingToUpdate != null)
+                    {
+                        trainingToUpdate.Title = model.Title;
+                        trainingToUpdate.Description = model.Description;
+                        trainingToUpdate.Deadline = model.Deadline;
+                        trainingToUpdate.Capacity = model.Capacity;
+                        trainingToUpdate.PriorityDepartment = model.PriorityDepartment;
+                        trainingToUpdate.IsClosed = model.IsClosed;
+
+                        return true;
+                    }
+
+                    return false;
+                });
+
 
             _appUserBL = new AppUserBL(_stubAppUser.Object, _stubEmployee.Object);
+            _trainingBL = new TrainingBL(_stubTraining.Object, _stubDepartment.Object, _stubEnrollment.Object, _stubPrerequisite.Object);
+
         }
 
         [Test]
-        [TestCase("user@ceridian.com", "4321", ExpectedResult = true)]
-        [TestCase("user@ceridian.com", "0000", ExpectedResult = false)]
-        [TestCase("notuser@ceridian.com", "4321", ExpectedResult = false)]
+        [TestCase("john.doe@example.com", "4321", ExpectedResult = true)]
+        [TestCase("john.doe@example.com", "0000", ExpectedResult = false)]
+        [TestCase("notuser@example.com", "4321", ExpectedResult = false)]
         public async Task<bool> Test_Login(string email, string password)
         {
             // Arrange
@@ -84,9 +148,9 @@ namespace SkillsLabProject.Test
 
         [Test]
         [TestCase("ved", "rowjee", 1, "ved.rowjee@ceridian.com", "1234", "R080901299930", "59749958", Role.Employee, ExpectedResult = "Success" )]
-        [TestCase("ved", "rowjee", 1, "user@ceridian.com", "1234", "R080901299930", "59749958", Role.Employee, ExpectedResult = "DuplicatedEmail")]
-        [TestCase("ved", "rowjee", 1, "ved.rowjee@ceridian.com", "1234", "U0930029930492", "59749958", Role.Employee, ExpectedResult = "DuplicatedNIC")]
-        [TestCase("ved", "rowjee", 1, "user@ceridian.com", "1234", "U0930029930492", "59749958", Role.Employee, ExpectedResult = "DuplicatedEmail,DuplicatedNIC")]
+        [TestCase("ved", "rowjee", 1, "john.doe@example.com", "1234", "R080901299930", "59749958", Role.Employee, ExpectedResult = "DuplicatedEmail")]
+        [TestCase("ved", "rowjee", 1, "ved.rowjee@ceridian.com", "1234", "U1234567890123", "59749958", Role.Employee, ExpectedResult = "DuplicatedNIC")]
+        [TestCase("john", "doe", 1, "john.doe@example.com", "1234", "U1234567890123", "59749958", Role.Employee, ExpectedResult = "DuplicatedEmail,DuplicatedNIC")]
 
         public async Task<string> Test_Register(string firstName, string lastName, int departmentId, string email, string password, string nic, string phoneNumber, Role role)
         {
@@ -108,6 +172,76 @@ namespace SkillsLabProject.Test
 
             // Assert
             return string.Join(",",result);
+        }
+
+        [Test]
+        public async Task Test_AddTraining()
+        {
+            // Arrange
+            var model = new TrainingViewModel()
+            {
+                Title = "Test",
+                Description = "Test",
+                Deadline = DateTime.Now.AddDays(4),
+                Capacity = 5,
+                PriorityDepartment = new DepartmentModel() { DepartmentId = 1, Title = "P&T" },
+                PreRequisites = new List<string>(){ "HSC" }
+            };
+            // Act
+            var result = await _trainingBL.AddTrainingAsync(model);
+
+            //Assert
+            Assert.IsTrue(result);
+        }
+
+        [Test]
+        public async Task Test_UpdateTraining()
+        {
+            // Arrange
+            int trainingIdToUpdate = 1;
+            var model = _trainings.First(t => t.TrainingId == trainingIdToUpdate);
+            var viewModel = new TrainingViewModel()
+            {
+                TrainingId = model.TrainingId,
+                Title = model.Title,
+                Description = model.Description,
+                Deadline = model.Deadline,
+                Capacity = model.Capacity,
+                PriorityDepartment = model.PriorityDepartment,
+                IsClosed = false,
+            };
+            var updatedTitle = "Updated Title";
+            var updatedDescription = "Updated Description";
+
+            viewModel.Title = updatedTitle;
+            viewModel.Description = updatedDescription;
+
+            // Act
+            var result = await _trainingBL.UpdateTrainingAsync(viewModel);
+
+            //Assert
+            Assert.IsTrue(result);
+            var updatedTraining = _trainings.FirstOrDefault(t => t.TrainingId == trainingIdToUpdate);
+
+            Assert.Multiple(() =>
+            {
+                Assert.NotNull(updatedTraining);
+                Assert.AreEqual(updatedTitle, updatedTraining.Title);
+                Assert.AreEqual(updatedDescription, updatedTraining.Description);
+            });
+            
+        }
+
+        [Test]
+        public async Task Test_AutomaticProcessing()
+        {
+            // Arrange
+
+            // Act
+            var result = await _trainingBL.AutoCloseTrainingAsync();
+
+            //Assert
+            Assert.IsTrue(result);
         }
     }
 }

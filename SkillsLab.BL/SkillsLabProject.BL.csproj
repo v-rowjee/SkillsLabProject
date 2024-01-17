@@ -86,7 +86,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BL\AppUserBL.cs" />
-    <Compile Include="BL\DeclinedEnrollmentBL.cs" />
     <Compile Include="BL\DepartmentBL.cs" />
     <Compile Include="BL\EmployeeBL.cs" />
     <Compile Include="BL\EnrollmentBL.cs" />

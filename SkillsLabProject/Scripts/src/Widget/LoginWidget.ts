@@ -26,10 +26,6 @@ class LoginWidget {
         this.inherited(arguments);
         console.log('Create Post');
     }
-
-    startup() {
-        this.inherited(arguments);
-    }
 }
 
 export = declare("widget/LoginWidget", [_Widget, _TemplatedMixin, _WidgetsInTemplateMixin], LoginWidget.prototype);

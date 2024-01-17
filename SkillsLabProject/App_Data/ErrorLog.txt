@@ -713,3 +713,26 @@ Stack Trace:    at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw(
    at System.Runtime.CompilerServices.ConfiguredTaskAwaitable.ConfiguredTaskAwaiter.GetResult()
    at SkillsLabProject.Common.Email.SmtpEmailClient.<SendEmailAsync>d__4.MoveNext() in C:\Users\P12AC8C\source\repos\SkillsLabProject\SkillsLab.Common\Email\SmtpEmailClient.cs:line 43
 --------------------------------------------------------
+
+--------------------------------------------------------
+Timestamp: 1/17/2024 3:12:13 PM
+Exception Type: System.Data.SqlClient.SqlException
+Message Type: The DELETE statement conflicted with the REFERENCE constraint "FK_DeclinedEnrollment_DeclinedEnrollmentId_Enrollment_EnrollmentId". The conflict occurred in database "SkillsLabDB", table "dbo.DeclinedEnrollment", column 'EnrollmentId'.
+The statement has been terminated.
+Inner Exception: The DELETE statement conflicted with the REFERENCE constraint "FK_DeclinedEnrollment_DeclinedEnrollmentId_Enrollment_EnrollmentId". The conflict occurred in database "SkillsLabDB", table "dbo.DeclinedEnrollment", column 'EnrollmentId'.
+The statement has been terminated.
+Stack Trace:    at System.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at System.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
+   at System.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   at System.Data.SqlClient.SqlCommand.FinishExecuteReader(SqlDataReader ds, RunBehavior runBehavior, String resetOptionsString, Boolean isInternal, Boolean forDescribeParameterEncryption, Boolean shouldCacheForAlwaysEncrypted)
+   at System.Data.SqlClient.SqlCommand.CompleteAsyncExecuteReader(Boolean isInternal, Boolean forDescribeParameterEncryption)
+   at System.Data.SqlClient.SqlCommand.InternalEndExecuteNonQuery(IAsyncResult asyncResult, String endMethod, Boolean isInternal)
+   at System.Data.SqlClient.SqlCommand.EndExecuteNonQueryInternal(IAsyncResult asyncResult)
+   at System.Data.SqlClient.SqlCommand.EndExecuteNonQueryAsync(IAsyncResult asyncResult)
+   at System.Threading.Tasks.TaskFactory`1.FromAsyncCoreLogic(IAsyncResult iar, Func`2 endFunction, Action`1 endAction, Task`1 promise, Boolean requiresSynchronization)
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.ConfiguredTaskAwaitable`1.ConfiguredTaskAwaiter.GetResult()
+   at SkillsLabProject.Common.DAL.DBCommand.<ExecuteNonQueryAsync>d__1.MoveNext() in C:\Users\P12AC8C\source\repos\SkillsLabProject\SkillsLab.Common\DAL\DBCommand.cs:line 41
+--------------------------------------------------------

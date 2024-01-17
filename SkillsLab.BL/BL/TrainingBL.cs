@@ -6,7 +6,6 @@ using SkillsLabProject.Common.Models;
 using SkillsLabProject.DAL.DAL;
 using SkillsLabProject.Common.Custom;
 using SkillsLabProject.Common.Enums;
-using System.Diagnostics;
 
 namespace SkillsLabProject.BL.BL
 {
@@ -152,6 +151,7 @@ namespace SkillsLabProject.BL.BL
             {
                 var trainingModel = new TrainingModel
                 {
+                    TrainingId = training.TrainingId,
                     Title = training.Title,
                     Description = training.Description,
                     Deadline = training.Deadline,
