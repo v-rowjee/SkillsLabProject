@@ -45,7 +45,7 @@ namespace SkillsLabProject.Test
 
             _stubAppUser
                 .Setup(a => a.GetHashedPasswordAsync(It.IsAny<LoginViewModel>()))
-                .ReturnsAsync((LoginViewModel model) => _appUsers.Where(a => a.Email == model.Email).Select(a => a.Password).FirstOrDefault());
+                .ReturnsAsync((LoginViewModel model) => _appUsers.Where(a => a.Email.Equals(model.Email)).Select(a => a.Password).FirstOrDefault());
 
             _stubAppUser
                 .Setup(a => a.RegisterUserAsync(It.IsAny<RegisterViewModel>()))
@@ -59,7 +59,7 @@ namespace SkillsLabProject.Test
                         NIC = model.NIC,
                         PhoneNumber = model.PhoneNumber,
                         Email = model.Email,
-                        Department = _departments.FirstOrDefault(d => d.DepartmentId == model.DepartmentId),
+                        Department = _departments.FirstOrDefault(d => d.DepartmentId.Equals(model.DepartmentId)),
                     });
                     _appUsers.Add(new AppUserModel 
                     { 
@@ -104,7 +104,7 @@ namespace SkillsLabProject.Test
                 .Setup(t => t.UpdateAsync(It.IsAny<TrainingModel>()))
                 .ReturnsAsync((TrainingModel model) =>
                 {
-                    var trainingToUpdate = _trainings.FirstOrDefault(t => t.TrainingId == model.TrainingId);
+                    var trainingToUpdate = _trainings.FirstOrDefault(t => t.TrainingId.Equals(model.TrainingId));
 
                     if (trainingToUpdate != null)
                     {
@@ -120,7 +120,13 @@ namespace SkillsLabProject.Test
 
                     return false;
                 });
-
+            _stubTraining
+                .Setup(t => t.DeleteAsync(It.IsAny<int>()))
+                .ReturnsAsync((int id) =>
+                {
+                    var numOfTrainingDeleted = _trainings.RemoveAll(t => t.TrainingId.Equals(id));
+                    return numOfTrainingDeleted == 1;
+                });
 
             _appUserBL = new AppUserBL(_stubAppUser.Object, _stubEmployee.Object);
             _trainingBL = new TrainingBL(_stubTraining.Object, _stubDepartment.Object, _stubEnrollment.Object, _stubPrerequisite.Object);
@@ -199,7 +205,7 @@ namespace SkillsLabProject.Test
         {
             // Arrange
             int trainingIdToUpdate = 1;
-            var model = _trainings.First(t => t.TrainingId == trainingIdToUpdate);
+            var model = _trainings.First(t => t.TrainingId.Equals(trainingIdToUpdate));
             var viewModel = new TrainingViewModel()
             {
                 TrainingId = model.TrainingId,
@@ -220,16 +226,35 @@ namespace SkillsLabProject.Test
             var result = await _trainingBL.UpdateTrainingAsync(viewModel);
 
             //Assert
-            Assert.IsTrue(result);
-            var updatedTraining = _trainings.FirstOrDefault(t => t.TrainingId == trainingIdToUpdate);
+            var updatedTraining = _trainings.FirstOrDefault(t => t.TrainingId.Equals(trainingIdToUpdate));
 
             Assert.Multiple(() =>
             {
+                Assert.IsTrue(result);
+
                 Assert.NotNull(updatedTraining);
-                Assert.AreEqual(updatedTitle, updatedTraining.Title);
-                Assert.AreEqual(updatedDescription, updatedTraining.Description);
+                Assert.AreEqual(updatedTraining.Title, updatedTitle);
+                Assert.AreEqual(updatedTraining.Description, updatedDescription);
             });
             
+        }
+
+        [Test]
+        public async Task Test_DeleteTraining()
+        {
+            // Arrange
+            int trainingIdToDelete = 2;
+            var model = _trainings.First(t => t.TrainingId.Equals(trainingIdToDelete));
+            // Act
+            var result = await _trainingBL.DeleteTrainingAsync(trainingIdToDelete);
+            // Assert
+            var deletedTraining = _trainings.FirstOrDefault(t => t.TrainingId.Equals(trainingIdToDelete));
+
+            Assert.Multiple(() =>
+            {
+                Assert.IsTrue(result.IsSuccess);
+                Assert.IsNull(deletedTraining);
+            });
         }
 
         [Test]

@@ -28,28 +28,28 @@ namespace SkillsLabProject.Test
 
         public static List<EmployeeModel> Employees = new List<EmployeeModel>()
         {
-            new EmployeeModel() { EmployeeId = 1, FirstName = "John", LastName = "Doe", NIC = "U1234567890123", PhoneNumber = "5551234", Email = "john.doe@example.com", Department = new DepartmentModel() { DepartmentId = 1, Title = "P&T" } },
-            new EmployeeModel() { EmployeeId = 2, FirstName = "Jane", LastName = "Smith", NIC = "U2345678901234", PhoneNumber = "5555678", Email = "jane.smith@example.com", Department = new DepartmentModel() { DepartmentId = 1, Title = "P&T" } },
-            new EmployeeModel() { EmployeeId = 3, FirstName = "Michael", LastName = "Johnson", NIC = "U3456789012345", PhoneNumber = "5559101", Email = "michael.johnson@example.com", Department = new DepartmentModel() { DepartmentId = 1, Title = "P&T" } },
-            new EmployeeModel() { EmployeeId = 4, FirstName = "Emily", LastName = "Williams", NIC = "U4567890123456", PhoneNumber = "5551122", Email = "emily.williams@example.com", Department = new DepartmentModel() { DepartmentId = 1, Title = "P&T" } },
-            new EmployeeModel() { EmployeeId = 5, FirstName = "Daniel", LastName = "Jones", NIC = "U5678901234567", PhoneNumber = "5553344", Email = "daniel.jones@example.com", Department = new DepartmentModel() { DepartmentId = 1, Title = "P&T" } },
-            new EmployeeModel() { EmployeeId = 6, FirstName = "Olivia", LastName = "Brown", NIC = "U6789012345678", PhoneNumber = "5555566", Email = "olivia.brown@example.com", Department = new DepartmentModel() { DepartmentId = 1, Title = "P&T" } },
-            new EmployeeModel() { EmployeeId = 7, FirstName = "William", LastName = "Miller", NIC = "U7890123456789", PhoneNumber = "5557788", Email = "william.miller@example.com", Department = new DepartmentModel() { DepartmentId = 1, Title = "P&T" } },
-            new EmployeeModel() { EmployeeId = 8, FirstName = "Sophia", LastName = "Davis", NIC = "U8901234567890", PhoneNumber = "5559900", Email = "sophia.davis@example.com", Department = new DepartmentModel() { DepartmentId = 1, Title = "P&T" } },
-            new EmployeeModel() { EmployeeId = 9, FirstName = "James", LastName = "Garcia", NIC = "U9012345678901", PhoneNumber = "5551122", Email = "james.garcia@example.com", Department = new DepartmentModel() { DepartmentId = 1, Title = "P&T" } },
-            new EmployeeModel() { EmployeeId = 10, FirstName = "Ava", LastName = "Rodriguez", NIC = "U0123456789012", PhoneNumber = "5553344", Email = "ava.rodriguez@example.com", Department = new DepartmentModel() { DepartmentId = 1, Title = "Support" } }
+            new EmployeeModel() { EmployeeId = 1, FirstName = "John", LastName = "Doe", NIC = "U1234567890123", PhoneNumber = "5551234", Email = "john.doe@example.com", Department = Departments[0] },
+            new EmployeeModel() { EmployeeId = 2, FirstName = "Jane", LastName = "Smith", NIC = "U2345678901234", PhoneNumber = "5555678", Email = "jane.smith@example.com", Department = Departments[0] },
+            new EmployeeModel() { EmployeeId = 3, FirstName = "Michael", LastName = "Johnson", NIC = "U3456789012345", PhoneNumber = "5559101", Email = "michael.johnson@example.com", Department = Departments[0] },
+            new EmployeeModel() { EmployeeId = 4, FirstName = "Emily", LastName = "Williams", NIC = "U4567890123456", PhoneNumber = "5551122", Email = "emily.williams@example.com", Department = Departments[0] },
+            new EmployeeModel() { EmployeeId = 5, FirstName = "Daniel", LastName = "Jones", NIC = "U5678901234567", PhoneNumber = "5553344", Email = "daniel.jones@example.com", Department = Departments[0] },
+            new EmployeeModel() { EmployeeId = 6, FirstName = "Olivia", LastName = "Brown", NIC = "U6789012345678", PhoneNumber = "5555566", Email = "olivia.brown@example.com", Department = Departments[0] },
+            new EmployeeModel() { EmployeeId = 7, FirstName = "William", LastName = "Miller", NIC = "U7890123456789", PhoneNumber = "5557788", Email = "william.miller@example.com", Department = Departments[0] },
+            new EmployeeModel() { EmployeeId = 8, FirstName = "Sophia", LastName = "Davis", NIC = "U8901234567890", PhoneNumber = "5559900", Email = "sophia.davis@example.com", Department = Departments[0] },
+            new EmployeeModel() { EmployeeId = 9, FirstName = "James", LastName = "Garcia", NIC = "U9012345678901", PhoneNumber = "5551122", Email = "james.garcia@example.com", Department = Departments[0] },
+            new EmployeeModel() { EmployeeId = 10, FirstName = "Ava", LastName = "Rodriguez", NIC = "U0123456789012", PhoneNumber = "5553344", Email = "ava.rodriguez@example.com", Department = Departments[1] }
         };
 
 
         public static List<TrainingModel> Trainings = new List<TrainingModel>()
         {
-            new TrainingModel() { TrainingId = 1, Title = "Introduction to Programming", Description = "Learn the basics of programming.", Deadline = DateTime.Now.AddMonths(2), Capacity = 50, PriorityDepartment = new DepartmentModel() { DepartmentId = 101, Title = "P&T" }, IsClosed = false },
-            new TrainingModel() { TrainingId = 2, Title = "Web Development Fundamentals", Description = "Basic concepts of web development.", Deadline = DateTime.Now.AddMonths(2), Capacity = 40, PriorityDepartment = new DepartmentModel() { DepartmentId = 101, Title = "P&T" }, IsClosed = false },
-            new TrainingModel() { TrainingId = 3, Title = "Database Management", Description = "Introduction to database systems.", Deadline = DateTime.Now.AddMonths(2), Capacity = 35, PriorityDepartment = new DepartmentModel() { DepartmentId = 101, Title = "P&T" }, IsClosed = false },
-            new TrainingModel() { TrainingId = 4, Title = "Software Engineering Principles", Description = "Fundamentals of software engineering.", Deadline = DateTime.Now.AddMonths(2), Capacity = 45, PriorityDepartment = new DepartmentModel() { DepartmentId = 101, Title = "P&T" }, IsClosed = false },
-            new TrainingModel() { TrainingId = 5, Title = "Algorithms and Data Structures", Description = "Essential algorithms and data structures.", Deadline = DateTime.Now.AddMonths(2), Capacity = 30, PriorityDepartment = new DepartmentModel() { DepartmentId = 101, Title = "P&T" }, IsClosed = false },
-            new TrainingModel() { TrainingId = 6, Title = "Network Security Basics", Description = "Introduction to network security.", Deadline = DateTime.Now.AddMonths(2), Capacity = 25, PriorityDepartment = new DepartmentModel() { DepartmentId = 101, Title = "P&T" }, IsClosed = false },
-            new TrainingModel() { TrainingId = 7, Title = "Data Science Essentials", Description = "Fundamental concepts in data science.", Deadline = DateTime.Now.AddMonths(3), Capacity = 30, PriorityDepartment = new DepartmentModel() { DepartmentId = 201, Title = "Support" }, IsClosed = false }
+            new TrainingModel() { TrainingId = 1, Title = "Introduction to Programming", Description = "Learn the basics of programming.", Deadline = DateTime.Now.AddMonths(2), Capacity = 50, PriorityDepartment = Departments[0], IsClosed = false },
+            new TrainingModel() { TrainingId = 2, Title = "Web Development Fundamentals", Description = "Basic concepts of web development.", Deadline = DateTime.Now.AddMonths(2), Capacity = 40, PriorityDepartment = Departments[0], IsClosed = false },
+            new TrainingModel() { TrainingId = 3, Title = "Database Management", Description = "Introduction to database systems.", Deadline = DateTime.Now.AddMonths(2), Capacity = 35, PriorityDepartment = Departments[0], IsClosed = false },
+            new TrainingModel() { TrainingId = 4, Title = "Software Engineering Principles", Description = "Fundamentals of software engineering.", Deadline = DateTime.Now.AddMonths(2), Capacity = 45, PriorityDepartment = Departments[0], IsClosed = false },
+            new TrainingModel() { TrainingId = 5, Title = "Algorithms and Data Structures", Description = "Essential algorithms and data structures.", Deadline = DateTime.Now.AddMonths(2), Capacity = 30, PriorityDepartment = Departments[0], IsClosed = false },
+            new TrainingModel() { TrainingId = 6, Title = "Network Security Basics", Description = "Introduction to network security.", Deadline = DateTime.Now.AddMonths(2), Capacity = 25, PriorityDepartment = Departments[0], IsClosed = false },
+            new TrainingModel() { TrainingId = 7, Title = "Data Science Essentials", Description = "Fundamental concepts in data science.", Deadline = DateTime.Now.AddMonths(3), Capacity = 30, PriorityDepartment = Departments[1], IsClosed = false }
         };
 
 
