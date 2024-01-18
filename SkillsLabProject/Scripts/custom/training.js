@@ -99,7 +99,9 @@
                 Description: description,
                 Deadline: deadline,
                 Capacity: capacity,
-                DepartmentId: department,
+                PriorityDepartment: {
+                    DepartmentId: department
+                },
                 PreRequisites: prerequisites
             }
 
@@ -165,7 +167,9 @@
                 Capacity: capacity,
             }
             if (department != null) {
-                TrainingModelObj.DepartmentId = department
+                TrainingModelObj.PriorityDepartment = {
+                    DepartmentId: department
+                }
             }
             
 

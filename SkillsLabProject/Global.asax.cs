@@ -1,15 +1,13 @@
 ﻿using Hangfire;
 using Hangfire.SqlServer;
-using System.Collections.Generic;
+using SkillsLabProject.App_Start;
+using SkillsLabProject.BL.BL;
 using System;
+using System.Collections.Generic;
+using System.Configuration;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
-using System.Configuration;
-using SkillsLabProject.BL.BL;
-using System.Diagnostics;
-using SkillsLabProject.DAL.DAL;
-using SkillsLabProject.App_Start;
 
 namespace SkillsLabProject
 {
